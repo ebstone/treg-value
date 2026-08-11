@@ -13,7 +13,6 @@ A function that needs one of these refuses to run rather than assume a value.
 | O6 | Whether durable remission is exempt from productivity costs | Co-authors | Societal scenario, out of base case | 2026-08-11 |
 | O7 | CPT 96365/96366: facility or non-facility setting, and RVUs at CY2026 | Stone | W3 | 2026-08-11 |
 | O8 | Which infliximab biosimilar product prices the base case (Q5103 vs Q5104), and whether ASP-file figures are payment limits or raw ASP | Stone | W3 | 2026-08-11 |
-| O9 | Surgery state: one-time entry cost or per-cycle occupancy cost. Aliyev S2 and the retired workbook disagree irreconcilably | Co-authors | W3 | 2026-08-11 |
 
 ## Closed
 
@@ -25,3 +24,4 @@ A function that needs one of these refuses to run rather than assume a value.
 | C4 | Maintenance duration | 2-year cap and no-cap as a bounding pair — Stone | 2026-08-11 |
 | C5 | Treg dose count | Single dose per course; count affects benchmark only — Stone | 2026-08-11 |
 | C6 | Pre-landmark trajectory (SPEC.md L9) | Treg follows conventional-therapy dynamics in weeks 0-12 — Stone | 2026-08-11 |
+| C7 | Surgery-state costing | Derives from Aliyev's Severe-Fulminant PMPM via the standard conversion. Not an episode cost. The retired workbook's colectomy substitution was a category error — Stone | 2026-08-11 |

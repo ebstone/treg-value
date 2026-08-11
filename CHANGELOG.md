@@ -12,3 +12,6 @@ One line per session: what changed, and which tests now cover it.
 - W2 partial: CMS ASP infliximab biosimilar (April 2026) transcribed with a
   provenance sidecar carrying four unresolved items. docs/W2_sourcing_register.md
   records what remains and how to close it. O7-O9 opened.
+- Surgery-state costing corrected: derives from Aliyev's Severe-Fulminant PMPM
+  via the standard conversion, not an HCUP colectomy episode. O9 closed as C7.
+  Amendment recorded.

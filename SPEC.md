@@ -138,7 +138,7 @@ evaluated at each analog's own timepoint, never on π itself. An acceptance test
 | Utilities | — | **TRANSCRIBE** | Aliyev / Buxton EQ-5D-to-CDAI algorithm |
 | Infliximab biosimilar unit cost | — | **TO SOURCE** | CMS ASP, current quarter |
 | Administration cost | — | **TO SOURCE** | CMS Physician Fee Schedule, CPT 96365 |
-| Surgery cost | — | **TO SOURCE** | HCUPnet colectomy |
+| Surgery-state cost | — | **RE-DERIVE** | Aliyev Suppl. Table 2 Severe-Fulminant PMPM, through the same conversion as every other health state. Not an episode cost; not a colectomy |
 | Life table | — | **TO SOURCE** | NCHS, vintage stated |
 | Observation stay | — | **TO SOURCE** | CMS OPPS APC 8011 |
 | Treg dose (cells/kg) | — | **TO SOURCE** | RESTORE protocol, NCT06721962. Benchmark only |

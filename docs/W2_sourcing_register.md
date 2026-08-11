@@ -27,18 +27,35 @@ across from `treg-cd`. If a value cannot be sourced, it goes in
 
 ---
 
-## S-2. Surgery state cost — HCUP
+## S-2. Surgery state cost — RESOLVED, no external source needed
 
-**Status:** not sourced. HCUPnet requires an interactive query; no national mean colectomy cost is retrievable from published summaries at the specificity this model needs.
+Aliyev's Surgery state is **all surgeries and procedures** (Lichtenstein et al.
+2005), many of them performed in an outpatient setting. It is not a colectomy
+admission, and it must not be costed as one.
 
-**How to close:** HCUPnet, https://datatools.ahrq.gov/hcupnet/ — National Inpatient Sample, most recent available year, mean cost per stay, colectomy procedure, restricted to a Crohn's disease principal diagnosis if the cell size permits.
+Its cost derives from the Severe-Fulminant CD-related PMPM mean total cost in
+Aliyev Suppl. Table 2, through the same single conversion rule as every other
+health state:
 
-**Decide and record:**
-- **Cost or charge.** HCUP reports both; they differ by roughly a factor of three. The model needs cost.
-- **Data year**, so the inflation path to 2025 USD is explicit.
-- **Whether the Surgery state is a one-time entry cost or a per-cycle occupancy cost.** Aliyev's Appendix S2 treats it as recurring at $884 per cycle via the PMPM mechanic; the retired workbook substituted a one-time episode cost applied on state entry. These are not reconcilable and the choice moves the surgery pathway substantially. Record the decision in `SPEC_AMENDMENTS.md`, not in code.
+```
+PMPM -> 2-week cycle:  14 / 30.44        = 0.45992
+2008 -> 2017 trend:    1.03^9            = 1.30477
+combined:                                = 0.60009
 
-The prior project used $30,389 (2021 HCUPnet) as a one-time entry cost. Treat that as a sanity check on magnitude, not as a value to carry across.
+Severe-Fulminant  $1,475 PMPM x 0.60009  = $885.14   (Aliyev: $884)
+Moderate-Severe     $362 PMPM x 0.60009  = $217.23   (Aliyev: $217)
+Mild                $152 PMPM x 0.60009  = $ 91.21   (Aliyev: $ 91)
+Remission            $17 PMPM x 0.60009  = $ 10.20   (Aliyev: $ 10)
+```
+
+All four reconcile within about a dollar with no free parameters. The rule is
+the derivation; re-base to 2025 USD with a named index and the same rule
+applies to every state including Surgery.
+
+**Do not query HCUP.** The retired workbook substituted a one-time colectomy
+episode cost on state entry — a >25x substitution into a state whose own
+transition probabilities describe roughly 1.5 cycles of occupancy with patients
+cycling in and out. That was a category error and is not carried forward.
 
 ---
 
