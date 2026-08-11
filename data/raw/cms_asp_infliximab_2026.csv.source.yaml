@@ -1,0 +1,41 @@
+file: cms_asp_infliximab_2026.csv
+status: transcribed
+citation:
+  publisher: Centers for Medicare & Medicaid Services
+  title: Medicare Part B Drug Average Sales Price — ASP Pricing File
+  quarter: 2026-04
+  program_page: https://www.cms.gov/medicare/payment/part-b-drugs/asp-reporting
+retrieved: 2026-08-11
+retrieved_via: >
+  Values read from a state Medicaid republication of the CMS April 2026 ASP
+  pricing file (WV BMS). NOT read from the CMS file directly.
+sha256: PENDING
+unresolved:
+  - id: U1
+    issue: >
+      The ASP pricing file column is labelled "Payment Limit", which is
+      conventionally ASP x 1.06, not raw ASP. Confirm whether 26.035 / 26.803
+      are payment limits or unadjusted ASP before use. A 6% error in the
+      reference comparator's drug cost propagates directly into A and B.
+    blocks: W3
+  - id: U2
+    issue: >
+      Quarter is 2026-04. The 2026-07 file is current as of the retrieval date
+      and supersedes this. Re-pull from CMS directly and replace.
+    blocks: W3
+  - id: U3
+    issue: >
+      Two biosimilars carry different payment limits. SPEC.md L-base names
+      "biosimilar pricing" without naming a product. Choose one and record it,
+      or carry both as a bounding pair. Note the prior project used 2.6803
+      (Q5104, Renflexis) without recording why.
+    blocks: W3
+  - id: U4
+    issue: >
+      J1745 (Remicade, originator) not retrieved. Required for scenario S4
+      (originator pricing).
+    blocks: S4
+notes: >
+  Q5121 (Avsola) and Q5109 (Ixifi) are additional infliximab biosimilars with
+  their own codes and payment limits. Q5121 has become a preferred product for
+  some commercial plans as of 2026-01, which may matter for the choice in U3.
