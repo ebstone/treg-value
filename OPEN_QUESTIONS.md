@@ -11,6 +11,9 @@ A function that needs one of these refuses to run rather than assume a value.
 | O4 | Whether a Treg infusion qualifies for observation billing, and wage-index adjustment | Dula | S6 only | 2026-08-11 |
 | O5 | Real-world biologic persistence (time to discontinuation) | Unsourced | Would replace L6's bounding pair | 2026-08-11 |
 | O6 | Whether durable remission is exempt from productivity costs | Co-authors | Societal scenario, out of base case | 2026-08-11 |
+| O7 | CPT 96365/96366: facility or non-facility setting, and RVUs at CY2026 | Stone | W3 | 2026-08-11 |
+| O8 | Which infliximab biosimilar product prices the base case (Q5103 vs Q5104), and whether ASP-file figures are payment limits or raw ASP | Stone | W3 | 2026-08-11 |
+| O9 | Surgery state: one-time entry cost or per-cycle occupancy cost. Aliyev S2 and the retired workbook disagree irreconcilably | Co-authors | W3 | 2026-08-11 |
 
 ## Closed
 
