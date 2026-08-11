@@ -5,7 +5,6 @@ A function that needs one of these refuses to run rather than assume a value.
 
 | # | Question | Owner | Blocks | Opened |
 |---|---|---|---|---|
-| O0 | Pre-landmark trajectory for the Treg arm (SPEC.md L9). Recommendation is conventional-therapy dynamics. Requires co-author sign-off | Co-authors | W4 | 2026-08-11 |
 | O1 | US eligible-population fractions for moderate-to-severe CD by treatment line | Unsourced | A4 population figure; break-even reported meanwhile | 2026-08-11 |
 | O2 | Confirmatory trial cost benchmark for a cell-therapy programme | Unsourced | A4 comparison | 2026-08-11 |
 | O3 | Preconditioning dose | Dula | S6 only | 2026-08-11 |
@@ -22,3 +21,4 @@ A function that needs one of these refuses to run rather than assume a value.
 | C3 | Infliximab induction window | Run both week-4 and week-8 as S1 — Stone | 2026-08-11 |
 | C4 | Maintenance duration | 2-year cap and no-cap as a bounding pair — Stone | 2026-08-11 |
 | C5 | Treg dose count | Single dose per course; count affects benchmark only — Stone | 2026-08-11 |
+| C6 | Pre-landmark trajectory (SPEC.md L9) | Treg follows conventional-therapy dynamics in weeks 0-12 — Stone | 2026-08-11 |

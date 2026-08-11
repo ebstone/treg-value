@@ -68,16 +68,11 @@ Induction accrues cost and QALYs as explicit cycles in every arm. It is not a fr
 | **L6** | **Maintenance duration: report 2-year cap and no-cap as a bounding pair** on every primary output | 2026-08-11 | Stone | No persistence data exists in any sourced material. The conclusion must hold across both bounds, or the failure is stated |
 | **L7** | **Single Treg dose per course.** Dose count affects the manufacturing benchmark only, never the frontier, which solves for price per course | 2026-08-11 | Stone | Any efficacy effect of a second dose is already absorbed by sweeping π |
 | **L8** | **Manufacturing cost is a benchmark, never a model input.** No pricing function may read it | 2026-08-11 | — | The primary result must not depend on it. Enforced by a grep test |
+| **L9** | **Pre-landmark trajectory: Treg patients follow conventional-therapy dynamics in weeks 0–12**, since no advanced therapy has been administered. They are not given infliximab's trajectory, and they are not charged for infliximab | 2026-08-11 | Stone | Granting the comparator's efficacy without its cost is the unearned intercept L3 exists to remove. This closes it on the efficacy side as L3 closes it on the cost side |
 
-### L9 — Pre-landmark trajectory (**requires sign-off before W4**)
+**Consequence of L9, recorded so it is not a surprise in a results table.** `A` is the discounted value of deferring one infliximab induction course by 12 weeks, *less* the health penalty of spending those 12 weeks on conventional therapy rather than infliximab. **`A` may be small and negative.** That is correct behaviour: a therapy that cures nobody has cost the patient a quarter-year of effective treatment. The frontier may therefore start below zero, and this is a stronger position than an intercept sitting at a few thousand dollars of unexplained savings. `T1` asserts `P*(0)` equals this quantity and nothing else, whatever its sign.
 
-Weeks 0–12 in the Treg arm: what disease dynamics apply before the split?
-
-- (a) Treg follows infliximab's trajectory — grants biologic efficacy without charging for a biologic. This is the unearned intercept in a new place.
-- (b) **Treg follows conventional-therapy dynamics**, since no advanced therapy has been administered. **Recommended.**
-- (c) Treg has its own assumed pre-landmark effect — unsourceable.
-
-**Consequence of (b), stated plainly:** `A` becomes the discounted value of deferring one infliximab induction course by 12 weeks, *less* the health penalty of 12 weeks on conventional therapy rather than infliximab. **`A` may be small and negative.** That is correct behaviour — a therapy that cures nobody has cost the patient a quarter-year of effective treatment — and it is a stronger position than an intercept sitting at a few thousand dollars of unexplained savings. Co-authors should sign off knowing the frontier may start below zero.
+The decision set is closed. No item in `SPEC.md` awaits a co-author.
 
 ---
 
