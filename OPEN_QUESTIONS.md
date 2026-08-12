@@ -3,14 +3,17 @@
 Every item here is a required argument in code with no default (guard 7).
 A function that needs one of these refuses to run rather than assume a value.
 
-| # | Question | Owner | Blocks | Opened |
-|---|---|---|---|---|
-| O1 | US eligible-population fractions for moderate-to-severe CD by treatment line | Unsourced | A4 population figure; break-even reported meanwhile | 2026-08-11 |
-| O2 | Confirmatory trial cost benchmark for a cell-therapy programme | Unsourced | A4 comparison | 2026-08-11 |
-| O3 | Preconditioning dose | Dula | S6 only | 2026-08-11 |
-| O4 | Whether a Treg infusion qualifies for observation billing, and wage-index adjustment | Dula | S6 only | 2026-08-11 |
-| O5 | Real-world biologic persistence (time to discontinuation) | Unsourced | Would replace L6's bounding pair | 2026-08-11 |
-| O6 | Whether durable remission is exempt from productivity costs | Co-authors | Societal scenario, out of base case | 2026-08-11 |
+| # | Question | Arg name | Owner | Blocks | Opened |
+|---|---|---|---|---|---|
+| O1 | US eligible-population fractions for moderate-to-severe CD by treatment line | `eligible_population_fractions` | Unsourced | A4 population figure; break-even reported meanwhile | 2026-08-11 |
+| O2 | Confirmatory trial cost benchmark for a cell-therapy programme | `confirmatory_trial_cost_usd` | Unsourced | A4 comparison | 2026-08-11 |
+| O3 | Preconditioning dose | `preconditioning_dose` | Dula | S6 only | 2026-08-11 |
+| O4 | Whether a Treg infusion qualifies for observation billing, and wage-index adjustment | `observation_billing_eligible` | Dula | S6 only | 2026-08-11 |
+| O5 | Real-world biologic persistence (time to discontinuation) | `biologic_persistence` | Unsourced | Would replace L6's bounding pair | 2026-08-11 |
+| O6 | Whether durable remission is exempt from productivity costs | `productivity_cost_exempt` | Co-authors | Societal scenario, out of base case | 2026-08-11 |
+
+`Arg name` is the canonical R argument name guard G7 checks: no function in
+`R/` may supply a default for a parameter with one of these names.
 
 ## Closed
 
