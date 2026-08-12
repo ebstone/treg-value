@@ -15,3 +15,5 @@ One line per session: what changed, and which tests now cover it.
 - Surgery-state costing corrected: derives from Aliyev's Severe-Fulminant PMPM
   via the standard conversion, not an HCUP colectomy episode. O9 closed as C7.
   Amendment recorded.
+- docs/W2_session_prompt.md added (transcription session + health-state cost
+  derive script and its re-derivation test).
