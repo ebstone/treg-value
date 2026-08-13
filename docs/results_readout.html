@@ -1,165 +1,103 @@
-<title>TREG-VALUE — Price Frontier Readout</title>
+<title>TREG-VALUE — Results</title>
 <style>
   :root {
-    --ground: #F6F7F9;
-    --surface: #FFFFFF;
-    --ink: #14181F;
-    --ink-2: #3D4655;
-    --muted: #5A6472;
-    --rule: #DDE1E7;
-    --rule-strong: #C3CAD4;
-    --accent: #0D5F6D;
-    --accent-soft: #E4EFF1;
-    --caution: #8A5216;
-    --caution-soft: #F6EEE2;
-    --s1: #2E96A8;
-    --s2: #0D5F6D;
-    --s3: #03272E;
+    --ground: #F6F7F9; --surface: #FFFFFF;
+    --ink: #14181F; --ink-2: #3D4655; --muted: #5A6472;
+    --rule: #DDE1E7; --rule-strong: #C3CAD4;
+    --accent: #0D5F6D; --caution: #8A5216;
+    --s1: #2E96A8; --s2: #0D5F6D; --s3: #03272E;
     --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
     --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ground: #101318;
-      --surface: #171B22;
-      --ink: #E9EDF3;
-      --ink-2: #C2CAD6;
-      --muted: #949EAC;
-      --rule: #262C36;
-      --rule-strong: #39424F;
-      --accent: #57BACD;
-      --accent-soft: #16303A;
-      --caution: #D9A063;
-      --caution-soft: #2C2318;
-      --s1: #2A7C8D;
-      --s2: #57BACD;
-      --s3: #B4ECF7;
+      --ground: #101318; --surface: #171B22;
+      --ink: #E9EDF3; --ink-2: #C2CAD6; --muted: #949EAC;
+      --rule: #262C36; --rule-strong: #39424F;
+      --accent: #57BACD; --caution: #D9A063;
+      --s1: #2A7C8D; --s2: #57BACD; --s3: #B4ECF7;
     }
   }
   :root[data-theme="dark"] {
-    --ground: #101318;
-    --surface: #171B22;
-    --ink: #E9EDF3;
-    --ink-2: #C2CAD6;
-    --muted: #949EAC;
-    --rule: #262C36;
-    --rule-strong: #39424F;
-    --accent: #57BACD;
-    --accent-soft: #16303A;
-    --caution: #D9A063;
-    --caution-soft: #2C2318;
-    --s1: #2A7C8D;
-    --s2: #57BACD;
-    --s3: #B4ECF7;
+    --ground: #101318; --surface: #171B22;
+    --ink: #E9EDF3; --ink-2: #C2CAD6; --muted: #949EAC;
+    --rule: #262C36; --rule-strong: #39424F;
+    --accent: #57BACD; --caution: #D9A063;
+    --s1: #2A7C8D; --s2: #57BACD; --s3: #B4ECF7;
   }
 
   * { box-sizing: border-box; }
   body {
-    background: var(--ground);
-    color: var(--ink);
-    font-family: var(--serif);
-    font-size: 17px;
-    line-height: 1.62;
-    margin: 0;
-    padding: 0 1.5rem 6rem;
-    -webkit-font-smoothing: antialiased;
+    background: var(--ground); color: var(--ink);
+    font-family: var(--serif); font-size: 16.5px; line-height: 1.55;
+    margin: 0; padding: 0 1.5rem 5rem; -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 53rem; margin: 0 auto; }
-  .measure { max-width: 36rem; }
+  .wrap { max-width: 52rem; margin: 0 auto; }
+  .measure { max-width: 38rem; }
 
-  .eyebrow {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  header.masthead {
+  header {
     border-bottom: 2px solid var(--ink);
-    padding: 4rem 0 1.5rem;
-    margin-bottom: 2.5rem;
+    padding: 3rem 0 1.2rem; margin-bottom: 2rem;
+  }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.67rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted);
   }
   h1 {
-    font-size: clamp(2rem, 5vw, 2.9rem);
-    line-height: 1.1;
-    font-weight: 600;
-    letter-spacing: -0.015em;
-    text-wrap: balance;
-    margin: 0.9rem 0 0.7rem;
-  }
-  .standfirst {
-    font-size: 1.12rem;
-    color: var(--ink-2);
-    max-width: 34rem;
-    margin: 0 0 1.6rem;
-    text-wrap: pretty;
+    font-size: clamp(1.7rem, 4vw, 2.3rem); line-height: 1.15; font-weight: 600;
+    letter-spacing: -0.015em; text-wrap: balance; margin: 0.7rem 0 0.6rem;
   }
   .byline {
-    display: flex; flex-wrap: wrap; gap: 0.6rem 1.6rem;
-    font-family: var(--mono); font-size: 0.72rem;
-    color: var(--muted); letter-spacing: 0.03em;
+    display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem;
+    font-family: var(--mono); font-size: 0.71rem; color: var(--muted);
   }
 
   h2 {
-    font-size: 1.45rem; font-weight: 600; letter-spacing: -0.01em;
-    margin: 0; text-wrap: balance;
+    font-size: 1.1rem; font-weight: 600; letter-spacing: -0.005em; margin: 0;
+    border-top: 1px solid var(--rule-strong); padding-top: 0.8rem;
   }
-  h3 {
-    font-size: 1.02rem; font-weight: 600; margin: 0 0 0.5rem;
-  }
-  p { margin: 0 0 1rem; text-wrap: pretty; }
-
-  section { margin-top: 3.4rem; }
-  .sec-head {
-    display: flex; align-items: baseline; gap: 1rem;
-    border-top: 1px solid var(--rule-strong);
-    padding-top: 0.9rem; margin-bottom: 1.3rem;
-  }
-  .glyph {
-    font-family: var(--mono); font-size: 1.5rem; font-weight: 600;
-    color: var(--accent); line-height: 1; min-width: 2.6rem;
-  }
+  section { margin-top: 2.6rem; }
+  p { margin: 0.5rem 0 0.9rem; text-wrap: pretty; }
+  .note { font-size: 0.88rem; color: var(--ink-2); max-width: 38rem; }
 
   .equation {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-left: 3px solid var(--accent);
-    padding: 1.5rem 1.75rem;
-    margin: 0 0 1.4rem;
+    background: var(--surface); border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent); padding: 1.1rem 1.3rem; margin: 1rem 0 1.2rem;
   }
-  .equation .expr {
-    font-family: var(--mono); font-size: clamp(1.05rem, 3vw, 1.35rem);
-    color: var(--ink); letter-spacing: -0.01em;
-  }
+  .equation .expr { font-family: var(--mono); font-size: 1.1rem; }
   .equation dl {
-    display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem;
-    margin: 1.1rem 0 0; font-size: 0.88rem;
+    display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 1rem;
+    margin: 0.9rem 0 0; font-size: 0.85rem;
   }
   .equation dt { font-family: var(--mono); color: var(--accent); font-weight: 600; }
   .equation dd { margin: 0; color: var(--ink-2); }
 
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 1.5rem 0 0; }
-  .tile { background: var(--surface); padding: 1.15rem 1.25rem; }
-  .tile .k { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.5rem; }
-  .tile .v { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; display: block; }
-  .tile .n { font-size: 0.83rem; color: var(--muted); display: block; margin-top: 0.35rem; line-height: 1.45; }
-  .neg { color: var(--caution); }
-
-  .scroller { overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--rule); background: var(--surface); }
-  table { border-collapse: collapse; width: 100%; font-size: 0.86rem; }
-  caption { text-align: left; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); padding: 0.9rem 1rem 0.6rem; }
-  th, td { padding: 0.5rem 1rem; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
-  thead th { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--rule-strong); vertical-align: bottom; }
-  th[scope="row"], td.lab { text-align: left; font-family: var(--mono); font-size: 0.78rem; color: var(--ink-2); font-weight: 500; }
+  .scroller { overflow-x: auto; margin: 0.9rem 0 0.5rem; border: 1px solid var(--rule); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  caption {
+    text-align: left; font-family: var(--mono); font-size: 0.66rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+    padding: 0.8rem 1rem 0.55rem;
+  }
+  th, td { padding: 0.45rem 1rem; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  thead th {
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--muted); font-weight: 500;
+    border-bottom: 1px solid var(--rule-strong); vertical-align: bottom;
+  }
+  th[scope="row"], td.lab {
+    text-align: left; font-family: var(--mono); font-size: 0.76rem;
+    color: var(--ink-2); font-weight: 500; white-space: normal;
+  }
   td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
   tbody tr:last-child td, tbody tr:last-child th { border-bottom: none; }
-  tbody tr.rule-above td, tbody tr.rule-above th { border-top: 1px solid var(--rule-strong); }
-  .swatch { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; margin-right: 0.45rem; vertical-align: baseline; }
+  tr.rule-above td, tr.rule-above th { border-top: 1px solid var(--rule-strong); }
+  .neg { color: var(--caution); }
+  .swatch { display: inline-block; width: 0.65rem; height: 0.65rem; border-radius: 2px; margin-right: 0.4rem; }
 
-  figure { margin: 1.4rem 0; }
-  figcaption { font-size: 0.83rem; color: var(--muted); margin-top: 0.6rem; max-width: 34rem; }
-  .chart-shell { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); padding: 1.1rem 0.6rem 0.4rem; }
+  figure { margin: 1rem 0 0.5rem; }
+  figcaption { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; max-width: 38rem; }
+  .chart-shell { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); padding: 1rem 0.5rem 0.3rem; }
   svg { display: block; min-width: 34rem; }
   .grid-line { stroke: var(--rule); stroke-width: 1; }
   .zero-line { stroke: var(--rule-strong); stroke-width: 1; stroke-dasharray: 3 3; }
@@ -167,109 +105,91 @@
   .series-label { font-family: var(--mono); font-size: 10.5px; font-weight: 600; }
   .mark { stroke: var(--surface); stroke-width: 2; }
 
-  .callout {
-    background: var(--caution-soft);
-    border: 1px solid var(--rule);
-    border-left: 3px solid var(--caution);
-    padding: 1.1rem 1.3rem; margin: 1.3rem 0;
+  ul.plain { padding-left: 1.1rem; margin: 0.6rem 0; font-size: 0.9rem; }
+  ul.plain li { margin-bottom: 0.4rem; }
+
+  footer {
+    margin-top: 3.5rem; border-top: 2px solid var(--ink); padding-top: 1rem;
+    font-family: var(--mono); font-size: 0.69rem; color: var(--muted);
   }
-  .callout p:last-child { margin-bottom: 0; }
-  .callout .eyebrow { color: var(--caution); }
-
-  ul.notes { padding-left: 0; list-style: none; margin: 1rem 0 0; }
-  ul.notes li { display: grid; grid-template-columns: auto 1fr; gap: 0.9rem; padding: 0.7rem 0; border-top: 1px solid var(--rule); font-size: 0.92rem; }
-  ul.notes .tag { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-top: 0.28rem; min-width: 5.4rem; }
-
-  footer { margin-top: 4rem; border-top: 2px solid var(--ink); padding-top: 1.1rem; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.03em; }
-  a { color: var(--accent); }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 
 <div class="wrap">
 
-<header class="masthead">
-  <span class="eyebrow">Early Health Technology Assessment · Results Readout</span>
-  <h1>What one durable Treg cure is worth in Crohn's disease</h1>
-  <p class="standfirst">The maximum justifiable price of a single allogeneic regulatory T-cell course, as a function of the cure fraction it achieves, the durability of that cure, and willingness to pay.</p>
+<header>
+  <span class="eyebrow">Early Health Technology Assessment · Results</span>
+  <h1>Justifiable price of an allogeneic Treg course in Crohn's disease</h1>
   <div class="byline">
     <span>Jadambaa · Stone · Abraham</span>
     <span>Johns Hopkins Bloomberg School of Public Health</span>
     <span>13 August 2026</span>
+    <span>All figures 2025 USD</span>
   </div>
 </header>
 
-<p class="measure">This study reports no incremental cost-effectiveness ratio. No efficacy data exist for this product in this indication, so rather than assume a cure fraction and price the consequence, the model inverts the question: it solves for the price each possible cure fraction would justify, and reports the whole curve.</p>
+<p class="measure">No efficacy data exist for this product in this indication, so the model does not assume a cure fraction and price the consequence. It solves for the price each possible cure fraction would justify. No ICER is reported.</p>
 
 <div class="equation">
   <div class="expr">P*(π, h, λ) &nbsp;=&nbsp; A(λ) &nbsp;+&nbsp; π · B(h, λ)</div>
   <dl>
-    <dt>P*</dt><dd>Maximum justifiable price of one course, US dollars</dd>
-    <dt>π</dt><dd>Cure fraction — the share of <strong>all treated patients</strong> in sustained drug-free remission at the 12-week landmark</dd>
-    <dt>h</dt><dd>Post-cure relapse hazard, continuous and ongoing, per year</dd>
-    <dt>λ</dt><dd>Willingness to pay, dollars per QALY</dd>
-    <dt>A</dt><dd>Net value accruing when the therapy cures nobody</dd>
-    <dt>B</dt><dd><strong>The headline quantity</strong> — what one durable cure is worth</dd>
+    <dt>P*</dt><dd>Maximum justifiable price of one course</dd>
+    <dt>π</dt><dd>Cure fraction — share of <strong>all treated patients</strong> in sustained drug-free remission at the 12-week landmark</dd>
+    <dt>h</dt><dd>Post-cure relapse hazard, per year, ongoing</dd>
+    <dt>λ</dt><dd>Willingness to pay, per QALY</dd>
+    <dt>A</dt><dd>Value when the therapy cures nobody</dd>
+    <dt>B</dt><dd>Value of one durable cure</dd>
   </dl>
 </div>
 
-<p class="measure">Every result below is a consequence of that one affine relationship. The frontier is linear in π to within $2×10⁻⁸ across a 101-point grid, which is a property the model was tested for rather than an identity it was built from.</p>
-
-<div class="tiles">
-  <div class="tile">
-    <span class="k">Intercept A</span>
-    <span class="v neg">&minus;$2,655<span style="font-size:.8rem;font-weight:400"> to &minus;$3,594</span></span>
-    <span class="n">Negative, and correct. A therapy that cures nobody has cost the patient a quarter-year.</span>
-  </div>
-  <div class="tile">
-    <span class="k">One cure B · h 5%</span>
-    <span class="v">$172k<span style="font-size:.8rem;font-weight:400"> to $226k</span></span>
-    <span class="n">Discounted lifetime net monetary benefit of a cured patient over standard care.</span>
-  </div>
-  <div class="tile">
-    <span class="k">Cure fraction needed</span>
-    <span class="v">18.7&ndash;24.0%</span>
-    <span class="n">Of all treated patients, at median allogeneic manufacturing cost and a 5% hazard.</span>
-  </div>
-</div>
-
-<p class="measure" style="font-size:.92rem;margin-top:1.2rem">Figures above span $100,000 to $150,000 per QALY, the range US value assessment conventionally treats as the benchmark for a value-based price. Results at $50,000 are reported throughout as a conservative floor.</p>
-
 <section>
-  <div class="sec-head"><span class="glyph">A</span><h2>The intercept is negative</h2></div>
-  <p class="measure">At a cure fraction of zero the Treg patient has spent the 12-week rescue window on conventional therapy, then started the comparator's induction course anyway. The deferral of that course is worth something; the quarter-year without effective treatment costs more. The intercept is the net of the two, and it is below zero at every willingness-to-pay threshold.</p>
-
-  <div class="callout">
-    <span class="eyebrow">Read this before the frontier</span>
-    <p style="margin-top:.5rem">A negative intercept is the honest result, not a defect. It becomes <em>more</em> negative as λ rises, because the penalty is measured in health and health is worth more at a higher threshold. An intercept sitting at a few thousand dollars of unexplained savings would be the failure mode — it would mean the arm was being credited with the comparator's benefit without being charged its cost.</p>
-  </div>
-
+  <h2>Model parameters</h2>
   <div class="scroller">
     <table>
-      <caption>A — intercept, by willingness to pay</caption>
-      <thead><tr><th scope="col" style="text-align:left">Willingness to pay</th><th scope="col">A (central case)</th><th scope="col">Across bounding pairs</th></tr></thead>
+      <caption>Analytic frame</caption>
       <tbody>
-        <tr><th scope="row">λ = $50,000</th><td class="num neg">−$1,717.23</td><td class="num">−$1,731.73 to −$1,717.23</td></tr>
-        <tr><th scope="row">λ = $100,000</th><td class="num neg">−$2,655.38</td><td class="num">−$2,687.83 to −$2,655.38</td></tr>
-        <tr><th scope="row">λ = $150,000</th><td class="num neg">−$3,593.52</td><td class="num">−$3,643.92 to −$3,593.52</td></tr>
+        <tr><th scope="row">Perspective</th><td class="lab">US healthcare sector</td></tr>
+        <tr><th scope="row">Currency</th><td class="lab">2025 USD; costs re-based via medical-care CPI</td></tr>
+        <tr><th scope="row">Comparator</th><td class="lab">Infliximab biosimilar, Renflexis (Q5104), $2.6615/mg</td></tr>
+        <tr><th scope="row">Populations</th><td class="lab">Biologic-naive base case; treatment-refractory co-primary</td></tr>
+        <tr><th scope="row">Cohort</th><td class="lab">Starting age 35 (SONIC trial median)</td></tr>
+        <tr><th scope="row">Structure</th><td class="lab">Induction decision tree into a 6-state Markov model; 2-week cycles; half-cycle correction</td></tr>
+        <tr><th scope="row">Health states</th><td class="lab">Remission · Mild · Moderate-Severe Responder · Moderate-Severe · Surgery · Death, plus drug-free remission in the Treg arm</td></tr>
+        <tr><th scope="row">Horizon</th><td class="lab">Lifetime (to age 100); 30 and 40 years secondary</td></tr>
+        <tr><th scope="row">Discount rate</th><td class="lab">3% annual, costs and QALYs</td></tr>
+        <tr><th scope="row">Landmark</th><td class="lab">12 weeks — cure declared, two-fate split</td></tr>
+        <tr><th scope="row">Bounding pairs</th><td class="lab">4- and 8-week induction windows; 2-year maintenance cap on and off</td></tr>
+        <tr><th scope="row">Reporting</th><td class="lab">CHEERS 2022</td></tr>
       </tbody>
     </table>
   </div>
-  <p style="font-size:.86rem;color:var(--muted);max-width:34rem">A is computed twice by code paths that share nothing — once by running the full Treg arm at π = 0, once by pricing the 12-week window directly and deferring one comparator course. The two routes agree to within $1×10⁻⁹.</p>
+  <p class="note">All results below are the central case: 8-week induction window, cap on, biologic-naive. Bounding pairs vary every figure by under 1.6%.</p>
 </section>
 
 <section>
-  <div class="sec-head"><span class="glyph">B</span><h2>What one durable cure is worth</h2></div>
-  <p class="measure">B is the discounted lifetime net monetary benefit of a cured patient less a patient on standard first-line biologic therapy. It is the slope of the frontier and the quantity the paper is about. Durability dominates it: a cure that leaks away at 10% a year is worth less than a third of a permanent one.</p>
-
+  <h2>A — value when the therapy cures nobody</h2>
+  <p class="note">A is negative at every threshold. Under the model's locked assumptions a Treg patient spends the 12-week window on conventional therapy and then receives the comparator's induction course anyway, so a therapy curing nobody has deferred effective treatment by a quarter-year. A is independent of the relapse hazard, since nobody is cured.</p>
   <div class="scroller">
     <table>
-      <caption>B — value of one cure, central case (8-week induction window, 2-year cap)</caption>
-      <thead>
-        <tr><th scope="col" style="text-align:left">Relapse hazard</th><th scope="col">λ = $50,000</th><th scope="col">λ = $100,000</th><th scope="col">λ = $150,000</th></tr>
-      </thead>
+      <caption>A — intercept, by willingness to pay</caption>
+      <thead><tr><th scope="col" style="text-align:left">λ per QALY</th><th scope="col">$50,000</th><th scope="col">$100,000</th><th scope="col">$150,000</th></tr></thead>
       <tbody>
-        <tr><th scope="row">h = 0% · permanent</th><td class="num">$240,875</td><td class="num">$351,420</td><td class="num">$461,965</td></tr>
+        <tr><th scope="row">A</th><td class="num neg">−$1,717</td><td class="num neg">−$2,655</td><td class="num neg">−$3,594</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>B — value of one durable cure</h2>
+  <p class="note">Discounted lifetime net monetary benefit of a cured patient less a patient on standard first-line biologic therapy.</p>
+  <div class="scroller">
+    <table>
+      <caption>B by relapse hazard and willingness to pay</caption>
+      <thead><tr><th scope="col" style="text-align:left">Relapse hazard</th><th scope="col">λ $50,000</th><th scope="col">λ $100,000</th><th scope="col">λ $150,000</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">h = 0% (permanent)</th><td class="num">$240,875</td><td class="num">$351,420</td><td class="num">$461,965</td></tr>
         <tr><th scope="row">h = 5% per year</th><td class="num">$117,847</td><td class="num">$172,042</td><td class="num">$226,237</td></tr>
         <tr><th scope="row">h = 10% per year</th><td class="num">$74,957</td><td class="num">$109,380</td><td class="num">$143,802</td></tr>
       </tbody>
@@ -278,24 +198,22 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="glyph">P*</span><h2>The price frontier</h2></div>
-  <p class="measure">Each line is the justifiable price across the full range of cure fractions at one willingness-to-pay threshold, holding the relapse hazard at 5% per year. All three begin below zero and rise linearly.</p>
+  <h2>P* — the price frontier</h2>
+  <p class="note">Justifiable price per course across the cure fraction, at h = 5% per year. Linear in π to within $2×10⁻⁸ across a 101-point grid.</p>
 
   <figure>
     <div class="chart-shell">
-      <svg viewBox="0 0 660 372" role="img" aria-label="Line chart: maximum justifiable price per course rises linearly with cure fraction, shown at three willingness-to-pay thresholds. All three lines begin slightly below zero at a cure fraction of zero.">
+      <svg viewBox="0 0 660 372" role="img" aria-label="Line chart: justifiable price per course rises linearly with cure fraction at three willingness-to-pay thresholds, each starting slightly below zero.">
         <line class="grid-line" x1="60" y1="67.5" x2="560" y2="67.5"></line>
         <line class="grid-line" x1="60" y1="130" x2="560" y2="130"></line>
         <line class="grid-line" x1="60" y1="192.5" x2="560" y2="192.5"></line>
         <line class="grid-line" x1="60" y1="255" x2="560" y2="255"></line>
         <line class="zero-line" x1="60" y1="317.5" x2="560" y2="317.5"></line>
-
         <text class="axis-text" x="52" y="71.0" text-anchor="end">$200k</text>
         <text class="axis-text" x="52" y="133.5" text-anchor="end">$150k</text>
         <text class="axis-text" x="52" y="196.0" text-anchor="end">$100k</text>
         <text class="axis-text" x="52" y="258.5" text-anchor="end">$50k</text>
         <text class="axis-text" x="52" y="321.0" text-anchor="end">0</text>
-
         <line class="grid-line" x1="60" y1="330" x2="560" y2="330"></line>
         <text class="axis-text" x="60" y="348" text-anchor="middle">0</text>
         <text class="axis-text" x="185" y="348" text-anchor="middle">0.25</text>
@@ -329,23 +247,22 @@
           <circle cx="435" cy="109.9" r="4"><title>π 0.75 · λ $150k · $166,084</title></circle>
           <circle cx="560" cy="39.2" r="4"><title>π 1.00 · λ $150k · $222,643</title></circle>
         </g>
-
         <text class="series-label" fill="var(--s3)" x="572" y="42.4">λ $150k</text>
         <text class="series-label" fill="var(--s2)" x="572" y="109">λ $100k</text>
         <text class="series-label" fill="var(--s1)" x="572" y="175.5">λ $50k</text>
       </svg>
     </div>
-    <figcaption>Maximum justifiable price per course, h = 5% per year, central case. Lines are direct-labelled; exact values are tabulated below.</figcaption>
+    <figcaption>P*(π) at h = 5% per year. Exact values below.</figcaption>
   </figure>
 
   <div class="scroller">
     <table>
-      <caption>P* — justifiable price per course, h = 5% per year</caption>
+      <caption>P* per course, h = 5% per year</caption>
       <thead>
-        <tr><th scope="col" style="text-align:left">Cure fraction π</th>
-          <th scope="col"><span class="swatch" style="background:var(--s1)"></span>λ = $50,000</th>
-          <th scope="col"><span class="swatch" style="background:var(--s2)"></span>λ = $100,000</th>
-          <th scope="col"><span class="swatch" style="background:var(--s3)"></span>λ = $150,000</th></tr>
+        <tr><th scope="col" style="text-align:left">π</th>
+          <th scope="col"><span class="swatch" style="background:var(--s1)"></span>λ $50,000</th>
+          <th scope="col"><span class="swatch" style="background:var(--s2)"></span>λ $100,000</th>
+          <th scope="col"><span class="swatch" style="background:var(--s3)"></span>λ $150,000</th></tr>
       </thead>
       <tbody>
         <tr><th scope="row">0.00</th><td class="num neg">−$1,717</td><td class="num neg">−$2,655</td><td class="num neg">−$3,594</td></tr>
@@ -359,13 +276,12 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="glyph">→</span><h2>What manufacturing would have to cost</h2></div>
-  <p class="measure">The frontier says what a course is worth. Whether that is buildable is a separate question, answered by a benchmark triangulated from published cell-therapy manufacturing costs and from the cost of goods reported for approved products. The benchmark is held against the frontier; by design it never enters it.</p>
-
+  <h2>Manufacturing cost benchmark</h2>
+  <p class="note">Triangulated from published cell-therapy manufacturing case studies and reported cost of goods for approved products. Compared against the frontier; never an input to it.</p>
   <div class="scroller">
     <table>
-      <caption>Manufacturing cost benchmark, 2025 USD per course</caption>
-      <thead><tr><th scope="col" style="text-align:left">Anchor</th><th scope="col" style="text-align:left">Basis</th><th scope="col">Cost per course</th></tr></thead>
+      <caption>Benchmark anchors, per course</caption>
+      <thead><tr><th scope="col" style="text-align:left">Anchor</th><th scope="col" style="text-align:left">Basis</th><th scope="col">Cost</th></tr></thead>
       <tbody>
         <tr><th scope="row">Allogeneic, batch-amortised</th><td class="lab">One batch serving 22 treatments</td><td class="num">$12,266</td></tr>
         <tr><th scope="row">Allogeneic, median</th><td class="lab">Published allogeneic case studies</td><td class="num">$38,634</td></tr>
@@ -374,164 +290,125 @@
       </tbody>
     </table>
   </div>
-
-  <p class="measure">Against those, the cure fraction the therapy would have to achieve — as a share of <strong>all treated patients</strong>, the only denominator that will be comparable to a future trial readout.</p>
-
-  <div class="scroller">
-    <table>
-      <caption>Required cure fraction at each benchmark · λ $100,000 / $150,000 per QALY</caption>
-      <thead>
-        <tr><th scope="col" style="text-align:left">Manufacturing cost</th><th scope="col">h = 0%</th><th scope="col">h = 5%</th><th scope="col">h = 10%</th></tr>
-      </thead>
-      <tbody>
-        <tr><th scope="row">$12,266 · batch-amortised</th><td class="num">4.2 / 3.4%</td><td class="num">8.7 / 7.0%</td><td class="num">13.6 / 11.0%</td></tr>
-        <tr><th scope="row">$38,634 · allogeneic median</th><td class="num">11.7 / 9.1%</td><td class="num">24.0 / 18.7%</td><td class="num">37.7 / 29.4%</td></tr>
-        <tr><th scope="row">$68,958 · one batch per treatment</th><td class="num">20.4 / 15.7%</td><td class="num">41.6 / 32.1%</td><td class="num">65.5 / 50.5%</td></tr>
-        <tr class="rule-above"><th scope="row">$380,336 · autologous CAR-T</th><td class="num">109.0 / <span style="color:var(--ink)">83.1</span>%</td><td class="num neg">222.6 / 169.7%</td><td class="num neg">350.1 / 267.0%</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="callout">
-    <span class="eyebrow">The manufacturing model decides this, not the biology</span>
-    <p style="margin-top:.5rem">A cure fraction above 100% is not a demanding target; it is an impossible one. Made at the cost of goods reported for autologous CAR-T — one manufacturing run per patient — curing <em>every patient treated</em> would still not justify the price at $100,000 per QALY, at any durability. The single exception across this whole grid is a permanent cure valued at $150,000 per QALY, which needs 83% — attainable in arithmetic, not in any therapy yet approved.</p>
-    <p>If instead one batch serves many patients, the same therapy needs 3% to 14% cured. Nothing about the biology differs between those two rows. What differs is whether a batch is amortised.</p>
-  </div>
-
-  <p class="measure" style="font-size:.92rem">At $50,000 per QALY the requirements roughly double and at $150,000 they fall by about a quarter; the allogeneic anchors stay achievable across that whole span, and the autologous anchor stays impossible across all of it.</p>
 </section>
 
 <section>
-  <div class="sec-head"><span class="glyph">±</span><h2>Parameter uncertainty</h2></div>
-  <p class="measure">One thousand probabilistic draws over health-state costs, utilities, the comparator's price and the transition matrix. Every distribution is the source model's own: costs from its fitted gamma parameters, the remission utility from its stated uniform range, transition rows drawn whole so each remains a valid set of probabilities. Nothing is assigned a distribution that was not published.</p>
-
-  <div class="callout">
-    <span class="eyebrow">What is deliberately not sampled</span>
-    <p style="margin-top:.5rem">The cure fraction, the relapse hazard and willingness to pay carry no distribution. They are swept, and the specification places no prior on any of them, so the intervals below are uncertainty in <em>A</em> and <em>B</em> at a stated cure fraction and hazard — not uncertainty about whether the therapy works. Putting a prior on the cure fraction would be a substantive assumption about an unstudied product, and it would change what every number here means.</p>
-  </div>
-
+  <h2>Required cure fraction</h2>
+  <p class="note">Cure fraction needed to justify each manufacturing cost, as a share of all treated patients. Values above 100% mean no cure fraction justifies that cost. Cells show λ $100,000 / $150,000.</p>
   <div class="scroller">
     <table>
-      <caption>A and B, 1,000 draws, central case · mean [95% credible interval]</caption>
-      <thead>
-        <tr><th scope="col" style="text-align:left">Quantity</th><th scope="col">λ = $50,000</th><th scope="col">λ = $100,000</th><th scope="col">λ = $150,000</th></tr>
-      </thead>
+      <caption>Required cure fraction, all-treated denominator · λ $100k / $150k</caption>
+      <thead><tr><th scope="col" style="text-align:left">Manufacturing cost</th><th scope="col">h = 0%</th><th scope="col">h = 5%</th><th scope="col">h = 10%</th></tr></thead>
       <tbody>
-        <tr><th scope="row">A · intercept</th><td class="num neg">−$1,838<br><span style="color:var(--muted)">[−2,923, −1,035]</span></td><td class="num neg">−$2,899<br><span style="color:var(--muted)">[−4,666, −1,610]</span></td><td class="num neg">−$3,961<br><span style="color:var(--muted)">[−6,403, −2,213]</span></td></tr>
-        <tr class="rule-above"><th scope="row">B · h = 0%</th><td class="num">$237,026<br><span style="color:var(--muted)">[134,772, 340,857]</span></td><td class="num">$345,370<br><span style="color:var(--muted)">[181,071, 519,606]</span></td><td class="num">$453,713<br><span style="color:var(--muted)">[227,249, 697,964]</span></td></tr>
-        <tr><th scope="row">B · h = 5%</th><td class="num">$115,711<br><span style="color:var(--muted)">[65,082, 167,009]</span></td><td class="num">$168,607<br><span style="color:var(--muted)">[87,494, 254,776]</span></td><td class="num">$221,502<br><span style="color:var(--muted)">[109,350, 342,414]</span></td></tr>
-        <tr><th scope="row">B · h = 10%</th><td class="num">$73,461<br><span style="color:var(--muted)">[41,086, 106,262]</span></td><td class="num">$106,910<br><span style="color:var(--muted)">[55,115, 162,002]</span></td><td class="num">$140,360<br><span style="color:var(--muted)">[68,737, 217,548]</span></td></tr>
+        <tr><th scope="row">$12,266 batch-amortised</th><td class="num">4.2 / 3.4%</td><td class="num">8.7 / 7.0%</td><td class="num">13.6 / 11.0%</td></tr>
+        <tr><th scope="row">$38,634 allogeneic median</th><td class="num">11.7 / 9.1%</td><td class="num">24.0 / 18.7%</td><td class="num">37.7 / 29.4%</td></tr>
+        <tr><th scope="row">$68,958 one batch per treatment</th><td class="num">20.4 / 15.7%</td><td class="num">41.6 / 32.1%</td><td class="num">65.5 / 50.5%</td></tr>
+        <tr class="rule-above"><th scope="row">$380,336 autologous CAR-T</th><td class="num">109.0 / 83.1%</td><td class="num neg">222.6 / 169.7%</td><td class="num neg">350.1 / 267.0%</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="measure" style="font-size:.92rem">The intervals are wide — B at $100,000 per QALY and a 5% hazard spans roughly threefold — and that width is the honest state of the evidence. It comes almost entirely from the health-state costs and utilities inherited from the source model, before any uncertainty about the therapy itself is considered.</p>
-
-  <h3 style="margin-top:2rem">Value of resolving that uncertainty</h3>
-  <p class="measure">Per-patient expected value of perfect information, for an adopt-or-decline decision at a $20,000 course and a cure fraction of 0.25 — a round figure near the low end of the benchmark above, chosen before it was built and kept so the pattern stays readable. It is near zero wherever the decision is not close, and rises where the draws straddle the threshold.</p>
-  <div class="scroller">
-    <table>
-      <caption>Per-patient EVPI at $20,000 per course, π = 0.25</caption>
-      <thead>
-        <tr><th scope="col" style="text-align:left">Relapse hazard</th><th scope="col">λ = $50,000</th><th scope="col">λ = $100,000</th><th scope="col">λ = $150,000</th></tr>
-      </thead>
-      <tbody>
-        <tr><th scope="row">h = 0% · favoured in</th><td class="num">100% of draws</td><td class="num">100% of draws</td><td class="num">100% of draws</td></tr>
-        <tr><th scope="row">h = 0% · EVPI</th><td class="num">$0</td><td class="num">$0</td><td class="num">$0</td></tr>
-        <tr class="rule-above"><th scope="row">h = 5% · favoured in</th><td class="num">83%</td><td class="num">96%</td><td class="num">98%</td></tr>
-        <tr><th scope="row">h = 5% · EVPI</th><td class="num">$607</td><td class="num">$182</td><td class="num">$99</td></tr>
-        <tr class="rule-above"><th scope="row">h = 10% · favoured in</th><td class="num">24%</td><td class="num">70%</td><td class="num">85%</td></tr>
-        <tr><th scope="row">h = 10% · EVPI</th><td class="num">$588</td><td class="num">$1,517</td><td class="num">$772</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="measure" style="font-size:.92rem">Read the pattern rather than the levels: information is worth most where the decision is genuinely balanced — at a 10% hazard and $100,000 per QALY, where the therapy is favoured in 70% of draws — and worth nothing at all where every draw points the same way. Multiplying these figures by an eligible population would give the budget a confirmatory trial could justify; that step needs a population estimate the study does not yet have.</p>
+  <p class="note">At $50,000 per QALY the requirements are roughly a third higher than at $100,000: 8.7% / 24.0% / 41.6% at h = 5% becomes 18.4% / 34.2% / 60.0% for the three allogeneic anchors.</p>
 </section>
 
 <section>
-  <div class="sec-head"><span class="glyph">◇</span><h2>Robustness</h2></div>
-  <p class="measure">Every alternative specification the protocol calls for, each one deviation from the base case and otherwise identical. The figure shown is the cure fraction required at the median allogeneic manufacturing cost, at $100,000 per QALY and a 5% hazard, against a base case of 24.0%.</p>
+  <h2>Parameter uncertainty</h2>
+  <p class="note">1,000 draws over health-state costs, utilities, comparator price and transition rows, using the source model's own fitted distributions. π, h and λ are swept rather than sampled, so these are intervals at a stated cure fraction and hazard.</p>
+  <div class="scroller">
+    <table>
+      <caption>B — mean [95% credible interval]</caption>
+      <thead><tr><th scope="col" style="text-align:left">Relapse hazard</th><th scope="col">λ $50,000</th><th scope="col">λ $100,000</th><th scope="col">λ $150,000</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">h = 0%</th><td class="num">$237,026<br><span style="color:var(--muted)">[134,772–340,857]</span></td><td class="num">$345,370<br><span style="color:var(--muted)">[181,071–519,606]</span></td><td class="num">$453,713<br><span style="color:var(--muted)">[227,249–697,964]</span></td></tr>
+        <tr><th scope="row">h = 5%</th><td class="num">$115,711<br><span style="color:var(--muted)">[65,082–167,009]</span></td><td class="num">$168,607<br><span style="color:var(--muted)">[87,494–254,776]</span></td><td class="num">$221,502<br><span style="color:var(--muted)">[109,350–342,414]</span></td></tr>
+        <tr><th scope="row">h = 10%</th><td class="num">$73,461<br><span style="color:var(--muted)">[41,086–106,262]</span></td><td class="num">$106,910<br><span style="color:var(--muted)">[55,115–162,002]</span></td><td class="num">$140,360<br><span style="color:var(--muted)">[68,737–217,548]</span></td></tr>
+        <tr class="rule-above"><th scope="row">A</th><td class="num neg">−$1,838<br><span style="color:var(--muted)">[−2,923 to −1,035]</span></td><td class="num neg">−$2,899<br><span style="color:var(--muted)">[−4,666 to −1,610]</span></td><td class="num neg">−$3,961<br><span style="color:var(--muted)">[−6,403 to −2,213]</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Intervals span roughly ±50% of the mean, driven mainly by the health-state costs and utilities inherited from the source model.</p>
 
   <div class="scroller">
     <table>
-      <caption>Alternative specifications · required cure fraction, all-treated denominator</caption>
-      <thead><tr><th scope="col" style="text-align:left">Specification</th><th scope="col">B</th><th scope="col">Required</th></tr></thead>
+      <caption>Per-patient EVPI at a $20,000 course, π = 0.25</caption>
+      <thead><tr><th scope="col" style="text-align:left">λ / hazard</th><th scope="col">h = 0%</th><th scope="col">h = 5%</th><th scope="col">h = 10%</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">$50,000 — favoured in</th><td class="num">100%</td><td class="num">83%</td><td class="num">24%</td></tr>
+        <tr><th scope="row">$50,000 — EVPI</th><td class="num">$0</td><td class="num">$607</td><td class="num">$588</td></tr>
+        <tr class="rule-above"><th scope="row">$100,000 — favoured in</th><td class="num">100%</td><td class="num">96%</td><td class="num">70%</td></tr>
+        <tr><th scope="row">$100,000 — EVPI</th><td class="num">$0</td><td class="num">$182</td><td class="num">$1,517</td></tr>
+        <tr class="rule-above"><th scope="row">$150,000 — favoured in</th><td class="num">100%</td><td class="num">98%</td><td class="num">85%</td></tr>
+        <tr><th scope="row">$150,000 — EVPI</th><td class="num">$0</td><td class="num">$99</td><td class="num">$772</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">EVPI is zero where every draw points the same way and rises where the decision is close. Multiplying by an eligible population would give the budget a confirmatory trial could justify; that population figure is not yet sourced.</p>
+</section>
+
+<section>
+  <h2>Robustness</h2>
+  <p class="note">Each row is one deviation from the base case, otherwise identical. Required cure fraction is at the median allogeneic benchmark, λ $100,000, h = 5%; base case 24.0%.</p>
+  <div class="scroller">
+    <table>
+      <caption>Alternative specifications</caption>
+      <thead><tr><th scope="col" style="text-align:left">Specification</th><th scope="col">B</th><th scope="col">Required π</th></tr></thead>
       <tbody>
         <tr><th scope="row">Base case</th><td class="num">$172,042</td><td class="num">24.0%</td></tr>
         <tr><th scope="row">Originator rather than biosimilar</th><td class="num">$172,416</td><td class="num">23.9%</td></tr>
         <tr><th scope="row">Ustekinumab as comparator</th><td class="num">$180,400</td><td class="num">22.8%</td></tr>
         <tr><th scope="row">Adalimumab as comparator</th><td class="num">$180,038</td><td class="num">22.9%</td></tr>
-        <tr><th scope="row">Pre-pandemic life table</th><td class="num">$167,225</td><td class="num">24.7%</td></tr>
+        <tr><th scope="row">Pre-pandemic (2019) life table</th><td class="num">$167,225</td><td class="num">24.7%</td></tr>
         <tr class="rule-above"><th scope="row">Discount rate 0%</th><td class="num">$250,021</td><td class="num">16.3%</td></tr>
         <tr><th scope="row">Discount rate 5%</th><td class="num">$142,198</td><td class="num">29.1%</td></tr>
       </tbody>
     </table>
   </div>
-
-  <p class="measure">Only the discount rate moves the answer appreciably. Changing the comparator drug, its price, or the mortality table shifts the required cure fraction by roughly one percentage point — because the two-year cap on biologic therapy returns every arm to conventional care well inside a lifetime horizon, so drug choice and drug price act on a short window. The discount rate, by contrast, reweights the entire horizon, and a durable cure delivers most of its value decades out.</p>
-
-  <h3 style="margin-top:2rem">The refractory population</h3>
-  <p class="measure">The protocol treats refractory disease as a co-primary population, not a sensitivity analysis, and it is the population this therapy is actually being trialled in. Adjusting induction outcomes to the refractory setting — derived from two trials sharing a protocol and differing only in prior therapy — moves the value of a cure by under 1%.</p>
-  <div class="callout">
-    <span class="eyebrow">Read this as a statement about evidence, not biology</span>
-    <p style="margin-top:.5rem">The adjustment available from published trials covers induction only. No maintenance-phase adjustment can be derived, because every randomised maintenance trial in the refractory setting enrolled induction responders — conditioning the very outcome a population adjustment needs to be free of. An induction-only adjustment acts over four cycles of a sixty-five-year horizon and is then washed out by the two-year cap. The two populations therefore look alike <em>in this model</em> because the evidence cannot yet separate them, which is not the same as their being alike.</p>
-  </div>
+  <p class="note">Only the discount rate moves the result appreciably. Comparator drug, drug price and mortality table each shift the required cure fraction by about one percentage point, because the 2-year maintenance cap returns every arm to conventional therapy well inside a lifetime horizon.</p>
 </section>
 
 <section>
-  <div class="sec-head"><span class="glyph">≈</span><h2>Comparison against published analogs</h2></div>
-  <p class="measure">The required cure fractions above are landmark figures. π is assessed at 12 weeks. Published cell-therapy analogs report at their own timepoints, so comparing their figures against π directly would be the right number against the wrong reference point. The comparison is made instead on the decayed quantity π·exp(−h·t), evaluated at each analog's own readout.</p>
-
+  <h2>Refractory co-primary population</h2>
+  <p class="note">Induction outcomes adjusted to the anti-TNF-refractory setting, derived from two trials sharing a protocol and differing only in prior therapy (response multiplier 0.608, remission 0.520). λ $100,000, h = 5%.</p>
   <div class="scroller">
     <table>
-      <caption>Model-predicted drug-free remission at each analog's readout, at the cure fraction the median benchmark requires</caption>
-      <thead>
-        <tr><th scope="col" style="text-align:left">Analog</th><th scope="col">Readout</th><th scope="col">h = 0%</th><th scope="col">h = 5%</th><th scope="col">h = 10%</th></tr>
-      </thead>
+      <caption>Biologic-naive versus refractory</caption>
+      <thead><tr><th scope="col" style="text-align:left">Population</th><th scope="col">A</th><th scope="col">B</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Biologic-naive</th><td class="num neg">−$2,655</td><td class="num">$172,042</td></tr>
+        <tr><th scope="row">Refractory</th><td class="num neg">−$2,642</td><td class="num">$172,839</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">The two differ by under 1%. The adjustment available from published trials covers induction only — every randomised maintenance trial in the refractory setting enrolled induction responders, so no maintenance adjustment can be derived without conditioning on response. An induction-only adjustment acts over four cycles of a lifetime horizon. The populations are not distinguishable in this model on current evidence.</p>
+</section>
+
+<section>
+  <h2>Comparison against published analogs</h2>
+  <p class="note">π is assessed at 12 weeks; analogs report at their own timepoints. Comparison uses the decayed quantity π·exp(−h·t) at each analog's readout, never π itself. Illustrated at the cure fraction the median benchmark requires.</p>
+  <div class="scroller">
+    <table>
+      <caption>Predicted drug-free remission at each analog's readout</caption>
+      <thead><tr><th scope="col" style="text-align:left">Analog</th><th scope="col">Readout</th><th scope="col">h = 0%</th><th scope="col">h = 5%</th><th scope="col">h = 10%</th></tr></thead>
       <tbody>
         <tr><th scope="row">PolTREG PTG-007</th><td class="num">24 months</td><td class="num">0.117</td><td class="num">0.220</td><td class="num">0.316</td></tr>
-        <tr><th scope="row">Ovasave / CATS1</th><td class="num">week 8</td><td class="num" colspan="3" style="text-align:left;color:var(--muted);font-family:var(--serif);white-space:normal">Not comparable — reads out before the 12-week landmark, when no patient has yet been declared cured</td></tr>
+        <tr><th scope="row">Ovasave / CATS1</th><td class="num">week 8</td><td class="lab" colspan="3" style="color:var(--muted)">Not comparable — precedes the 12-week landmark</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="glyph">§</span><h2>Analytic frame</h2></div>
-  <div class="scroller">
-    <table>
-      <caption>Model parameters as they currently stand</caption>
-      <tbody>
-        <tr><th scope="row">Perspective</th><td class="lab">US healthcare sector · all costs in 2025 USD</td></tr>
-        <tr><th scope="row">Reference comparator</th><td class="lab">Infliximab biosimilar — Renflexis (Q5104), $2.6615/mg at the current CMS payment limit</td></tr>
-        <tr><th scope="row">Comparator pricing</th><td class="lab">Lowest of the three available biosimilars, so the frontier sits at its most conservative; originator prices scenario S4</td></tr>
-        <tr><th scope="row">Cycle length</th><td class="lab">2 weeks · lifetime horizon from age 35</td></tr>
-        <tr><th scope="row">Discount rate</th><td class="lab">3% annual, costs and QALYs</td></tr>
-        <tr><th scope="row">Landmark</th><td class="lab">12 weeks — the two-fate split</td></tr>
-        <tr><th scope="row">Populations</th><td class="lab">Biologic-naive base case; treatment-refractory co-primary</td></tr>
-        <tr><th scope="row">Reporting standard</th><td class="lab">CHEERS 2022 — all 28 items addressed; 20 evidenced by versioned analysis artifacts</td></tr>
-        <tr><th scope="row">Bounding pairs</th><td class="lab">4- and 8-week induction windows · 2-year maintenance cap on and off</td></tr>
-        <tr><th scope="row">Health states</th><td class="lab">Remission · Mild · Moderate-Severe Responder · Moderate-Severe · Surgery · Death, plus sustained drug-free remission in the Treg arm</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="measure" style="font-size:.92rem">Deterministic figures throughout unless a section says otherwise. Undiscounted life expectancy from age 35 reproduces the NCHS life table to within 0.003 years. Every state vector sums to unity within 1×10⁻¹⁰ at every cycle, in both arms, at every horizon and both cap settings. Results are stable across both bounding pairs: the widest spread on any figure reported here is 1.6%, so the conclusions hold across both bounds rather than depending on either.</p>
-</section>
-
-<section>
-  <div class="sec-head"><span class="glyph">!</span><h2>Open items and limitations</h2></div>
-  <p class="measure">Five items remain. None is a defect in the mechanics; each is an input awaiting a decision or a source.</p>
-  <ul class="notes">
-    <li><span class="tag">Cohort</span><span><strong>Starting age is 35, sourced from the SONIC trial's median</strong> rather than from the model this analysis rebuilds, whose own figure was not accessible. Background mortality drives most of the lifetime QALY total, so this is not a minor input.</span></li>
-    <li><span class="tag">Population</span><span><strong>The break-even eligible population is not yet reportable.</strong> Per-patient information value is above; converting it into the budget a confirmatory trial could justify needs both an eligible-population estimate and a trial-cost benchmark, neither of which is currently sourced.</span></li>
-    <li><span class="tag">Benchmark</span><span><strong>The manufacturing benchmark rests on two legs, not three.</strong> Published analogy costs and reported cost of goods are both in; a bottom-up build from dose and lot size is not, because the dose in cells per kilogram is not public — all three registered trials of this product describe their arms only as dose levels one, two and three. Rather than assume a figure, the benchmark is reported as the range those two legs support. It is wide by construction, and the width is the finding.</span></li>
-    <li><span class="tag">Equity</span><span><strong>No distributional analysis, and no patient or public involvement.</strong> Results are not disaggregated by socioeconomic group, race or geography, and no patient, clinician or payer was consulted in designing the study. The reporting standard permits both omissions provided they are declared, which they are here — but a price for a therapy is being set on behalf of people who were not asked.</span></li>
-    <li><span class="tag">Anchors</span><span><strong>The upper anchor is a different manufacturing model.</strong> Reported cost of goods is available for autologous products, where one run serves one patient. An allogeneic therapy amortises a batch across many. That anchor is a bound on what this product must <em>not</em> cost, not an estimate of what it will.</span></li>
+  <h2>Limitations</h2>
+  <ul class="plain">
+    <li><strong>Manufacturing benchmark rests on two of three intended legs.</strong> A bottom-up build from dose and lot size is absent because the dose in cells/kg is not public — all three registered trials of this product report only "dose level 1/2/3".</li>
+    <li><strong>The upper benchmark anchor is a different manufacturing model.</strong> Reported cost of goods is available only for autologous products, where one run serves one patient. It bounds what this product must not cost rather than estimating what it will, and rests on a single trade-press figure.</li>
+    <li><strong>Starting age 35 is from the SONIC trial</strong>, not from the model this analysis rebuilds, whose own figure was not accessible. Background mortality drives most of the lifetime QALY total.</li>
+    <li><strong>Break-even eligible population not reportable.</strong> Converting per-patient EVPI into a justifiable trial budget needs an eligible-population estimate and a trial-cost benchmark, neither sourced.</li>
+    <li><strong>No distributional analysis and no patient or public involvement.</strong> Results are not disaggregated by socioeconomic group, race or geography, and no patient, clinician or payer was consulted in study design.</li>
   </ul>
-  <p class="measure" style="font-size:.92rem;margin-top:1.4rem">Costs are now on a single dollar year. Health-state costs from the source model and current CMS drug and administration prices are all re-based to 2025 through medical-care CPI. The 2025 index average covers eleven months rather than twelve, an absence in the published series that moves the adjustment by less than a tenth of a percent.</p>
 </section>
 
 <footer>
-  TREG-VALUE · price frontier, probabilistic analysis and manufacturing benchmark · 2025 USD · CHEERS 2022 · generated from hash-stamped model runs against a governing specification
+  TREG-VALUE · 2025 USD · CHEERS 2022 · outputs hash-stamped to the governing specification and model commit
 </footer>
 
 </div>
