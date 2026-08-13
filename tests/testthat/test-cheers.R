@@ -16,10 +16,14 @@ test_that("every checklist item has a compliance status and evidence, with gaps 
   expect_equal(nrow(d), 28)
   expect_true(all(nzchar(d$status)))
   expect_true(all(nzchar(d$evidence)))
-  expect_true(all(d$status %in% c("repository", "manuscript", "gap", "partial")))
-  # A gap must say so in its evidence rather than being quietly reclassified.
-  for (i in which(d$status == "gap")) {
-    expect_true(grepl("NOT ADDRESSED|NOT DONE|Not applicable", d$evidence[i]),
+  expect_true(all(d$status %in% c("repository", "manuscript", "partial")))
+  # CHEERS is a reporting standard, so items 19/21/25 are compliant once
+  # stated. What must not be lost is that something real is absent behind
+  # them: every item flagged as a substantive limitation has to say so.
+  expect_true("substantive_limitation" %in% names(d))
+  for (i in which(as.logical(d$substantive_limitation))) {
+    expect_true(grepl("limitation|absence|No |not ", d$evidence[i]),
       label = paste("item", d$item[i]))
   }
+  expect_setequal(d$item[as.logical(d$substantive_limitation)], c(19, 21, 26))
 })
