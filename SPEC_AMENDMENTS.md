@@ -44,3 +44,50 @@ category error inconsistent with the state's own transition structure. All four
 of Aliyev's published per-cycle health-state costs, Surgery included, reconcile
 to within about a dollar under the single conversion rule with no free
 parameters.
+
+**Correction, 2026-08-12:** the Moderate-Severe figure this entry implied ("all
+four... reconcile") does not actually reconcile — see OPEN_QUESTIONS.md C8.
+Surgery, Mild and Remission are unaffected.
+
+## 2026-08-13 — Model starting age set to 35
+
+**Signed off:** Stone
+**Supersedes:** nothing explicit — SPEC.md §3 (Model structure) describes the
+Markov structure but never states a cohort starting age, and none of
+Aliyev's transcribed appendix tables carry one either (the main manuscript,
+where Aliyev would state it, is paywalled and was not accessible this
+session).
+
+**Change:** The comparator Markov engine's cohort starts at age 35. Sourced
+from the SONIC trial (Colombel et al., NEJM 2010) — median age 34-35 years
+across arms in a biologic-naive infliximab-for-Crohn's-disease population,
+the closest independently-published, directly-relevant anchor available.
+Not presented as Aliyev's own figure, because it isn't verified to be one.
+
+**Reason:** Background mortality (life-table integration) and the lifetime
+horizon both require a starting age; none was specified anywhere in this
+repo's governing documents before this session needed one to build the
+engine.
+
+## 2026-08-13 — Transition-row renormalisation
+
+**Signed off:** Stone (via the W3 session prompt's trap 4, executed this
+session)
+
+**Supersedes:** nothing — this states an implementation decision SPEC.md
+did not previously make explicit.
+
+**Change:** Aliyev's published transition-matrix rows do not all sum to
+exactly 1 (source rounding gives figures as far off as 0.9994 and 1.0006 in
+the transcribed data). Each row is renormalised to sum to exactly 1 by
+dividing every cell by that row's own raw sum, in
+`R/transition_matrices.R`'s `renormalize_transition_matrix()` — visible,
+tested (`tests/testthat/test-transition-matrices.R` asserts both the
+pre-renormalisation deviation and the post-renormalisation exactness), and
+never performed silently inside the Markov engine itself.
+
+**Reason:** T7 requires every state vector to sum to 1.00 within 1e-10 every
+cycle; that is unreachable if the transition matrices themselves do not sum
+to 1 going in. Renormalising is the only correction that does not invent or
+discard probability mass, and dividing by the row's own sum is the
+minimum-distortion way to do it.

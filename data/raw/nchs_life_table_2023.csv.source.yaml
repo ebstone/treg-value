@@ -1,0 +1,46 @@
+file: nchs_life_table_2023.csv
+status: transcribed
+citation:
+  publisher: National Center for Health Statistics (NCHS), National Vital Statistics System
+  authors: Arias E, Xu J, et al.
+  title: "United States Life Tables, 2023"
+  series: National Vital Statistics Reports
+  volume: 74
+  issue: 6
+  publication_date: 2025-07-15
+  url: https://www.cdc.gov/nchs/data/nvsr/nvsr74/nvsr74-06.pdf
+table_or_page: "Table 1 (Life table for the total population, sex-averaged, all races/origins), pages 14-16"
+retrieved: 2026-08-13
+retrieved_via: >
+  Downloaded directly from cdc.gov via curl (not blocked, unlike www.cms.gov
+  in this same session). Parsed with pdftotext -layout, then spot-checked at
+  ages 35/65/78/99 against a direct visual read of the same page images.
+sha256: 7f08503e613c4b11bd2334137af5e1d1ec3ebb070eb3f6d0099dd7d3f4874d9d
+notes: >
+  101 rows, ages 0 through 100 (100 = "100 and older", qx = 1.000000 by
+  construction). qx_prob_1yr is NCHS's own "probability of dying between
+  ages x and x+1" -- an annual, single-year-of-age probability, native to
+  the source. Converting to this repo's native 2-week cycle length is a
+  derive/ or R/ decision (this file states what NCHS published, nothing
+  more). This is the 2023 vintage -- the most recent NCHS published as of
+  the retrieval date -- and reflects post-pandemic mortality; SPEC.md S7
+  (pre-pandemic life-table vintage) is a separate, not-yet-sourced scenario
+  input, not this file.
+  This is Table 1, the sex-averaged/all-races table, per
+  W2_sourcing_register.md S-3's "sex-averaged" instruction. Tables 2-18 in
+  the same source give sex- and race/ethnicity-specific tables if ever
+  needed.
+unresolved:
+  - id: U1
+    issue: >
+      W2_sourcing_register.md S-3 asked to "decide and record" the vintage,
+      flagging that the 2021 table reflects COVID-era mortality. This file
+      uses 2023 (the current most-recent NCHS publication as of 2026-08-13,
+      not 2021) -- life expectancy at birth recovered to 78.4 years in 2023
+      per the source's own reporting, closer to pre-pandemic levels than
+      2021 was. Using the most-recent-available table as the base case and
+      treating an explicitly pre-pandemic vintage as the SPEC.md S7
+      scenario (rather than the reverse) was not independently signed off
+      by Eric/a co-author before this file was committed -- flagged for
+      confirmation, not for a code fix.
+    blocks: none currently -- base-case choice, reasonable default

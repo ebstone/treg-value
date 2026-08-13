@@ -1,0 +1,15 @@
+# commit: d80af929b2e9fb24fd35273823033c0a0612232c
+# spec_sha256: 33fb719c79072b1c1c98442899a3d3f77128b62342937afc902080c73dda6635
+"induction_window_weeks","maintenance_cap","horizon","max_state_sum_deviation","n_cycles_checked","cohort_exhausted"
+4,"on","lifetime",2.33146835171283e-15,1692,TRUE
+4,"off","lifetime",4.21884749357559e-15,1692,TRUE
+8,"on","lifetime",3.10862446895044e-15,1694,TRUE
+8,"off","lifetime",3.77475828372553e-15,1694,TRUE
+4,"on","30yr",1.77635683940025e-15,782,FALSE
+4,"off","30yr",4.21884749357559e-15,782,FALSE
+8,"on","30yr",2.22044604925031e-15,784,FALSE
+8,"off","30yr",3.77475828372553e-15,784,FALSE
+4,"on","40yr",2.33146835171283e-15,1042,FALSE
+4,"off","40yr",4.21884749357559e-15,1042,FALSE
+8,"on","40yr",3.10862446895044e-15,1044,FALSE
+8,"off","40yr",3.77475828372553e-15,1044,FALSE

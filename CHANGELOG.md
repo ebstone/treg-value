@@ -95,3 +95,47 @@ One line per session: what changed, and which tests now cover it.
 - Full suite unchanged at 46 assertions / 27 tests, 0 failures, 2 pre-existing
   skips (new data/raw/ files validated against G1 individually and via the
   full suite).
+
+## 2026-08-13 (W3: comparator Markov engine)
+- Sourced two remaining gaps found while building: data/raw/nchs_life_table_2023.csv
+  (NCHS United States Life Tables 2023, Table 1, sex-averaged -- fetched
+  directly from cdc.gov) for background mortality, and a model starting age
+  (35, from the SONIC trial's median age -- SPEC.md never specified one and
+  Aliyev's own figure is paywalled). Both recorded in SPEC_AMENDMENTS.md.
+- Found and fixed a real gap from W2: aliyev2019_maintenance_transitions.csv
+  never actually got the Conventional Therapy (CT) sub-table's rows, though
+  W2's sidecar referenced having viewed that page. Added them; sha256 and
+  sidecar updated.
+- Built the comparator engine: R/transition_matrices.R (loads and
+  renormalises Aliyev's induction/maintenance matrices -- trap 4, recorded
+  in SPEC_AMENDMENTS.md, never silent), R/life_table.R (DEALE-style
+  annual-to-2wk mortality conversion, matching Aliyev's own methodology),
+  R/dosing.R (induction/maintenance dosing schedules, provisional pending
+  O8 on which biosimilar prices the base case), R/costs_utilities.R, and
+  R/markov_engine.R (induction decision tree, dual biologic/CT cohort
+  tracking with the Moderate-Severe redirect mechanic, 2-year cap, half-cycle
+  correction, age-varying background mortality, 3% discounting).
+  analysis/run_infliximab_trace.R runs and stamps the trace and a validation
+  table for all 12 combinations (2 windows x 2 cap settings x 3 horizons)
+  -- intermediate artifacts, no SPEC.md section 6 aim satisfied this session.
+- All six traps in the W3 session prompt addressed and tested: induction
+  cost/QALY accrual, cap-timing dose-count exactness, induction window/dosing
+  consistency, transition-row renormalisation (documented, not silent),
+  maintenance Moderate-Severe row sourced from Table 4 (CT) directly rather
+  than reused from induction, and no colectomy-scale Surgery cost.
+- Extended G2 (units) with six new suffixes real model code needed
+  (`_usd`, `_utility`, `_discount_factor`, `_prob_1yr`, `_life_years`,
+  `_age_years`, plus `_years`/`_kg`/`_mg`/`_mg_per_kg`), and fixed two real
+  gaps the guard itself had never been exercised against: suffix matching
+  was case-sensitive (broke idiomatic UPPER_SNAKE_CASE R constants), and the
+  unnamed-converter check flagged any function combining 2+ differently-
+  suffixed arguments even when nothing was actually being converted (an
+  orchestrator taking several independent inputs) -- narrowed to exactly 2,
+  matching the guard's own pairwise-conflation rationale. Also fixed G6's
+  skip condition, which kept "output/tables/ is empty" as its trigger even
+  after this session populated it with non-aim intermediate files -- now
+  checks for an aim-*designated* output specifically.
+- T6, T7, T8 all pass; T8 in particular: model undiscounted life expectancy
+  from age 35 is 45.203 years against the life table's own 45.2, a 0.003-year
+  difference.
+- Full suite: 92 assertions across 48 tests, 0 failures, 2 pre-existing skips.

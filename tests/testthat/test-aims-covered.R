@@ -8,10 +8,18 @@ test_that("G6: SPEC.md's aims table parses with Aim and Output file columns", {
 })
 
 test_that("G6: every aim is covered, once output/tables/ is populated", {
-  output_tables <- repo_root_relative("output", "tables")
-  populated <- length(list.files(output_tables, pattern = "\\.csv$")) > 0
-  if (!populated) {
-    skip("output/tables/ is empty -- no aim can be covered yet on an empty model; guard binds once analysis code runs")
+  # Skip while none of SPEC.md's *aim-designated* output files exist yet --
+  # not merely while output/tables/ is empty. W3 populated output/tables/
+  # with intermediate artifacts (a comparator trace, a validation table)
+  # that are explicitly not aim outputs; a skip keyed on "any CSV present"
+  # would have flipped to a real (and wrong) failure the moment those
+  # landed, well before any aim's own file exists. Still not a silent pass:
+  # the skip message says exactly why, every run, until the first aim
+  # output lands.
+  aims <- parse_aims_table(repo_root_relative("SPEC.md"))
+  any_aim_output_exists <- any(file.exists(file.path(repo_root_relative("."), aims[["Output file"]])))
+  if (!any_aim_output_exists) {
+    skip("no aim-designated output file exists yet -- guard binds once the first one lands")
   }
   problems <- uncovered_aims(
     repo_root_relative("SPEC.md"),

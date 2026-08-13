@@ -15,3 +15,26 @@ test_that("G2 fires: an unsuffixed numeric and an unnamed converter are caught",
   expect_true(length(unsuffixed_numerics(env)) > 0)
   expect_true(length(unnamed_converters(env)) > 0)
 })
+
+test_that("G2: a function combining a value-bearing suffix with a dimensionless ratio is not flagged as an unnamed converter (W3)", {
+  env <- new.env()
+  # discounting a per-cycle cost by a dimensionless factor does not convert
+  # its unit -- the result is still cost-flavoured, just smaller.
+  eval(quote(discount_cost <- function(x_usd_per_cycle, factor_discount_factor) x_usd_per_cycle * factor_discount_factor), envir = env)
+  expect_length(unnamed_converters(env), 0)
+})
+
+test_that("G2 fires: a function genuinely combining two value-bearing suffixes without converter naming is still caught (W3 regression check)", {
+  env <- new.env()
+  eval(quote(bad_combo <- function(x_usd_per_dose, y_usd_per_cycle) x_usd_per_dose + y_usd_per_cycle), envir = env)
+  expect_true(length(unnamed_converters(env)) > 0)
+})
+
+test_that("G2: a function taking three or more independently value-bearing arguments is not flagged (W3, orchestrator functions)", {
+  env <- new.env()
+  # e.g. a trace orchestrator using a window, a horizon and an age as three
+  # independent inputs, never converting between them -- not a pairwise
+  # conflation risk the way exactly two differently-suffixed args is.
+  eval(quote(orchestrate <- function(window_weeks, horizon_years, start_age_years) window_weeks + horizon_years + start_age_years), envir = env)
+  expect_length(unnamed_converters(env), 0)
+})
