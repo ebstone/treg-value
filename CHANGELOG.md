@@ -260,3 +260,29 @@ One line per session: what changed, and which tests now cover it.
   benchmark module exports, rather than two files against a keyword list.
 - Full suite: 280 assertions across 77 tests, 0 failures, 0 skips -- the
   first run in this project with nothing skipped.
+
+## 2026-08-13 (refractory co-primary population)
+- SPEC.md section 2 makes the refractory population co-primary, not a
+  sensitivity analysis, and nothing implemented it. Now built:
+  data/raw/uniti_induction_outcomes.csv holds UNITI-1 and UNITI-2 per-arm
+  counts read from the ClinicalTrials.gov results API (counts stored, not
+  pre-divided rates, so every downstream figure is auditable to a numerator
+  and denominator). R/refractory.R derives the multipliers and applies them
+  to induction; `population` threads through the engine, the standard-care
+  grid and the frontier.
+- Provenance confirmation worth keeping: Aliyev's UST week-6 response
+  parameter is Beta(116, 93), and UNITI-2's 6 mg/kg arm reports exactly 116
+  responders of 209 with 93 non-responders. The inherited base case IS
+  UNITI-2, so UNITI-1 is its correct refractory counterpart. Asserted as a
+  test rather than left as a coincidence.
+- Adjustment is induction-only. IM-UNITI randomised week-8 responders, so
+  its maintenance rates are conditioned on induction success and would
+  reintroduce the conditional-denominator error in a new place. Recorded as
+  OPEN_QUESTIONS.md O10 and as an amendment.
+- Consequence recorded explicitly: the two co-primary populations currently
+  differ by under 1% on B (0.46% cap on, 0.73% cap off), because an
+  induction-only adjustment acts over four cycles of a sixty-five-year
+  horizon and the two-year cap returns both populations to conventional
+  therapy anyway. That is a statement about available evidence, not a
+  finding that the populations are alike.
+- Full suite: 302 assertions across 85 tests, 0 failures, 0 skips.

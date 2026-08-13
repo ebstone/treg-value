@@ -286,3 +286,41 @@ whether a batch amortises across many treatments or serves one.
 **L8 is unaffected.** No pricing function reads any of this; T12 now greps
 five files in the pricing path against every name the benchmark module
 exports, not two files against a keyword list.
+
+## 2026-08-13 — Refractory co-primary adjusted at induction only
+
+**Signed off:** Stone
+**Supersedes:** nothing in SPEC.md; this records how section 2's
+"refractory co-primary, run identically" (also scenario S2) is implemented.
+
+**Change:** the refractory population differs from the biologic-naive base
+case in its induction transition matrix only. Multipliers are derived from
+UNITI-1 (anti-TNF-refractory) against UNITI-2 (conventional-therapy
+failure), two trials sharing a protocol and endpoints and differing only in
+prior therapy, from their own posted per-arm counts: response 0.608,
+remission 0.520 on the active arm. Maintenance transitions are unadjusted.
+
+**Reason maintenance is unadjusted:** IM-UNITI randomised only week-8
+responders, so its maintenance figures are conditioned on induction success.
+Using them as a maintenance multiplier would condition a population
+adjustment on response — the conditional-denominator error that guard 3 and
+T4 exist to prevent, in a new place. No other like-for-like source was
+found. Recorded as OPEN_QUESTIONS.md O10.
+
+**Consequence, stated because it is easy to misread:** the two co-primary
+populations currently differ by under 1% on B (0.46% with the cap on, 0.73%
+with it off), because an induction-only adjustment acts over four cycles of
+a sixty-five-year horizon and the two-year maintenance cap returns both
+populations to conventional therapy regardless. **This is a statement about
+the available evidence, not a finding that the populations are alike.** A
+maintenance multiplier would very likely separate them materially.
+
+**Direction:** leaving maintenance unadjusted understates the refractory
+penalty on the comparator, which makes the comparator look better and the
+Treg product's justifiable price lower. Conservative.
+
+**Independent provenance check:** Aliyev's transcribed UST week-6 response
+parameter carries Beta(116, 93). UNITI-2's ~6 mg/kg arm reports exactly 116
+responders of 209, leaving 93 non-responders, confirming that the base case
+this repository inherited is UNITI-2 and that UNITI-1 is its correct
+refractory counterpart. Asserted in tests/testthat/test-refractory.R.

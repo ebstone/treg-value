@@ -47,13 +47,14 @@ relapse_hazard_per_year_to_prob_2wk <- function(h_per_year, cycles_per_year = AL
 #' rather than a second Markov re-implemented here with its own 2-year cap
 #' clock running from their own start date.
 standard_care_grid <- function(window_weeks, cap_on, raw_dir = "data/raw",
-                                ages = seq(MODEL_START_AGE_YEARS, 100, by = 1)) {
+                                ages = seq(MODEL_START_AGE_YEARS, 100, by = 1),
+                                population = "naive") {
   cost <- numeric(length(ages))
   qaly <- numeric(length(ages))
   for (i in seq_along(ages)) {
     horizon <- 100 - ages[i]
     if (horizon <= 0) next
-    tr <- run_comparator_trace("IFX", window_weeks, cap_on, horizon, raw_dir, start_age_years = ages[i])
+    tr <- run_comparator_trace("IFX", window_weeks, cap_on, horizon, raw_dir, start_age_years = ages[i], population = population)
     cost[i] <- tr$discounted_cost_usd
     qaly[i] <- tr$discounted_qaly
   }
@@ -77,7 +78,11 @@ standard_care_at_age <- function(grid, age_years) {
 #'
 #' `sc_grid` is a `standard_care_grid()` for the same window/cap, passed in
 #' rather than rebuilt per call so a 101-point `pi_cure` sweep costs one
-#' grid, not 101.
+#' grid, not 101. The POPULATION enters through that grid and through the
+#' comparator, not through a parameter here: everything population-specific
+#' in this arm is downstream of the landmark, and the pre-landmark window is
+#' conventional-therapy MAINTENANCE dynamics, for which no refractory
+#' multiplier is derivable (see R/refractory.R).
 run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
                             raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS) {
   stopifnot(pi_cure >= 0, pi_cure <= 1, h_per_year >= 0)

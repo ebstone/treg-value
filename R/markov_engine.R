@@ -109,7 +109,8 @@ half_cycle_weighted_occupancy <- function(occupancy_start, occupancy_end) {
 #' induction window, cap setting and horizon. Returns discounted lifetime
 #' cost and QALYs, plus validation series for T7/T8 and the trap tests.
 run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
-                                  raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS) {
+                                  raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS,
+                                  population = "naive") {
   induction_cycles <- window_weeks / 2
   dose_weeks <- ifx_induction_dose_weeks(window_weeks)
   stopifnot(all(dose_weeks < window_weeks)) # trap 3, asserted at run time too
@@ -117,7 +118,7 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
   costs <- health_state_costs_usd_per_cycle(raw_dir)
   utilities <- health_state_utilities(raw_dir)
   lt <- load_life_table(raw_dir)
-  induction_matrix <- load_induction_matrix(therapy, raw_dir)
+  induction_matrix <- load_induction_matrix_for_population(therapy, population, raw_dir)
   biologic_matrix_base <- load_maintenance_matrix(therapy, raw_dir)
   ct_matrix_base <- load_maintenance_matrix("CT", raw_dir)
   dose_cost_usd <- ifx_infusion_cost_usd_per_dose(raw_dir)

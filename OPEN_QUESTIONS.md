@@ -11,6 +11,7 @@ A function that needs one of these refuses to run rather than assume a value.
 | O4 | Whether a Treg infusion qualifies for observation billing, and wage-index adjustment | `observation_billing_eligible` | Dula | S6 only | 2026-08-11 |
 | O5 | Real-world biologic persistence (time to discontinuation) | `biologic_persistence` | Unsourced | Would replace L6's bounding pair | 2026-08-11 |
 | O6 | Whether durable remission is exempt from productivity costs | `productivity_cost_exempt` | Co-authors | Societal scenario, out of base case | 2026-08-11 |
+| O10 | Maintenance-phase refractory multiplier. UNITI-1/UNITI-2 supply an induction adjustment only; IM-UNITI randomised week-8 responders, so its maintenance rates are conditioned on induction success and cannot be used without committing the conditional-denominator error this project has twice made. Without it the refractory co-primary differs from the biologic-naive base case by under 1% on B, which reflects the available evidence rather than the biology. | `refractory_maintenance_multiplier` | Unsourced | Separation of the two co-primary populations | 2026-08-13 |
 
 `Arg name` is the canonical R argument name guard G7 checks: no function in
 `R/` may supply a default for a parameter with one of these names.

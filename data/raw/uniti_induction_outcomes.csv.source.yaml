@@ -1,0 +1,58 @@
+file: uniti_induction_outcomes.csv
+status: transcribed
+citation:
+  trials:
+    - name: UNITI-1
+      nct_id: NCT01369329
+      population: "Patients who had failed anti-TNF therapy"
+    - name: UNITI-2
+      nct_id: NCT01369342
+      population: "Patients who had failed conventional therapy"
+  primary_publication: >
+    Feagan BG, Sandborn WJ, Gasink C, et al. Ustekinumab as Induction and
+    Maintenance Therapy for Crohn's Disease. N Engl J Med 2016;375:1946-1960.
+  url: https://clinicaltrials.gov/study/NCT01369329
+table_or_page: >
+  Posted results, outcome measures "Number of Participants With Clinical
+  Response at Week 6" and "Number of Participants in Clinical Remission at
+  Week 8", with per-arm denominators from the same outcome records.
+retrieved: 2026-08-13
+retrieved_via: >
+  ClinicalTrials.gov API v2, results section, read programmatically for both
+  trials. These are the sponsor's own posted per-arm counts, not figures
+  read out of a review or a search summary. Counts are stored rather than
+  the rates or multipliers derived from them, so every downstream figure is
+  auditable back to a numerator and a denominator.
+sha256: 0ca92b91c5be62e244466ea2f5cb91db22b18789dba1c4505992bc8f8c4524e5
+notes: >
+  These two trials are the standard contrast for refractory versus
+  conventional-failure Crohn's disease: identical protocol and endpoints,
+  differing only in prior-therapy history, which is what makes their ratio
+  usable as a population adjustment rather than a comparison of two
+  unrelated studies.
+  Independent corroboration that this is the right source for the base case:
+  Aliyev's transcribed UST week-6 response parameter is 0.56 with
+  Beta(116, 93). UNITI-2's ~6 mg/kg arm reports exactly 116 responders out
+  of 209, leaving 93 non-responders. Aliyev's alpha and beta are that arm's
+  raw counts, so the biologic-naive base case this repository inherits is
+  UNITI-2, and UNITI-1 is its refractory counterpart.
+unresolved:
+  - id: U1
+    issue: >
+      Both trials study USTEKINUMAB. The reference comparator in this model
+      is infliximab, so applying a ustekinumab-derived refractory adjustment
+      to infliximab assumes the refractory penalty is a property of the
+      population rather than of the drug. Aliyev's own Induction assumption
+      #1 already equates infliximab and adalimumab efficacy, so cross-product
+      assumptions are established in the inherited model, but this one is
+      introduced here and is recorded rather than buried.
+    blocks: nothing; widens interpretation of the refractory co-primary
+  - id: U2
+    issue: >
+      Week-6 response and week-8 remission are the induction endpoints. No
+      maintenance-phase refractory adjustment is derived from these records;
+      IM-UNITI randomised only week-8 responders, so its maintenance figures
+      are conditioned on induction success and are not a like-for-like
+      source for a maintenance multiplier.
+    blocks: a maintenance-phase refractory adjustment, which is deliberately
+      not applied -- see SPEC_AMENDMENTS.md

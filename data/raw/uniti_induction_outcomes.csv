@@ -1,0 +1,7 @@
+trial,nct_id,population,arm,n_randomised,n_clinical_response_week6,n_clinical_remission_week8
+UNITI-1,NCT01369329,anti-TNF refractory,Placebo,247,53,18
+UNITI-1,NCT01369329,anti-TNF refractory,Ustekinumab 130 mg,245,84,39
+UNITI-1,NCT01369329,anti-TNF refractory,Ustekinumab ~6 mg/kg,249,84,52
+UNITI-2,NCT01369342,conventional therapy failure,Placebo,209,60,41
+UNITI-2,NCT01369342,conventional therapy failure,Ustekinumab 130 mg,209,108,64
+UNITI-2,NCT01369342,conventional therapy failure,Ustekinumab ~6 mg/kg,209,116,84
