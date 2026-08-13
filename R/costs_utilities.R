@@ -5,7 +5,8 @@
 # (W3 trap 6): Surgery is priced through the same PMPM conversion as every
 # other state, per SPEC_AMENDMENTS.md's "Surgery-state costing corrected".
 
-#' Named vector of per-cycle, 2017 USD health-state costs, keyed by
+#' Named vector of per-cycle health-state costs in TARGET_CURRENCY_YEAR
+#' (2025) USD -- re-based here from Aliyev's 2017 basis. Keyed by
 #' MAINTENANCE_STATES in that exact order (Death = 0, added explicitly --
 #' no cost accrues there -- so this vector is always the same length and
 #' order as an occupancy vector over MAINTENANCE_STATES; a same-length but
@@ -13,28 +14,29 @@
 #' misaligned, instead of erroring).
 health_state_costs_usd_per_cycle <- function(raw_dir = "data/raw") {
   costs <- health_state_cost_cycle_2017_usd(raw_dir)
-  values <- setNames(costs$cost_usd_per_cycle, costs$state)
+  values <- setNames(rebase_usd(costs$cost_usd_per_cycle, ALIYEV_COST_YEAR, raw_dir = raw_dir), costs$state)
   values <- c(values, "Death" = 0)
   values[MAINTENANCE_STATES]
 }
 
-#' Per-cycle conventional-therapy drug cost (2017 USD), Suppl. Table 5's own
+#' Per-cycle conventional-therapy drug cost in 2025 USD, re-based from
+#' Suppl. Table 5's own 2017-basis
 #' "Conventional therapy per cycle" line. Charged to the CT cohort in
 #' addition to the health-state cost -- the health-state figures are
 #' CD-related medical costs by severity, not the cost of the conventional
 #' regimen itself, and Aliyev lists the two separately.
 conventional_therapy_cost_usd_per_cycle <- function(raw_dir = "data/raw") {
-  adopted <- read.csv(file.path(raw_dir, "aliyev2019_base_case_costs_utilities.csv"), stringsAsFactors = FALSE)
+  adopted <- read_csv_cached(file.path(raw_dir, "aliyev2019_base_case_costs_utilities.csv"))
   row <- adopted[adopted$category == "Direct Cost per Cycle (2017 USD)" & adopted$item == "Conventional Therapy", ]
   stopifnot(nrow(row) == 1)
-  as.numeric(row$value)
+  rebase_usd(as.numeric(row$value), ALIYEV_COST_YEAR, raw_dir = raw_dir)
 }
 
 #' Named vector of EQ-5D utility weights, keyed by MAINTENANCE_STATES minus
 #' Death (utility 0 there, added explicitly rather than sourced, since no
 #' quality of life accrues after death).
 health_state_utilities <- function(raw_dir = "data/raw") {
-  adopted <- read.csv(file.path(raw_dir, "aliyev2019_base_case_costs_utilities.csv"), stringsAsFactors = FALSE)
+  adopted <- read_csv_cached(file.path(raw_dir, "aliyev2019_base_case_costs_utilities.csv"))
   u <- adopted[adopted$category == "Utility (EQ-5D)", ]
   values <- setNames(as.numeric(u$value), u$item)
   # Suppl. Table 5 has no separate row for Remission; Suppl. Table 1

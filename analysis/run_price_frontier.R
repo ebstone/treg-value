@@ -8,6 +8,8 @@
 # (W5) -- the $20,000 course price below is a stated hypothetical used to
 # invert an already-computed frontier, never an input to it.
 
+source("R/io_cache.R")
+source("R/price_index.R")
 source("R/denominator.R")
 source("derive/health_state_costs.R")
 source("R/transition_matrices.R")

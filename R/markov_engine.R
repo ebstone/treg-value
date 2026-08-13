@@ -129,7 +129,8 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
   discounted_cost_usd <- 0
   discounted_qaly <- 0
   undiscounted_life_years <- 0
-  state_sum_log <- numeric(0)
+  state_sum_log <- numeric(induction_cycles + total_cycles)
+  log_i <- 0L
   age <- start_age_years
 
   # --- Induction: explicit cycles, cohort fully Moderate-Severe (trap 1) ---
@@ -145,7 +146,7 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
     discounted_cost_usd <- discounted_cost_usd + cycle_cost * df
     discounted_qaly <- discounted_qaly + induction_state_utility * CYCLE_YEARS * df
     undiscounted_life_years <- undiscounted_life_years + CYCLE_YEARS
-    state_sum_log <- c(state_sum_log, 1) # induction cohort is 100% Moderate-Severe, always sums to 1
+    log_i <- log_i + 1L; state_sum_log[log_i] <- 1 # induction cohort is 100% Moderate-Severe
     age <- age + CYCLE_YEARS
   }
 
@@ -163,23 +164,39 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
 
   dose_cycles <- ifx_maintenance_dose_cycles(if (is.finite(cap_cycles)) cap_cycles else total_cycles)
 
+  # Background mortality is constant within an integer age band, so the
+  # age-adjusted matrices only change 65 times across a lifetime horizon,
+  # not once per cycle. Caching them by age band leaves results identical
+  # and removes the engine's dominant cost.
+  bio_cache <- list()
+  bio_cache_safe <- list()
+  ct_cache <- list()
+
   for (t in seq_len(total_cycles)) {
     occupancy_start_bio <- on_biologic
     occupancy_start_ct <- on_ct
-    age_death_prob_2wk <- background_mortality_prob_2wk(age, lt)
-
-    biologic_matrix <- age_adjust_maintenance_matrix(biologic_matrix_base, age_death_prob_2wk)
-    ct_matrix <- age_adjust_maintenance_matrix(ct_matrix_base, age_death_prob_2wk)
+    age_band <- as.character(floor(age))
+    if (is.null(bio_cache[[age_band]])) {
+      age_death_prob_2wk <- background_mortality_prob_2wk(age, lt)
+      bio_cache[[age_band]] <- age_adjust_maintenance_matrix(biologic_matrix_base, age_death_prob_2wk)
+      ct_cache[[age_band]] <- age_adjust_maintenance_matrix(ct_matrix_base, age_death_prob_2wk)
+      safe <- bio_cache[[age_band]]
+      safe[is.na(safe)] <- 0
+      bio_cache_safe[[age_band]] <- safe
+    }
+    biologic_matrix <- bio_cache[[age_band]]
+    ct_matrix <- ct_cache[[age_band]]
 
     # Biologic mass: only the 5 defined rows are ever "from" states here --
     # Moderate-Severe mass in on_biologic is always exactly 0 at cycle start
     # (trap 5's structural guarantee; see file header).
-    bio_defined <- MAINTENANCE_STATES[!is.na(biologic_matrix[, 1])]
-    next_from_bio <- setNames(numeric(length(MAINTENANCE_STATES)), MAINTENANCE_STATES)
-    for (s in bio_defined) next_from_bio <- next_from_bio + on_biologic[[s]] * biologic_matrix[s, ]
-
-    next_from_ct <- setNames(numeric(length(MAINTENANCE_STATES)), MAINTENANCE_STATES)
-    for (s in MAINTENANCE_STATES) next_from_ct <- next_from_ct + on_ct[[s]] * ct_matrix[s, ]
+    # One BLAS call per cohort rather than a per-state R loop. The biologic
+    # matrix's undefined from-Moderate-Severe row is zeroed for the multiply
+    # (see bio_matrix_safe below); on_biologic's Moderate-Severe entry is
+    # always exactly 0 here by the trap-5 mechanic, so zeroing that row is
+    # arithmetically identical to skipping it.
+    next_from_bio <- setNames(as.vector(on_biologic %*% bio_cache_safe[[age_band]]), MAINTENANCE_STATES)
+    next_from_ct <- setNames(as.vector(on_ct %*% ct_matrix), MAINTENANCE_STATES)
 
     # Trap 5 mechanic: mass that just landed in Moderate-Severe under the
     # biologic redirects to CT for the *next* cycle (Maintenance
@@ -219,7 +236,7 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
     # start-to-end.
     hc_alive <- sum(hc_bio) + sum(hc_ct) - hc_bio[["Death"]] - hc_ct[["Death"]]
     undiscounted_life_years <- undiscounted_life_years + hc_alive * CYCLE_YEARS
-    state_sum_log <- c(state_sum_log, sum(occupancy_end_bio) + sum(occupancy_end_ct))
+    log_i <- log_i + 1L; state_sum_log[log_i] <- sum(occupancy_end_bio) + sum(occupancy_end_ct)
     age <- age + CYCLE_YEARS
   }
 

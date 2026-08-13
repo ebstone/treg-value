@@ -19,7 +19,7 @@ renormalize_transition_matrix <- function(m) {
 #' Aliyev's induction transition matrix for one therapy: a 4x4 matrix over
 #' INDUCTION_STATES, renormalised. `therapy` is one of "UST", "IFX", "ADA".
 load_induction_matrix <- function(therapy, raw_dir = "data/raw") {
-  df <- read.csv(file.path(raw_dir, "aliyev2019_induction_transitions.csv"), stringsAsFactors = FALSE)
+  df <- read_csv_cached(file.path(raw_dir, "aliyev2019_induction_transitions.csv"))
   df <- df[df$therapy == therapy, ]
   stopifnot(nrow(df) == length(INDUCTION_STATES))
   m <- matrix(0, nrow = length(INDUCTION_STATES), ncol = length(INDUCTION_STATES),
@@ -46,7 +46,7 @@ load_induction_matrix <- function(therapy, raw_dir = "data/raw") {
 #' historical bug (trap 5) where the retired workbook populated this row
 #' with induction-phase values instead of leaving it undefined.
 load_maintenance_matrix <- function(therapy, raw_dir = "data/raw") {
-  df <- read.csv(file.path(raw_dir, "aliyev2019_maintenance_transitions.csv"), stringsAsFactors = FALSE)
+  df <- read_csv_cached(file.path(raw_dir, "aliyev2019_maintenance_transitions.csv"))
   df <- df[df$therapy == therapy, ]
   m <- matrix(NA_real_, nrow = length(MAINTENANCE_STATES), ncol = length(MAINTENANCE_STATES),
     dimnames = list(MAINTENANCE_STATES, MAINTENANCE_STATES))

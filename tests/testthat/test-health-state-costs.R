@@ -1,3 +1,5 @@
+source_r("io_cache.R")
+source_r("price_index.R")
 source_derive("health_state_costs.R")
 
 test_that("provenance re-derivation: PMPM-to-cycle rule reproduces Aliyev's published per-cycle figures", {

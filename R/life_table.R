@@ -26,7 +26,7 @@ annual_qx_prob_1yr_to_prob_2wk <- function(qx_prob_1yr, cycles_per_year = ALIYEV
 
 #' The NCHS life table, with a `qx_prob_2wk` column added.
 load_life_table <- function(raw_dir = "data/raw") {
-  lt <- read.csv(file.path(raw_dir, "nchs_life_table_2023.csv"), stringsAsFactors = FALSE)
+  lt <- read_csv_cached(file.path(raw_dir, "nchs_life_table_2023.csv"))
   lt$qx_prob_2wk <- annual_qx_prob_1yr_to_prob_2wk(lt$qx_prob_1yr)
   lt
 }

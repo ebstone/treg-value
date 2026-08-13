@@ -1,0 +1,47 @@
+file: cpi_medical_care_annual.csv
+status: transcribed
+citation:
+  publisher: US Bureau of Labor Statistics, via Federal Reserve Bank of St. Louis (FRED)
+  title: "Consumer Price Index for All Urban Consumers: Medical Care in U.S. City Average, not seasonally adjusted"
+  series_id: CPIMEDNS
+  index_base: 1982-1984 = 100
+  url: https://fred.stlouisfed.org/series/CPIMEDNS
+table_or_page: "Full monthly series, aggregated here to annual averages for 2005 onward"
+retrieved: 2026-08-13
+retrieved_via: >
+  Downloaded programmatically from FRED's machine-readable CSV endpoint
+  (fredgraph.csv?id=CPIMEDNS) with curl, then aggregated from monthly to
+  annual means in R. `months_observed` is carried alongside each annual
+  average so any partial year is visible rather than silently averaged as
+  though complete.
+sha256: 3f34559263d364f1a10f66ba4ad3b3aa9116579043ed1d6395eb0a726a879600
+notes: >
+  Chosen as the deflator because SPEC.md section 2 fixes the currency year at
+  2025 USD while the model's cost inputs arrive on three different bases:
+  Aliyev's health-state costs and conventional-therapy cost in 2017 USD, and
+  the CMS ASP and Physician Fee Schedule figures at current (2026) rates.
+  Medical-care CPI is the conventional US deflator for healthcare-sector
+  costs and is what this repo uses to bring all three onto one year.
+unresolved:
+  - id: U1
+    issue: >
+      The 2025 annual average is computed over ELEVEN months, not twelve --
+      October 2025 is absent from the published series (the BLS collection
+      interruption of that month). The figure used, 580.1018, is therefore
+      the mean of the eleven observed months rather than BLS's own annual
+      average. Because the series trends upward through 2025, omitting a
+      late-year month biases the annual mean slightly downward, which makes
+      the 2017-to-2025 re-basing factor slightly smaller and every re-based
+      cost slightly lower. Linearly interpolating the missing month would
+      give roughly 580.51 against 580.10 -- a difference of about 0.07%,
+      immaterial to any figure this model reports. No datapoint has been
+      invented to close the gap.
+    blocks: nothing at current precision; revisit if BLS publishes a revised
+      2025 annual average
+  - id: U2
+    issue: >
+      The 2026 annual average is computed over the first seven months only
+      and is used to deflate current CMS prices to 2025. A partial-year mean
+      is a weaker base than a complete one; as later 2026 months publish,
+      the 2026-to-2025 factor (currently 0.979316) will move.
+    blocks: nothing; the affected adjustment is about 2%

@@ -1,3 +1,4 @@
+source_r("io_cache.R")
 source_r("life_table.R")
 
 RAW_DIR <- repo_root_relative("data", "raw")
@@ -24,6 +25,8 @@ test_that("background_mortality_prob_2wk() looks up the right age band and clamp
 })
 
 test_that("T8: undiscounted life-years from the model's start age match the life-table expectation within 1 year", {
+  source_r("io_cache.R")
+  source_r("price_index.R")
   source_derive("health_state_costs.R")
   source_r("transition_matrices.R")
   source_r("dosing.R")

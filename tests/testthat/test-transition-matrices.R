@@ -1,3 +1,4 @@
+source_r("io_cache.R")
 source_r("transition_matrices.R")
 
 RAW_DIR <- repo_root_relative("data", "raw")

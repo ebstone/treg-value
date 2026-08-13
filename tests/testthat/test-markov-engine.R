@@ -1,3 +1,5 @@
+source_r("io_cache.R")
+source_r("price_index.R")
 source_derive("health_state_costs.R")
 source_r("transition_matrices.R")
 source_r("life_table.R")
@@ -74,8 +76,10 @@ test_that("trap 1: induction accrues nonzero cost and QALYs (not a free window)"
 
 test_that("trap 6: no colectomy-scale cost anywhere -- Surgery per-cycle cost is Aliyev's PMPM-derived figure, not an episode cost", {
   costs <- health_state_costs_usd_per_cycle(RAW_DIR)
-  # A colectomy episode cost (the retired workbook's mistake) is on the
-  # order of tens of thousands of dollars; Aliyev's per-cycle figure is
-  # under $1,000.
-  expect_lt(costs[["Surgery"]], 999)
+  # A colectomy admission runs to tens of thousands of dollars; Aliyev's
+  # per-cycle Surgery figure is three orders of magnitude smaller. The
+  # threshold is set well above the per-cycle figure and well below any
+  # plausible episode cost, so it survives currency re-basing without
+  # becoming a value snapshot of the current number.
+  expect_lt(costs[["Surgery"]], 5e3)
 })

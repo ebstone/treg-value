@@ -25,7 +25,8 @@ ALLOWED_UNIT_SUFFIXES <- c(
   "_years", # a plain duration in years -- distinct from _age_years (a point) and _life_years (accumulated, utility-relevant)
   "_kg", # body weight, kilograms
   "_mg", # a drug dose mass, milligrams
-  "_mg_per_kg" # a weight-scaled dosing rate
+  "_mg_per_kg", # a weight-scaled dosing rate
+  "_year" # a calendar year (a point on the calendar, not a duration like _years)
 )
 
 # Suffixes naming a dimensionless ratio/weight/rate rather than a stock or
@@ -71,8 +72,6 @@ is_named_converter <- function(name, suffixes = ALLOWED_UNIT_SUFFIXES) {
   sum(hits) >= 2 && grepl("_to_", name, fixed = TRUE)
 }
 
-#' Numeric, non-function objects in `env` whose name lacks a permitted
-#' suffix.
 #' Numeric, non-function objects in `env` whose name lacks a permitted
 #' suffix. Objects carrying a declared `denominator` attribute are exempt:
 #' those are probability-like parameters governed by guard 3, which demands

@@ -1,3 +1,5 @@
+source_r("io_cache.R")
+source_r("price_index.R")
 source_derive("health_state_costs.R")
 source_r("denominator.R")
 source_r("transition_matrices.R")

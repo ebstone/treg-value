@@ -220,3 +220,37 @@ $3.0830) would each raise the frontier.
 `R/dosing.R` pending this decision, so every figure in the W4 readout stands
 as published. What changes is that the input is now decided and justified
 rather than inherited.
+
+## 2026-08-13 — All costs re-based to 2025 USD
+
+**Signed off:** Stone
+**Supersedes:** every dollar figure reported before this date, and SPEC.md
+section 8's "then re-based to 2025", which had not been implemented.
+
+**Change:** cost inputs arrived on three bases — Aliyev's health-state and
+conventional-therapy costs in 2017 USD, and the CMS ASP and Physician Fee
+Schedule figures at current 2026 rates. All are now re-based to 2025 USD,
+SPEC.md section 2's stated currency year, through medical-care CPI
+(BLS CPIMEDNS, `data/raw/cpi_medical_care_annual.csv`). Factors: 2017 to
+2025 is 1.220440; 2026 to 2025 is 0.979316.
+
+Re-basing is applied in `R/price_index.R` at the `R/` boundary, never inside
+`derive/`. The derive layer continues to reproduce Aliyev's published
+per-cycle figures in Aliyev's own dollar year, which its provenance
+re-derivation test depends on.
+
+**Effect on reported results:** every dollar figure moves. Central case, at
+$100,000 per QALY: A from −$2,507.11 to −$2,655.38; B at h = 5% from
+$160,996.86 to $172,041.94; the required cure fraction at a $20,000 course
+from 14.0% to 13.2%. Directionally, health-state costs rise 22% while the
+CMS-sourced drug and administration prices fall 2%, so the comparator arm
+becomes more expensive and the therapy's justifiable price rises.
+
+**Reason:** SPEC.md fixes the currency year and a cost-effectiveness model
+cannot mix dollar years across its inputs. Medical-care CPI is the
+conventional US deflator for healthcare-sector costs.
+
+**Known limitation, recorded rather than resolved:** the 2025 index average
+covers eleven months (October 2025 is absent from the published BLS series)
+and the 2026 average seven. Both are documented in the index file's own
+sidecar. The eleven-month gap moves the re-basing factor by roughly 0.07%.

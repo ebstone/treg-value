@@ -22,10 +22,10 @@ IFX_PRICED_PRODUCT <- "Q5104"
 #' Cost of one infliximab infusion's drug (dose_mg * $/mg for the priced
 #' product), read from data/raw/cms_asp_infliximab_2026.csv.
 ifx_drug_cost_usd_per_dose <- function(dose_mg = IFX_DOSE_MG, product = IFX_PRICED_PRODUCT, raw_dir = "data/raw") {
-  asp <- read.csv(file.path(raw_dir, "cms_asp_infliximab_2026.csv"), stringsAsFactors = FALSE)
+  asp <- read_csv_cached(file.path(raw_dir, "cms_asp_infliximab_2026.csv"))
   row <- asp[asp$hcpcs_code == product, ]
   stopifnot(nrow(row) == 1)
-  dose_mg * row$usd_per_mg
+  rebase_usd(dose_mg * row$usd_per_mg, CMS_COST_YEAR, raw_dir = raw_dir)
 }
 
 #' Administration cost for one infusion visit: CPT 96365 (first hour) + one
@@ -36,10 +36,10 @@ ifx_drug_cost_usd_per_dose <- function(dose_mg = IFX_DOSE_MG, product = IFX_PRIC
 #' administration"; the PFS sidecar's U1 flags that 96366's additive billing
 #' has not been separately confirmed against CMS policy.
 ifx_administration_cost_usd_per_dose <- function(raw_dir = "data/raw") {
-  pfs <- read.csv(file.path(raw_dir, "cms_pfs_infusion_administration_2026.csv"), stringsAsFactors = FALSE)
+  pfs <- read_csv_cached(file.path(raw_dir, "cms_pfs_infusion_administration_2026.csv"))
   first_hour <- pfs$national_payment_usd[pfs$hcpcs_code == "96365" & pfs$setting == "non-facility"][1]
   addl_hour <- pfs$national_payment_usd[pfs$hcpcs_code == "96366" & pfs$setting == "non-facility"][1]
-  first_hour + addl_hour
+  rebase_usd(first_hour + addl_hour, CMS_COST_YEAR, raw_dir = raw_dir)
 }
 
 #' Total cost of one infliximab infusion visit: drug + administration.

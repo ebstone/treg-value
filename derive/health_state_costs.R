@@ -28,7 +28,7 @@ pmpm_2008_usd_to_cycle_2017_usd <- function(pmpm_2008_usd) {
 #' carries the state name, e.g. "Mild-Moderate CD-related PMPM Mean Total
 #' Cost, 2008 USD"), given a substring that identifies it uniquely.
 aliyev_pmpm_2008_usd <- function(state_match, raw_dir = "data/raw") {
-  params <- read.csv(file.path(raw_dir, "aliyev2019_source_parameters.csv"), stringsAsFactors = FALSE)
+  params <- read_csv_cached(file.path(raw_dir, "aliyev2019_source_parameters.csv"))
   row <- params[grepl(state_match, params$parameter, fixed = TRUE) &
     grepl("Mean Total Cost", params$parameter, fixed = TRUE), ]
   stopifnot(nrow(row) == 1)
@@ -39,7 +39,7 @@ aliyev_pmpm_2008_usd <- function(state_match, raw_dir = "data/raw") {
 #' data/raw/aliyev2019_base_case_costs_utilities.csv's "Direct Cost per
 #' Cycle (2017 USD)" category, by exact item name.
 aliyev_adopted_cycle_2017_usd <- function(item, raw_dir = "data/raw") {
-  adopted <- read.csv(file.path(raw_dir, "aliyev2019_base_case_costs_utilities.csv"), stringsAsFactors = FALSE)
+  adopted <- read_csv_cached(file.path(raw_dir, "aliyev2019_base_case_costs_utilities.csv"))
   row <- adopted[adopted$category == "Direct Cost per Cycle (2017 USD)" & adopted$item == item, ]
   stopifnot(nrow(row) == 1)
   as.numeric(row$value)

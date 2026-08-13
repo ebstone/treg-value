@@ -90,7 +90,8 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
 
   discounted_cost_usd <- 0
   discounted_qaly <- 0
-  state_sum_log <- numeric(0)
+  state_sum_log <- numeric(LANDMARK_CYCLES + round((100 - start_age_years) * ALIYEV_CYCLES_PER_YEAR))
+  log_i <- 0L
   age <- start_age_years
   years_elapsed <- 0
 
@@ -114,7 +115,7 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
     discounted_cost_usd <- discounted_cost_usd + (sum(hc * costs) + ct_alive * ct_drug_cost) * df
     discounted_qaly <- discounted_qaly + sum(hc * utilities) * CYCLE_YEARS * df
 
-    state_sum_log <- c(state_sum_log, sum(cohort))
+    log_i <- log_i + 1L; state_sum_log[log_i] <- sum(cohort)
     age <- age + CYCLE_YEARS
   }
 
@@ -169,7 +170,7 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
 
     cumulative_standard_care <- cumulative_standard_care + relapsed
     cumulative_dead <- cumulative_dead + died
-    state_sum_log <- c(state_sum_log, dfr + cumulative_standard_care + cumulative_dead)
+    log_i <- log_i + 1L; state_sum_log[log_i] <- dfr + cumulative_standard_care + cumulative_dead
     age <- age + CYCLE_YEARS
   }
 
@@ -177,7 +178,7 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
     discounted_cost_usd = discounted_cost_usd,
     discounted_qaly = discounted_qaly,
     cycle6_drug_free_remission_share = cycle6_drug_free_remission_share,
-    state_sums = state_sum_log,
+    state_sums = state_sum_log[seq_len(log_i)],
     final_drug_free_remission = dfr
   )
 }

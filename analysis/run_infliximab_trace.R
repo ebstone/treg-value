@@ -6,6 +6,8 @@
 # builds no Treg arm, no cure fraction, no price, no frontier (W4).
 
 # Run from the repository root.
+source("R/io_cache.R")
+source("R/price_index.R")
 source("derive/health_state_costs.R")
 source("R/transition_matrices.R")
 source("R/life_table.R")
