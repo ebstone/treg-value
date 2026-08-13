@@ -1,0 +1,57 @@
+file: cms_pfs_infusion_administration_2026.csv
+status: transcribed
+citation:
+  publisher: Centers for Medicare & Medicaid Services
+  title: "Physician Fee Schedule Open Data: Indicators for 2026"
+  dataset_identifier: 7c7df311-5315-4f38-b9ed-fd62f8bebe11
+  url: https://pfs.data.cms.gov/dataset/7c7df311-5315-4f38-b9ed-fd62f8bebe11
+  download_url: https://pfs.data.cms.gov/sites/default/files/data/indicators2026-07-01-2026.csv
+retrieved: 2026-08-12
+retrieved_via: >
+  Downloaded directly from pfs.data.cms.gov's open-data API (first-party CMS
+  source, not a state Medicaid republication) via curl. www.cms.gov itself
+  returned HTTP 403 to a direct fetch tool in this session; pfs.data.cms.gov
+  (a separate CMS-run open-data subdomain) did not.
+sha256: cdd6edde14f259f7b425eb1dada966d36797b0c4c9bbba89bdc38566f7adf2a8
+notes: >
+  Resolves OPEN_QUESTIONS.md O7 (partially -- see unresolved U1 below) and
+  W2_sourcing_register.md S-1. `national_payment_usd` = rvu_total *
+  conversion_factor_usd, per S-1's own instruction to "record RVUs and the
+  payment amount separately so the arithmetic is checkable, not just the
+  total" -- this is CMS's own published payment formula, not a modeling
+  derivation, so it is included directly in this raw transcription rather
+  than deferred to derive/.
+  The source dataset lists two rows per HCPCS code, differing only in
+  `price_ind` (9 vs 1) and `conversion_factor_usd` (33.4009 vs 33.5675); all
+  RVU components are identical between the two. This file keeps only the
+  price_ind=9 / $33.4009 rows, since $33.4009 independently matches
+  W2_sourcing_register.md S-1's already-cited CY2026 PFS conversion factor
+  (CMS PFS January 2026 release, CY2026 final rule MM14315, effective
+  2026-01-01). The price_ind=1 / $33.5675 rows are dropped, not resolved --
+  see unresolved U2.
+  Facility and non-facility RVUs (and therefore payments) are identical for
+  both codes in this dataset -- W2_sourcing_register.md S-1 flagged
+  "facility or non-facility" as a decision to make and record, but for these
+  two specific codes the source data does not actually distinguish the two
+  settings, so no decision changes the number. Both rows are kept for
+  completeness/traceability rather than picking one.
+unresolved:
+  - id: U1
+    issue: >
+      CPT 96366 (each additional hour) RVUs are per the source's own
+      description "addon" -- confirm this is additive to 96365 (one unit of
+      96365 + N units of 96366 for an N+1 hour infusion) rather than a
+      standalone code, before using it in a derive/ script. This matches
+      the billing-guide pattern seen in unrelated commercial sources during
+      sourcing, but has not been confirmed against CMS's own NCCI/billing
+      policy documentation.
+    blocks: derive/ script for administration cost (W3 or later)
+  - id: U2
+    issue: >
+      Meaning of the dropped price_ind=1 / $33.5675 rows is not confirmed --
+      possibly a mid-year conversion factor update, an anesthesia-specific
+      indicator, or something else. If $33.5675 turns out to be the
+      currently-effective CF rather than $33.4009, every payment figure in
+      this file needs recomputing (33.5675/33.4009 = 1.005, a ~0.5% shift,
+      small but not zero).
+    blocks: none currently -- flagged for whoever next touches CMS PFS data

@@ -1,0 +1,5 @@
+hcpcs_code,short_description,setting,rvu_work,rvu_practice_expense,rvu_malpractice,rvu_total,price_ind,conversion_factor_usd,national_payment_usd
+96365,Ther/proph/diag iv inf init,non-facility,0.21,1.76,0.04,2.01,9,33.4009,67.14
+96365,Ther/proph/diag iv inf init,facility,0.21,1.76,0.04,2.01,9,33.4009,67.14
+96366,Ther/proph/diag iv inf addon,non-facility,0.18,0.45,0.01,0.64,9,33.4009,21.38
+96366,Ther/proph/diag iv inf addon,facility,0.18,0.45,0.01,0.64,9,33.4009,21.38

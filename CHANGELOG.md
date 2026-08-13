@@ -69,3 +69,29 @@ One line per session: what changed, and which tests now cover it.
   W4/analysis-code scaffolds). Gate A satisfied: every data/raw/ file has a
   resolving sidecar, and the health-state cost rule reproduces all published
   per-cycle figures (three derived, two adopted directly, both documented).
+
+## 2026-08-12 (pre-W3 sourcing)
+- Sourced what W2_sourcing_register.md S-1 and OPEN_QUESTIONS.md O7/O8/U1-U4
+  flagged as blocking W3. CPT 96365/96366 (infusion administration) RVUs and
+  payment amounts sourced directly from CMS's own open-data API
+  (pfs.data.cms.gov/dataset -- www.cms.gov itself returned HTTP 403 to a
+  direct fetch) as data/raw/cms_pfs_infusion_administration_2026.csv. O7
+  closed as C9: 96365 = $67.14, 96366 = $21.38 (add-on), and the
+  facility/non-facility question S-1 raised turned out moot -- CMS's own
+  data has identical RVUs for both settings for these two codes.
+- Re-pulled the CMS ASP infliximab file at the current 2026-07 quarter
+  (superseding 2026-04), added the originator (J1745) and a third biosimilar
+  (Q5121, Avsola) alongside Q5103/Q5104. Resolved U1 (confirmed "Payment
+  Limit" is ASP+6% by CMS's own methodology, not raw ASP), U2 (quarter now
+  current), and U4 (originator now included). U3 (which product prices the
+  base case) stays open -- a decision, not a lookup -- narrowed into O8 for
+  Eric/co-author sign-off.
+- Corrected W2_sourcing_register.md S-2, which had stated Aliyev's
+  Moderate-Severe PMPM as $362 (a figure that does not appear in the actual
+  source and appears to have been backed into to make the reconciliation
+  arithmetic work) -- now states the real $374 figure and the C8 finding
+  that it does not reconcile, rather than the previously-false "all four
+  reconcile... with no free parameters" claim.
+- Full suite unchanged at 46 assertions / 27 tests, 0 failures, 2 pre-existing
+  skips (new data/raw/ files validated against G1 individually and via the
+  full suite).

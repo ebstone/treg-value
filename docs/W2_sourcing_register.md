@@ -9,25 +9,48 @@ across from `treg-cd`. If a value cannot be sourced, it goes in
 
 ---
 
-## S-1. Infliximab administration — CMS Physician Fee Schedule
+## S-1. Infliximab administration — CMS Physician Fee Schedule — RESOLVED 2026-08-12
 
-**Status:** partially sourced. Conversion factor in hand, code-level rate not.
+**Status:** sourced, from CMS's own open-data API (pfs.data.cms.gov), not a
+third-party or state mirror. See `data/raw/cms_pfs_infusion_administration_2026.csv`
+and its sidecar. OPEN_QUESTIONS.md O7 closed as C9.
 
 | Item | Value | Source |
 |---|---|---|
 | CY2026 PFS conversion factor | **$33.4009** | CMS PFS January 2026 release, CY2026 final rule (MM14315, effective 2026-01-01) |
-| CPT 96365 total RVUs, non-facility | **TO SOURCE** | — |
-| CPT 96365 national payment amount | **TO SOURCE** | — |
+| CPT 96365 total RVUs (work 0.21 + PE 1.76 + MP 0.04) | **2.01** | pfs.data.cms.gov, "Indicators for 2026" |
+| CPT 96365 national payment amount | **$67.14** | 2.01 × $33.4009 |
+| CPT 96366 total RVUs (work 0.18 + PE 0.45 + MP 0.01), add-on | **0.64** | pfs.data.cms.gov, "Indicators for 2026" |
+| CPT 96366 national payment amount | **$21.38** | 0.64 × $33.4009 |
 
-**How to close:** PFS Look-up Tool, https://www.cms.gov/medicare/physician-fee-schedule/search/overview — CPT 96365, national, CY2026, non-facility. Record RVUs and the payment amount separately so the arithmetic is checkable, not just the total.
+**Facility or non-facility:** turned out moot. CMS's own data has identical
+RVUs for facility and non-facility settings for both codes — the "prior
+project used $57.90 (2025) without recording which setting" gap this section
+originally flagged does not have a live consequence for these two codes.
 
-**Decide and record:** facility or non-facility. Infliximab infusion for Crohn's occurs in both hospital outpatient and independent infusion settings, and the two rates differ materially. The prior project used $57.90 (2025) without recording which setting it represented.
-
-**Also needed:** CPT 96366 (each additional hour). Infliximab infusions run 2 hours or more, so 96365 alone understates administration.
+**Residual, not blocking W3:** whether 96366 is billed additively alongside
+96365 (one unit of each per hour beyond the first) is assumed, not confirmed
+against CMS billing policy; and the source data carries a second,
+unexplained RVU row at a different conversion factor ($33.5675) that was not
+used. Both recorded as unresolved items in the sidecar for whoever next
+touches this data.
 
 ---
 
 ## S-2. Surgery state cost — RESOLVED, no external source needed
+
+**Correction, 2026-08-12 (OPEN_QUESTIONS.md C8):** the Moderate-Severe row
+below, as originally written, used $362 as Aliyev's PMPM figure. That number
+does not appear anywhere in Aliyev's actual Suppl. Table 2 -- verified at
+1200 DPI against the source PDF. The real figure is **$374**, which does
+*not* reconcile to Aliyev's adopted $217/cycle via this conversion rule (it
+gives $224.43, a $7.40 gap). The other three states below are unaffected and
+do reconcile as shown. See `data/raw/aliyev2019_base_case_costs_utilities.csv`
+and `derive/health_state_costs.R`: Moderate-Severe (and Moderate-Severe
+Responder, which Suppl. Table 2 has no PMPM row for at all) now use Aliyev's
+adopted per-cycle figure directly rather than this rule, per Eric Stone's
+direction. The claim "all four reconcile... with no free parameters" below
+is therefore false for Moderate-Severe and should not be relied on.
 
 Aliyev's Surgery state is **all surgeries and procedures** (Lichtenstein et al.
 2005), many of them performed in an outpatient setting. It is not a colectomy
@@ -43,14 +66,15 @@ PMPM -> 2-week cycle:  14 / 30.44        = 0.45992
 combined:                                = 0.60009
 
 Severe-Fulminant  $1,475 PMPM x 0.60009  = $885.14   (Aliyev: $884)
-Moderate-Severe     $362 PMPM x 0.60009  = $217.23   (Aliyev: $217)
+Moderate-Severe     $374 PMPM x 0.60009  = $224.43   (Aliyev: $217 -- does NOT reconcile, see correction above)
 Mild                $152 PMPM x 0.60009  = $ 91.21   (Aliyev: $ 91)
 Remission            $17 PMPM x 0.60009  = $ 10.20   (Aliyev: $ 10)
 ```
 
-All four reconcile within about a dollar with no free parameters. The rule is
-the derivation; re-base to 2025 USD with a named index and the same rule
-applies to every state including Surgery.
+Three of four reconcile within about a dollar with no free parameters; see the
+correction above for Moderate-Severe. The rule is the derivation; re-base to
+2025 USD with a named index and the same rule applies to every state
+including Surgery.
 
 **Do not query HCUP.** The retired workbook substituted a one-time colectomy
 episode cost on state entry — a >25x substitution into a state whose own

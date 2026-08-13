@@ -1,3 +1,5 @@
 hcpcs_code,product,descriptor,billing_unit_mg,payment_limit_usd_per_unit,usd_per_mg,asp_file_quarter
-Q5103,Inflectra (infliximab-dyyb),"Injection, infliximab-dyyb, biosimilar, 10 mg",10,26.035,2.6035,2026-04
-Q5104,Renflexis (infliximab-abda),"Injection, infliximab-abda, biosimilar, 10 mg",10,26.803,2.6803,2026-04
+J1745,"Remicade (infliximab, originator)","Injection, infliximab, not otherwise specified, 10 mg",10,31.479,3.1479,2026-07
+Q5103,Inflectra (infliximab-dyyb),"Injection, infliximab-dyyb, biosimilar, 10 mg",10,27.710,2.7710,2026-07
+Q5104,Renflexis (infliximab-abda),"Injection, infliximab-abda, biosimilar, 10 mg",10,26.615,2.6615,2026-07
+Q5121,Avsola (infliximab-axxq),"Injection, infliximab-axxq, biosimilar, 10 mg",10,30.830,3.0830,2026-07
