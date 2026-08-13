@@ -198,3 +198,33 @@ One line per session: what changed, and which tests now cover it.
   cheapest and B and P* smallest: the conservative direction. Originator
   J1745 prices scenario S4.
 - Full suite unchanged: 127 assertions across 63 tests, 0 failures, 1 skip.
+
+## 2026-08-13 (currency re-basing and probabilistic analysis)
+- All costs re-based to 2025 USD (SPEC.md section 2's stated currency year,
+  previously unimplemented) through medical-care CPI, added as
+  data/raw/cpi_medical_care_annual.csv. Re-basing lives at the R/ boundary
+  so derive/ keeps reproducing Aliyev's figures in Aliyev's dollar year and
+  its provenance test stays valid. Amendment recorded; every dollar figure
+  moves (A -$2,507 -> -$2,655; B at h=5%, $100k $160,997 -> $172,042).
+- Engine optimised 5.6x (0.474s -> 0.085s per lifetime trace): age-adjusted
+  matrices cached per integer age band, per-state transition loop replaced
+  with a matrix multiply, state-sum logs preallocated, memoised CSV reader
+  (R/io_cache.R) since every loader re-read its file on every call. Results
+  unchanged to 1.7e-7 relative.
+- R/psa.R + analysis/run_psa.R: probabilistic analysis (A5) over health-state
+  costs, utilities, comparator price and transition rows sampled whole --
+  every distribution Aliyev's own, from Suppl. Table 2's alpha/beta columns.
+  pi_cure, h and lambda are NOT sampled: SPEC.md section 5 places no prior
+  on them, so the PSA is conditional on a stated (pi, h, lambda) and a
+  distribution over pi_cure would be a new assumption requiring an
+  amendment. 1000 draws; one draw serves all 27 (lambda, h) combinations
+  because neither changes the sampled model.
+- Per-patient EVPI over the sourced parameter uncertainty at an illustrative
+  price and cure fraction (part of A4). The break-even eligible population
+  A4 also asks for remains blocked on O1 and O2, both unsourced.
+- G5 strengthened: the source-text ban on write.csv now applies to analysis/
+  only (R/psa.R legitimately writes sampled model INPUTS to scratch), and is
+  replaced for R/ by a direct assertion that every file in output/ actually
+  carries a commit hash and a SPEC.md hash -- an outcome test rather than a
+  grep for a function name, with a violation fixture.
+- Full suite: 210 assertions across 71 tests, 0 failures, 1 skip.
