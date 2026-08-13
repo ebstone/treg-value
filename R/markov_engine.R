@@ -41,9 +41,19 @@
 CYCLE_YEARS <- 1 / ALIYEV_CYCLES_PER_YEAR
 DISCOUNT_RATE_PER_YEAR <- 0.03 # SPEC.md section 2; matches Suppl. Table 5's own Discount Rate panel
 
+#' The discount rate in force. Reads an option so a sensitivity analysis can
+#' vary it for a whole run without threading a rate argument through every
+#' function that discounts something -- CHEERS 2022 item 24 asks for the
+#' effect of the choice of discount rate, and the base case is the 3% SPEC.md
+#' section 2 fixes. Callers that vary it are responsible for restoring it;
+#' analysis/run_scenarios.R does so with on.exit().
+discount_rate_per_year <- function() {
+  getOption("treg_value.discount_rate", DISCOUNT_RATE_PER_YEAR)
+}
+
 #' Discount factor for a value realised `years_from_start` years into the
-#' trace, at the standard 3% annual rate (SPEC.md section 2).
-discount_factor_years_to_discount_factor <- function(years_from_start, rate = DISCOUNT_RATE_PER_YEAR) {
+#' trace, at whichever rate is in force (SPEC.md section 2 fixes 3% annual).
+discount_factor_years_to_discount_factor <- function(years_from_start, rate = discount_rate_per_year()) {
   (1 + rate)^(-years_from_start)
 }
 

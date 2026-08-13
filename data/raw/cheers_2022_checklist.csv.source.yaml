@@ -1,0 +1,23 @@
+file: cheers_2022_checklist.csv
+status: transcribed
+citation:
+  authors: "Husereau D, Drummond M, Augustovski F, et al."
+  title: >
+    Consolidated Health Economic Evaluation Reporting Standards 2022
+    (CHEERS 2022) Statement: Updated Reporting Guidance for Health Economic
+    Evaluations
+  year: 2022
+  pmid: 35031096
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC8749494/
+table_or_page: "The CHEERS 2022 checklist, all 28 items"
+retrieved: 2026-08-13
+retrieved_via: >
+  Read from the open-access publication. Item numbers, sections, topics and
+  recommendation text are transcribed verbatim rather than paraphrased, so
+  the compliance assessment is made against the standard's own wording.
+sha256: 26ddc5e1e6035d51362824e207688903d8e4ed8ef9e21701515c3bc39427ca2b
+notes: >
+  SPEC.md section 2 names CHEERS 2022 as this study's reporting standard.
+  The checklist is stored as raw data so the assessment in
+  output/tables/cheers_2022_compliance.csv can be regenerated against it and
+  audited item by item.

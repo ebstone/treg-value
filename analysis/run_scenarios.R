@@ -41,13 +41,24 @@ SCENARIOS <- list(
   list(id = "S5-ADA", label = "S5: adalimumab as reference comparator",
        therapy = "ADA", window = NULL, product = "Q5104", vintage = "base"),
   list(id = "S7", label = "S7: pre-pandemic (2019) life table",
-       therapy = "IFX", window = 8, product = "Q5104", vintage = "pre_pandemic")
+       therapy = "IFX", window = 8, product = "Q5104", vintage = "pre_pandemic"),
+  # CHEERS 2022 item 24 asks for the effect of the choice of discount rate.
+  # SPEC.md section 2 fixes 3%; 0% and 5% bracket conventional practice.
+  list(id = "disc-0", label = "Discount rate 0% (CHEERS item 24)",
+       therapy = "IFX", window = 8, product = "Q5104", vintage = "base", discount = 0),
+  list(id = "disc-5", label = "Discount rate 5% (CHEERS item 24)",
+       therapy = "IFX", window = 8, product = "Q5104", vintage = "base", discount = 0.05)
 )
 
 bench <- manufacturing_benchmark_usd_per_course()
 rows <- list()
 
 for (sc in SCENARIOS) {
+  if (!is.null(sc$discount)) {
+    old <- getOption("treg_value.discount_rate")
+    options(treg_value.discount_rate = sc$discount)
+    on.exit(options(treg_value.discount_rate = old), add = TRUE)
+  }
   grid <- standard_care_grid(sc$window, CAP_ON, product = sc$product,
     life_table_vintage = sc$vintage, therapy = sc$therapy)
   comparator <- run_comparator_trace(sc$therapy, sc$window, CAP_ON,
@@ -68,6 +79,7 @@ for (sc in SCENARIOS) {
         stringsAsFactors = FALSE)
     }
   }
+  if (!is.null(sc$discount)) options(treg_value.discount_rate = NULL)
 }
 scenarios <- do.call(rbind, rows)
 stamp_output(scenarios, "output/tables/scenarios.csv")

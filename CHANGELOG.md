@@ -310,3 +310,24 @@ One line per session: what changed, and which tests now cover it.
   require assuming a redose cure probability, which is the parameter being
   solved for; S6 is blocked on O3 and O4, both unsourced.
 - Full suite: 331 assertions across 92 tests, 0 failures, 0 skips.
+
+## 2026-08-13 (CHEERS 2022 compliance)
+- data/raw/cheers_2022_checklist.csv holds all 28 items transcribed verbatim
+  from the open-access statement, with sidecar, so the assessment is made
+  against the standard's own wording rather than a paraphrase.
+- analysis/run_cheers_assessment.R classifies each item as satisfied by a
+  repository artifact (20), a manuscript matter (4), a genuine gap (3), or
+  partial (1), each with named evidence. Stamped to
+  output/tables/cheers_2022_compliance.csv.
+- Item 24 asks for the effect of the choice of discount rate as well as time
+  horizon. Time horizon was already varied; discount rate was not. The rate
+  now reads from an option so a run can vary it without threading a rate
+  argument through every function that discounts, and 0% and 5% are run as
+  scenarios alongside SPEC.md's 3% base case.
+- Three gaps are recorded rather than papered over, and none is something an
+  analysis repository can close: item 19 (distributional and equity effects,
+  not analysed), item 21 (no patient, public, clinician or payer engagement
+  in study design), and item 25 (consequent on 21). Item 26 is partial --
+  limitations exist, ethical and equity considerations and generalisability
+  do not.
+- Full suite: 344 assertions across 94 tests, 0 failures, 0 skips.
