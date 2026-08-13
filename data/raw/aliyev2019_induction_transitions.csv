@@ -1,0 +1,13 @@
+therapy,from_state,to_moderate_severe,to_moderate_severe_responder,to_mild,to_remission,total
+UST,Moderate-Severe,0.791,0.0377,0.0377,0.133,1.000
+UST,Moderate-Severe Responder,0,1,0,0,1.000
+UST,Mild,0,0,1,0,1.000
+UST,Remission,0,0,0,1,1.000
+IFX,Moderate-Severe,0.756,0.0208,0.0208,0.203,1.000
+IFX,Moderate-Severe Responder,0,1,0,0,1.000
+IFX,Mild,0,0,1,0,1.000
+IFX,Remission,0,0,0,1,1.000
+ADA,Moderate-Severe,0.756,0.0208,0.0208,0.203,1.000
+ADA,Moderate-Severe Responder,0,1,0,0,1.000
+ADA,Mild,0,0,1,0,1.000
+ADA,Remission,0,0,0,1,1.000

@@ -10,6 +10,11 @@ source_r <- function(..., envir = parent.frame()) {
   source(repo_root_relative("R", ...), local = envir)
 }
 
+# Source a single script from derive/ into the caller's frame.
+source_derive <- function(..., envir = parent.frame()) {
+  source(repo_root_relative("derive", ...), local = envir)
+}
+
 # Source every *.R file directly under `dir` (sorted, so earlier files'
 # constants are available to later ones) into one fresh environment and
 # return it. Used by guards that lint or introspect R/'s functions and

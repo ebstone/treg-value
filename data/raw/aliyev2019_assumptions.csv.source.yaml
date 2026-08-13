@@ -1,0 +1,47 @@
+file: aliyev2019_assumptions.csv
+status: transcribed
+citation:
+  authors: Aliyev ER, Hay JW, Hwang C
+  title: >
+    Cost-Effectiveness Comparison of Ustekinumab, Infliximab, or Adalimumab
+    for the Treatment of Moderate-Severe Crohn's Disease in Biologic-Naive
+    Patients
+  journal: "Pharmacotherapy: The Journal of Human Pharmacology and Drug Therapy"
+  year: 2019
+  volume: 39
+  issue: 2
+  pages: 118-128
+  doi: 10.1002/phar.2208
+  appendix: Appendix S1
+  supplementary_table: "Supplementary Table 1. Model assumptions and justifications"
+table_or_page: "Supplementary Table 1 (single page), Appendix S1"
+retrieved: 2026-08-12
+retrieved_via: >
+  Local file phar2208-sup-0001-appendixs1.pdf, already present in Downloads
+  from prior project work. Rendered at 400 DPI with pdftoppm and read
+  section by section from the resulting image (not from pdftotext's text
+  layer, which is known to scramble this table's row order -- W2 prompt
+  trap #1). Cross-checked terms against SPEC.md's own citation of a "Buxton"
+  EQ-5D-to-CDAI algorithm (SPEC.md section 8), which confirmed a
+  low-resolution first read of "Baron 2007" was wrong.
+sha256: f38edea0efea675cb08100d5060288a4614f7a6c18181de76b7f80786238b711
+notes: >
+  29 rows total: Induction 1-8, Maintenance 1-13, Quality of Life 1-2,
+  Costs 1-6 -- matches the count the W2 prompt expects. All 29 rows were
+  legible at 400 DPI and are transcribed at full confidence; none needed a
+  confidence: low flag. Three transcription errors were caught and
+  corrected during a first low-resolution pass before this sidecar was
+  written: Maintenance #11's cycle probability is 0.05, not 1; Maintenance
+  #13 and Induction #8 both read "No vial sharing", not "No aid sharing";
+  Costs #6 is "3.5 hours" of Surgery treatment time, not "1.5 hours"; and
+  Quality of Life #1 cites "Buxton 2007", not "Baron 2007" -- kept here as a
+  record of what the trap actually looks like in practice, not just a
+  warning.
+  Several justification cells refer to earlier rows ("See justification for
+  Induction assumption #4/#7/#8") rather than repeating text -- transcribed
+  exactly as printed, not expanded/resolved.
+  Parent-article citation confirmed via web search against the DOI
+  (10.1002/phar.2208), which matches the source filename's "phar2208"
+  prefix -- journal is Pharmacotherapy, not PharmacoEconomics as an earlier
+  draft of this sidecar guessed from SPEC.md's informal "Aliyev 2019" label
+  alone.

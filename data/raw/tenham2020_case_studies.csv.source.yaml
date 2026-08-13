@@ -1,0 +1,73 @@
+file: tenham2020_case_studies.csv
+status: transcribed
+citation:
+  authors: >
+    ten Ham RMT, Hovels AM, Hoekman J, Frederix GW, Leufkens HGM, Klungel OH,
+    Jedema I, Veld SAJ, Nikolic T, Van Pel M, Zwaginga JJ, de Goede AL,
+    Schreibelt G, Budde S, de Vries IJM, Wilkie GM, Dolstra H, Ovelgonne H,
+    Meij P, Mountford JC, Turner ML, Hoefnagel MHN
+  title: >
+    What does cell therapy manufacturing cost? A framework and methodology to
+    facilitate academic and other small-scale cell therapy manufacturing
+    costings
+  journal: Cytotherapy
+  year: 2020
+  volume: 22
+  issue: 7
+  pages: 388-397
+  doi: 10.1016/j.jcyt.2020.03.432
+  open_access_copy: https://dspace.library.uu.nl/bitstream/handle/1874/442540/1_s2.0_S1465324920304965_main.pdf
+table_or_page: "Table I (p.391, case study characteristics) and Table II (p.394, cost per batch and treatment)"
+retrieved: 2026-08-12
+retrieved_via: >
+  Located via web search (the paper was not supplied locally). Downloaded the
+  open-access author copy from the Utrecht University repository (dspace).
+  Table I and Table II transcribed from pdftotext -layout extraction of
+  pages 391 and 394, cross-checked against the rendered page images and
+  against row-sum arithmetic (Materials + Equipment + Personnel + Facility =
+  Total/batch, to within the source's own rounding).
+sha256: 41d7e18a9c0f4858ad2fa030cbe25f89eaf80df04602ec52f2bf9289f65411cb
+unit_note: >
+  ten Ham reports cost per *treatment*, not per dose. Case study 8 (D-8) is
+  the only one where a batch yields multiple treatments: 88 doses at 4 doses
+  per treatment = 22 treatments per batch (Table I; Table II's "Treatment
+  yield/batch" row confirms 22). For case studies 1-7, one batch corresponds
+  to one treatment (stated in the article text, section "Facility and case
+  study characteristics"). total_per_treatment_eur is transcribed exactly as
+  printed in Table II's "Total/treatment" row, which is literally "NA" for
+  case studies 1-7 and only populated (€8673) for case study 8 -- this
+  sidecar does not impute a value for 1-7 by substituting the failure-rate-
+  adjusted Total/batch, even though the article text states the two are
+  equal for those cases ("In case studies 1 to 7, batch cost is equal to
+  per-patient CBT treatment cost"). A derive/ script may make that
+  substitution explicitly and cite this note; a raw transcription may not.
+unresolved:
+  - id: U1
+    issue: >
+      Facility C (case studies 6, 7): the article's Discussion states a
+      payment arrangement aggregated fixed materials, personnel and facility
+      costs at this facility, producing "empty" cost categories the study
+      could not independently break down. Table II nonetheless prints
+      non-empty Materials/Personnel/Facility figures for cases 6 and 7 (and,
+      notably, Facility cost is identical, €4167, for both) -- consistent
+      with an allocated/estimated split of an aggregate rather than an
+      independently measured breakdown. Transcribed verbatim; flagged so a
+      consumer does not treat facility C's category split as measured at the
+      same confidence as facilities A, B, D.
+    blocks: any use of facility-C category-level costs
+  - id: U2
+    issue: >
+      Case study 5 (B-5)'s product is manufactured according to a
+      proprietary protocol per the paper's Declaration of Competing
+      Interest -- its cost breakdown may not be independently reproducible
+      or auditable in the way the other seven are.
+    blocks: none currently; noted for any sensitivity analysis restricted to
+      auditable case studies
+notes: >
+  Currency is 2018 EUR throughout (stated in Methods: "Costs are reported in
+  2018 euros because that was the most recent full financial year of data
+  collection"). Failure rate of 5% is an assumption the authors made based on
+  developer interviews (Methods), not a measured figure. Re-basing to 2025
+  USD, and any choice of which case studies (if any) inform the Treg
+  manufacturing benchmark, is a derive/ (W5) decision, not a transcription
+  one.

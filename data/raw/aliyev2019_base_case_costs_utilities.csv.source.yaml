@@ -1,0 +1,45 @@
+file: aliyev2019_base_case_costs_utilities.csv
+status: transcribed
+citation:
+  authors: Aliyev ER, Hay JW, Hwang C
+  title: >
+    Cost-Effectiveness Comparison of Ustekinumab, Infliximab, or Adalimumab
+    for the Treatment of Moderate-Severe Crohn's Disease in Biologic-Naive
+    Patients
+  journal: "Pharmacotherapy: The Journal of Human Pharmacology and Drug Therapy"
+  year: 2019
+  volume: 39
+  issue: 2
+  pages: 118-128
+  doi: 10.1002/phar.2208
+  appendix: Appendix S2
+  supplementary_table: "Supplementary Table 5. Base case costs, utilities, and discount rate"
+table_or_page: "Supplementary Table 5, page 11 of the Appendix S2 PDF"
+retrieved: 2026-08-12
+retrieved_via: >
+  Local file phar2208-sup-0002-appendixs2.pdf, already present in Downloads
+  from prior project work. This page's tables are embedded as images with no
+  extractable text layer (pdftotext -layout returns only the page header and
+  footer) -- transcribed entirely from a 600 DPI pdftoppm rendering, each of
+  the five panels (Utilities, Direct Costs, Discount Rate, Indirect Costs,
+  and the Adverse Event row inside the Utilities panel) individually cropped
+  and re-verified at that resolution before transcription.
+sha256: 429dda4a964424b5749c017f9e9db3433969cd05fba665f5e7e5300909dfd636
+notes: >
+  Added beyond W2_session_prompt.md's original four-file target list. Became
+  necessary when the "Direct Cost per Cycle" figures here (used directly by
+  Aliyev's model, per the panel title "Base case costs...") turned out not
+  to reconcile with aliyev2019_source_parameters.csv's Moderate-Severe PMPM
+  figure via the stated PMPM-to-cycle conversion rule -- see
+  OPEN_QUESTIONS.md O9. Per Eric Stone's direction (2026-08-12 session): use
+  this table's adopted per-cycle figures directly wherever the goal is
+  replicating what Aliyev's model actually did, rather than re-deriving
+  them from Suppl. Table 2's PMPM inputs.
+  "Direct Cost per Cycle" rows for Moderate-Severe and Moderate-Severe
+  Responder are identical (217 each) -- consistent with Suppl. Table 1
+  Costs assumption #4 ("Equivalent health state costs for M-S and M-SR").
+  Adverse Event Weighting Factors and the Utilities panel's health-state
+  EQ-5D values were not independently cross-checked against a second
+  extraction method (no usable text layer existed to check against, unlike
+  Tables 2-4) -- transcribed once, at 600 DPI, high confidence but single-
+  pass.

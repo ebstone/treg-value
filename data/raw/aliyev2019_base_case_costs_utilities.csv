@@ -1,0 +1,28 @@
+category,item,value
+Utility (EQ-5D),Moderate-Severe,0.57
+Utility (EQ-5D),Moderate-Severe Responder,0.65
+Utility (EQ-5D),Mild,0.73
+Utility (EQ-5D),Remission,0.82
+Utility (EQ-5D),Surgery,0.57
+Adverse Event Weighting Factor,UST,0.9960
+Adverse Event Weighting Factor,IFX,0.9953
+Adverse Event Weighting Factor,ADA,0.9975
+Adverse Event Weighting Factor,Conventional Therapy,0.9963
+Direct Cost per Cycle (2017 USD),Moderate-Severe,217
+Direct Cost per Cycle (2017 USD),Moderate-Severe Responder,217
+Direct Cost per Cycle (2017 USD),Mild,91
+Direct Cost per Cycle (2017 USD),Remission,10
+Direct Cost per Cycle (2017 USD),Surgery,884
+Direct Cost per Cycle (2017 USD),Out of Pocket,34
+Direct Cost per Cycle (2017 USD),Conventional Therapy,67
+Unit Cost (2017 USD),UST unit cost (130 mg vial),1512
+Unit Cost (2017 USD),UST maintenance unit cost (90 mg syringe),9693
+Unit Cost (2017 USD),IFX unit cost (100 mg vial),656
+Unit Cost (2017 USD),ADA unit cost (40 mg syringe),1384
+Unit Cost (2017 USD),Drug administration (infusion),319
+Discount Rate,Annual,0.03
+Discount Rate,Number of cycles per year,26
+Discount Rate,Equivalent cycle rate,0.0011
+Indirect Cost - Time (2017 USD),Infusion total time cost,110
+Indirect Cost - Time (2017 USD),Monitoring total time cost,71
+Indirect Cost - Time (2017 USD),Surgery total time cost,145

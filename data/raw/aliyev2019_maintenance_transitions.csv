@@ -1,0 +1,16 @@
+therapy,from_state,to_moderate_severe,to_moderate_severe_responder,to_mild,to_remission,to_surgery,to_death,total
+UST,Moderate-Severe Responder,0.0942,0.441,0.441,0,0.0238,0.00006,1.000
+UST,Mild,0.1007,0.441,0.441,0.0173,0,0.00006,1.000
+UST,Remission,0,0,0.0182,0.982,0,0.00006,1.000
+UST,Surgery,0.0153,0.010,0.010,0.868,0.0976,0.00006,1.000
+UST,Death,0,0,0,0,0,1,1.000
+IFX,Moderate-Severe Responder,0.0434,0.466,0.466,0,0.0238,0.00006,1.000
+IFX,Mild,0.0532,0.466,0.466,0.01405,0,0.00006,1.000
+IFX,Remission,0,0,0.010,0.990,0,0.00006,1.000
+IFX,Surgery,0.0153,0.010,0.010,0.868,0.0976,0.00006,1.000
+IFX,Death,0,0,0,0,0,1,1.000
+ADA,Moderate-Severe Responder,0.0773,0.449,0.449,0,0.0238,0.00006,1.000
+ADA,Mild,0.0871,0.449,0.449,0.01405,0,0.00006,1.000
+ADA,Remission,0,0,0.010,0.990,0,0.00006,1.000
+ADA,Surgery,0.0153,0.010,0.010,0.868,0.0976,0.00006,1.000
+ADA,Death,0,0,0,0,0,1,1.000

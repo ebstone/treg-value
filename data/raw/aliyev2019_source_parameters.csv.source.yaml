@@ -1,0 +1,58 @@
+file: aliyev2019_source_parameters.csv
+status: transcribed
+citation:
+  authors: Aliyev ER, Hay JW, Hwang C
+  title: >
+    Cost-Effectiveness Comparison of Ustekinumab, Infliximab, or Adalimumab
+    for the Treatment of Moderate-Severe Crohn's Disease in Biologic-Naive
+    Patients
+  journal: "Pharmacotherapy: The Journal of Human Pharmacology and Drug Therapy"
+  year: 2019
+  volume: 39
+  issue: 2
+  pages: 118-128
+  doi: 10.1002/phar.2208
+  appendix: Appendix S1
+  supplementary_table: "Supplementary Table 2. Model source parameters."
+table_or_page: "Supplementary Table 2 (page 2 of the appendix PDF), 59 rows"
+retrieved: 2026-08-12
+retrieved_via: >
+  Local file phar2208-sup-0001-appendixs1.pdf, already present in Downloads
+  from prior project work. Transcribed from pdftotext -layout's text-layer
+  extraction (unlike Suppl. Table 1, this table's rows extract in correct
+  order) and cross-checked against a 300-600 DPI pdftoppm rendering of the
+  same page, row by row. Both sources agree on every cell.
+sha256: 04f6cb5d3473e3e81505d1b7d63c8a808e72a70e51e747fa28520cfb674d3147
+notes: >
+  59 rows total, matching the W2 prompt's expected count. `alpha`/`beta` are
+  the named distribution parameters as printed (not necessarily shape/rate
+  or shape/scale in a single consistent sense across Beta/Uniform/Gamma --
+  see the source table's own footnotes, transcribed below). `-` in
+  distribution/alpha/beta (rows 54-59, plus row for Drug Administration) is
+  transcribed exactly as printed; those six rows are point estimates with no
+  stated distribution, used as-is in Aliyev's base case.
+  Source table footnotes (transcribed, not summarized): "Beta distribution
+  parameters were defined for proportions from the referenced clinical
+  trials." / "Gamma distribution parameters were fit using the method of
+  moments approach." / "Uniform distributions were applied to parameters
+  lacking reliable mean and variance information." / "All costs were
+  converted to 2017 USD." / "References are from main manuscript" (i.e. the
+  numeric `reference_source` values, e.g. 12, 21, are citation numbers in
+  Aliyev's own reference list, not reproduced here -- resolving them requires
+  the main manuscript, not just this appendix).
+unresolved:
+  - id: U1
+    issue: >
+      Row 45 ("Infusion Minutes of Treatment Time") prints Base Case Value
+      as "$150" -- a dollar sign on a minutes-denominated row, inconsistent
+      with the three sibling Time rows (84, 210, 37), none of which carry a
+      currency symbol. Confirmed present in both the PDF's text layer and a
+      600 DPI rendering, so this is not a transcription artifact -- it
+      appears to be a genuine formatting error in Aliyev's own published
+      table (likely inherited currency formatting from an adjacent column
+      in the source spreadsheet). Transcribed verbatim as "$150". A
+      consumer treating this as a time value in minutes should read it as
+      150, not $150; a consumer treating it as a cost should look elsewhere,
+      since no other Time row has a dollar value and Direct Cost rows are
+      a separate category.
+    blocks: derive/ script for treatment-time costs (W3 or later)

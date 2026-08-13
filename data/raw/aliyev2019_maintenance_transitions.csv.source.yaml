@@ -1,0 +1,57 @@
+file: aliyev2019_maintenance_transitions.csv
+status: transcribed
+citation:
+  authors: Aliyev ER, Hay JW, Hwang C
+  title: >
+    Cost-Effectiveness Comparison of Ustekinumab, Infliximab, or Adalimumab
+    for the Treatment of Moderate-Severe Crohn's Disease in Biologic-Naive
+    Patients
+  journal: "Pharmacotherapy: The Journal of Human Pharmacology and Drug Therapy"
+  year: 2019
+  volume: 39
+  issue: 2
+  pages: 118-128
+  doi: 10.1002/phar.2208
+  appendix: Appendix S2
+  supplementary_table: "Supplementary Table 4. Maintenance phase transition probabilities."
+table_or_page: "Supplementary Table 4, pages 8 (UST) and 9 (IFX, ADA) of the Appendix S2 PDF"
+retrieved: 2026-08-12
+retrieved_via: >
+  Local file phar2208-sup-0002-appendixs2.pdf, already present in Downloads
+  from prior project work. Rendered at 300 DPI with pdftoppm and read
+  directly from the image (UST sub-table on page 8; IFX and ADA sub-tables
+  on page 9 -- the table spans a page break in the source PDF).
+sha256: ce46b77959cdb63081452882caa36e70c3d3d11b1e56af441a18c99f1be68828
+unit_note: >
+  Native cycle length is 2 weeks, matching Table 3 and SPEC.md's convention.
+notes: >
+  Each therapy sub-table has only 5 "from" rows -- Moderate-Severe Responder,
+  Mild, Remission, Surgery, Death -- with no "from Moderate-Severe" row,
+  though Moderate-Severe is a destination column. This is not a
+  transcription gap: it is consistent across all three sub-tables (UST, IFX,
+  ADA) and matches aliyev2019_assumptions.csv Maintenance assumption #2
+  ("Any patients that lose response, i.e. transition into M-S state, ...
+  are switched to CT at the end of the first cycle during which they lost
+  response") -- a biologic-maintenance patient who reaches Moderate-Severe
+  leaves this Markov immediately, so no "from Moderate-Severe" row is ever
+  needed here. Transitions out of Moderate-Severe under conventional therapy
+  (CT) are the separate "CT Transition Probability" parameters in
+  aliyev2019_source_parameters.csv (rows 30-31: CT 2-Week M-S to M-SR/Mild
+  Probability, both 0.050), not reproduced in this file.
+  Surgery and Death row values are numerically identical across UST, IFX and
+  ADA (0.0153/0.010/0.010/0.868/0.0976/0.00006 and
+  0/0/0/0/0/1 respectively) -- consistent with Maintenance assumption #8
+  ("All biologics reduce risk of Surgery by the same amount") and #9 ("M-S
+  and M-SR states have the same probability of Surgery"), corroborating
+  rather than contradicting the assumptions table.
+  `total` is transcribed exactly as printed (each row states 1.000); actual
+  row sums of the six transcribed probabilities deviate from 1.000 by up to
+  0.001, consistent with independent per-cell rounding in the source (3-4
+  significant figures per cell).
+unresolved:
+  - id: U1
+    issue: >
+      Same appendix-number discrepancy as aliyev2019_induction_transitions.csv:
+      W2_session_prompt.md cites "Aliyev Appendix S1, Suppl. Table 4"; the
+      actual location is Appendix S2. See that file's sidecar for detail.
+    blocks: none -- transcription proceeded from the correct file once located

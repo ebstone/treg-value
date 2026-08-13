@@ -1,0 +1,53 @@
+file: aliyev2019_induction_transitions.csv
+status: transcribed
+citation:
+  authors: Aliyev ER, Hay JW, Hwang C
+  title: >
+    Cost-Effectiveness Comparison of Ustekinumab, Infliximab, or Adalimumab
+    for the Treatment of Moderate-Severe Crohn's Disease in Biologic-Naive
+    Patients
+  journal: "Pharmacotherapy: The Journal of Human Pharmacology and Drug Therapy"
+  year: 2019
+  volume: 39
+  issue: 2
+  pages: 118-128
+  doi: 10.1002/phar.2208
+  appendix: Appendix S2
+  supplementary_table: "Supplementary Table 3. Induction phase transition probabilities."
+table_or_page: "Supplementary Table 3, page 7 of the Appendix S2 PDF"
+retrieved: 2026-08-12
+retrieved_via: >
+  Local file phar2208-sup-0002-appendixs2.pdf, already present in Downloads
+  from prior project work. Rendered at 300 DPI with pdftoppm and read
+  directly from the image; table is clean (not a scrambled text layer) and
+  cross-checked against pdftotext -layout output for the same page.
+sha256: 59a0a9bca1ae9c870ce0b20cee430979a236bbf8b90367ececf0d5e46dfadaea
+unit_note: >
+  Native cycle length is 2 weeks (SPEC.md's own convention). Probabilities
+  are transcribed with the `_prob_2wk` semantics SPEC.md/CLAUDE.md expect,
+  though this raw file does not itself carry the R unit-suffix naming
+  convention -- that belongs to whatever derive/ or R/ code reads it.
+notes: >
+  States: Moderate-Severe, Moderate-Severe Responder (M-SR), Mild,
+  Remission. No Surgery or Death columns/rows in induction, consistent with
+  aliyev2019_assumptions.csv Induction assumption #2 ("No chance of Surgery
+  or Death during induction"). IFX and ADA rows are numerically identical
+  (0.756/0.0208/0.0208/0.203 from Moderate-Severe; 0/1/0/0, 0/0/1/0, 0/0/0/1
+  for the absorbing-from-response rows), consistent with Induction
+  assumption #1 ("Equal induction efficacy for infliximab and adalimumab")
+  -- this is the source data corroborating that stated assumption, not a
+  transcription error. `total` is transcribed exactly as printed (each row
+  states 1.000); actual row sums of the four transcribed probabilities
+  deviate from 1.000 by up to 0.0006, consistent with each cell being
+  independently rounded to 3 significant figures in the source.
+unresolved:
+  - id: U1
+    issue: >
+      W2_session_prompt.md's sourcing table cites this data as "Aliyev
+      Appendix S1, Suppl. Table 3." The actual location, confirmed by
+      opening both appendix PDFs, is Appendix S2 (phar2208-sup-0002-appendixs2.pdf),
+      page 7. Appendix S1 is only 3 pages (Suppl. Tables 1-2, then Suppl.
+      Figures 1-2) and does not contain a Table 3 or Table 4 at all. This
+      sidecar's `citation.appendix` records the true location; the W2 prompt
+      itself should be corrected for future sessions.
+    blocks: none -- transcription proceeded from the correct file once located
