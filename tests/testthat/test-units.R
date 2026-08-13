@@ -30,6 +30,24 @@ test_that("G2 fires: a function genuinely combining two value-bearing suffixes w
   expect_true(length(unnamed_converters(env)) > 0)
 })
 
+test_that("G2 flags same-numerator conflation but not different-kind arguments (W4 narrowing)", {
+  # Same numerator, different denominator -- the documented defect class.
+  same_numerator <- new.env()
+  eval(quote(bad <- function(a_usd_per_dose, b_usd_per_course) a_usd_per_dose + b_usd_per_course), envir = same_numerator)
+  expect_length(unnamed_converters(same_numerator), 1)
+
+  # Different kinds entirely -- a duration beside an age. No swap is
+  # possible, and flagging these trained the guard on orchestrators.
+  different_kinds <- new.env()
+  eval(quote(orchestrate <- function(window_weeks, start_age_years) window_weeks + start_age_years), envir = different_kinds)
+  expect_length(unnamed_converters(different_kinds), 0)
+})
+
+test_that("suffix_numerator() strips the denominator", {
+  expect_equal(suffix_numerator(c("_usd_per_dose", "_usd_per_course", "_usd")), c("usd", "usd", "usd"))
+  expect_equal(suffix_numerator(c("_weeks", "_age_years")), c("weeks", "age_years"))
+})
+
 test_that("G2: a function taking three or more independently value-bearing arguments is not flagged (W3, orchestrator functions)", {
   env <- new.env()
   # e.g. a trace orchestrator using a window, a horizon and an age as three

@@ -1,4 +1,4 @@
-# commit: d80af929b2e9fb24fd35273823033c0a0612232c
+# commit: b8675a8487deceb2cd41af80c3c5150850c11f40
 # spec_sha256: 33fb719c79072b1c1c98442899a3d3f77128b62342937afc902080c73dda6635
 "induction_window_weeks","maintenance_cap","horizon","max_state_sum_deviation","n_cycles_checked","cohort_exhausted"
 4,"on","lifetime",2.33146835171283e-15,1692,TRUE

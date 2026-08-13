@@ -139,3 +139,50 @@ One line per session: what changed, and which tests now cover it.
   from age 35 is 45.203 years against the life table's own 45.2, a 0.003-year
   difference.
 - Full suite: 92 assertions across 48 tests, 0 failures, 2 pre-existing skips.
+
+## 2026-08-13 (W4: Treg arm and price frontier)
+- **Correction to W3, recorded in SPEC_AMENDMENTS.md:** Aliyev's separate
+  "Conventional therapy per cycle, $67" cost line was never charged. Every
+  cost figure W3 reported is superseded; lifetime comparator cost at the
+  8-week/cap-on case moves $74,270.51 -> $115,257.80 (+55%), QALYs unchanged.
+  output/tables/comparator_ifx_trace.csv regenerated.
+- R/treg_arm.R: conventional-therapy dynamics to the 12-week landmark (L9),
+  two-fate split at cycle 6 on the ALL-TREATED denominator (L1/L2),
+  drug-free-remission state with an ongoing relapse hazard, relapsers
+  rejoining standard care in full (L4). `pi_cure` is declared with
+  `denominator = "all_treated"`, which binds W1's dormant G3 scaffold --
+  that test now runs instead of skipping.
+- R/frontier.R: A, B and P*(pi, h, lambda). `price_star_usd_per_course()`
+  evaluates the arm at each pi rather than assembling `A + pi*B`, so T3's
+  affineness check is a real property test and not a tautology. A is
+  computed by two code-disjoint routes for T1.
+- R/analog_comparison.R: SPEC.md section 7's decayed quantity
+  `pi_cure*exp(-h*t)` at each analog's own timepoint (T11).
+- **T2 caught a real defect.** `value_of_one_cure_usd()` discounted B to the
+  landmark while P* is a price paid at t=0 -- inconsistent reference points,
+  a $1,102 gap at h=0.05. T1 and T3 both passed throughout; only the two
+  independent routes to B exposed it. Fixed by denominating B at t=0.
+- Four decisions SPEC.md did not settle, each recorded in SPEC_AMENDMENTS.md
+  rather than made in code: pre-landmark window mortality-free (without it
+  T4's "equals 1.00" is unreachable by construction), drug-free remission
+  costing, relapsers charged a full standard-care course, and analogs
+  reading out before the landmark marked incomparable rather than
+  back-extrapolated.
+- G2 narrowed to its documented defect class: flag two value-bearing
+  suffixes only when they share a NUMERATOR and differ in denominator
+  (`_usd_per_dose` vs `_usd_per_course` -- the ten Ham sidecar's recorded
+  defect), not any two differing suffixes. The old rule flagged eight
+  correct functions including every orchestrator; the W3 "exactly two"
+  workaround was fragile and tripped on argument-count accident. Violation
+  fixture updated to demonstrate the real defect class. Also exempted
+  objects carrying a declared `denominator` attribute from the suffix
+  requirement, since guard 3 governs those more strictly than a suffix
+  would.
+- Outputs stamped as price_frontier_w4.csv, value_of_one_cure_w4.csv and
+  analog_comparison_w4.csv -- deliberately NOT SPEC.md section 6's aim
+  filenames. A1-A3's content is computed here, but A4 (EVPI) and A5 (PSA)
+  are W6; naming three of five aim files would arm G6 into a permanent
+  failure for scheduling reasons rather than correctness ones. G6's skip
+  message stays explicit and visible instead.
+- Full suite: 127 assertions across 63 tests, 0 failures, 1 skip (G6 only).
+  Tests cover T1, T2, T3, T4, T5, T7, T11, T12.

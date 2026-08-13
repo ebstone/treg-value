@@ -18,6 +18,18 @@ health_state_costs_usd_per_cycle <- function(raw_dir = "data/raw") {
   values[MAINTENANCE_STATES]
 }
 
+#' Per-cycle conventional-therapy drug cost (2017 USD), Suppl. Table 5's own
+#' "Conventional therapy per cycle" line. Charged to the CT cohort in
+#' addition to the health-state cost -- the health-state figures are
+#' CD-related medical costs by severity, not the cost of the conventional
+#' regimen itself, and Aliyev lists the two separately.
+conventional_therapy_cost_usd_per_cycle <- function(raw_dir = "data/raw") {
+  adopted <- read.csv(file.path(raw_dir, "aliyev2019_base_case_costs_utilities.csv"), stringsAsFactors = FALSE)
+  row <- adopted[adopted$category == "Direct Cost per Cycle (2017 USD)" & adopted$item == "Conventional Therapy", ]
+  stopifnot(nrow(row) == 1)
+  as.numeric(row$value)
+}
+
 #' Named vector of EQ-5D utility weights, keyed by MAINTENANCE_STATES minus
 #' Death (utility 0 there, added explicitly rather than sourced, since no
 #' quality of life accrues after death).

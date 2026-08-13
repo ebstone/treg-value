@@ -35,8 +35,22 @@ ALLOWED_UNIT_SUFFIXES <- c(
 # (PMPM -> per-cycle) -- so combining one of these with any other suffix does
 # not by itself require the function to be a named converter.
 DIMENSIONLESS_RATIO_SUFFIXES <- c(
-  "_prob_2wk", "_prob_1yr", "_per_year", "_utility", "_discount_factor"
+  "_prob_2wk", "_prob_1yr", "_per_year", "_utility", "_discount_factor",
+  # Willingness to pay is an exchange rate, not a quantity of money the
+  # model spends or receives. Its entire job is to bridge `_qaly` and
+  # `_usd`, so its presence in a signature is a conversion being declared
+  # rather than a conflation risk -- unlike `_usd_per_dose` vs
+  # `_usd_per_course`, which are two prices of two different things.
+  "_usd_per_qaly"
 )
+
+#' The numerator of a unit suffix: everything before `_per_`, or the whole
+#' suffix when it names no denominator. `_usd_per_dose`, `_usd_per_course`
+#' and `_usd` all share the numerator "usd" and are therefore mutually
+#' confusable; `_weeks` and `_age_years` do not.
+suffix_numerator <- function(suffixes) {
+  sub("^_", "", sub("_per_.*$", "", suffixes))
+}
 
 #' Does `name` end in a permitted unit suffix? Matched case-insensitively --
 #' R constants are conventionally UPPER_SNAKE_CASE (e.g. `MODEL_START_AGE_YEARS`,
@@ -59,13 +73,25 @@ is_named_converter <- function(name, suffixes = ALLOWED_UNIT_SUFFIXES) {
 
 #' Numeric, non-function objects in `env` whose name lacks a permitted
 #' suffix.
+#' Numeric, non-function objects in `env` whose name lacks a permitted
+#' suffix. Objects carrying a declared `denominator` attribute are exempt:
+#' those are probability-like parameters governed by guard 3, which demands
+#' something strictly stronger than a unit suffix -- an explicit statement of
+#' what population the number is a share of. `pi_cure` is unitless by
+#' SPEC.md section 1's own table; its denominator, not its unit, is the
+#' thing that has twice gone wrong here.
 unsuffixed_numerics <- function(env, suffixes = ALLOWED_UNIT_SUFFIXES) {
   names_ <- ls(env)
   numeric_names <- Filter(function(n) {
     v <- get(n, envir = env)
     is.numeric(v) && !is.function(v)
   }, names_)
-  Filter(function(n) !has_permitted_unit_suffix(n, suffixes), numeric_names)
+  Filter(function(n) {
+    # Attribute read inline rather than via denominator.R's accessor, so
+    # this guard has no load-order dependency on another guard's file.
+    if (!is.null(attr(get(n, envir = env), "denominator"))) return(FALSE)
+    !has_permitted_unit_suffix(n, suffixes)
+  }, numeric_names)
 }
 
 #' Names of functions in `env` that combine *exactly two* differently-
@@ -96,6 +122,23 @@ unnamed_converters <- function(env, suffixes = ALLOWED_UNIT_SUFFIXES, ratio_suff
       if (length(hit)) hit[1] else NA_character_
     }, character(1))))
     value_bearing <- setdiff(suffixes_used, ratio_suffixes)
-    length(value_bearing) == 2 && !is_named_converter(n, suffixes)
+    # Flag only when two value-bearing suffixes share a NUMERATOR and differ
+    # in denominator -- `_usd_per_dose` against `_usd_per_course`, or either
+    # against a bare `_usd` total. That is the documented defect class: the
+    # ten Ham sidecar records "a per-course figure was previously relabelled
+    # as a per-dose retail price". A duration in weeks beside an age in
+    # years, or dollars beside QALYs, are different kinds that nobody
+    # silently swaps, and flagging them only trained the guard to cry wolf
+    # at orchestrator functions.
+    if (!any(duplicated(suffix_numerator(value_bearing)))) return(FALSE)
+    if (is_named_converter(n, suffixes)) return(FALSE)
+    # A function whose OWN name ends in a permitted unit suffix has declared
+    # what it returns. Combining a rate with a total to produce a stated
+    # total is accumulation, not conflation -- `one_cycle_cost_usd()` adding
+    # a per-cycle drug rate to a per-dose lump to yield that cycle's dollars
+    # is correct and self-documenting. The conflation this guard exists to
+    # catch is an undeclared swap between two denominators of the same
+    # numerator, which is precisely what an undeclared return unit hides.
+    !has_permitted_unit_suffix(n, suffixes)
   }, fn_names)
 }

@@ -81,10 +81,12 @@ age_adjust_maintenance_matrix <- function(m, age_death_prob_2wk) {
 #' the half-cycle-weighted figure: a dose is a one-time event tied to who
 #' was on therapy when the cycle's dose was due, not a duration to average
 #' over (the file header's half-cycle correction note).
-one_cycle_cost_usd <- function(hc_occupancy_biologic, hc_occupancy_ct, occupancy_start_biologic, is_dose_cycle, costs, dose_cost_usd) {
+one_cycle_cost_usd <- function(hc_occupancy_biologic, hc_occupancy_ct, occupancy_start_biologic, is_dose_cycle, costs, dose_cost_usd, ct_drug_cost_usd_per_cycle) {
   state_cost <- sum(hc_occupancy_biologic * costs) + sum(hc_occupancy_ct * costs)
   dose_cost <- if (is_dose_cycle) sum(occupancy_start_biologic) * dose_cost_usd else 0
-  state_cost + dose_cost
+  # Conventional-therapy drug cost, charged to living CT-cohort mass only.
+  ct_alive <- sum(hc_occupancy_ct) - hc_occupancy_ct[["Death"]]
+  state_cost + dose_cost + ct_alive * ct_drug_cost_usd_per_cycle
 }
 
 #' Trapezoidal half-cycle correction: the value accrued in a cycle is the
@@ -119,6 +121,7 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
   biologic_matrix_base <- load_maintenance_matrix(therapy, raw_dir)
   ct_matrix_base <- load_maintenance_matrix("CT", raw_dir)
   dose_cost_usd <- ifx_infusion_cost_usd_per_dose(raw_dir)
+  ct_drug_cost_usd_per_cycle <- conventional_therapy_cost_usd_per_cycle(raw_dir)
   cap_cycles <- if (cap_on) 2 * ALIYEV_CYCLES_PER_YEAR else Inf
 
   total_cycles <- round(horizon_years * ALIYEV_CYCLES_PER_YEAR)
@@ -205,7 +208,7 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
     years_elapsed <- years_elapsed + CYCLE_YEARS
     df <- discount_factor_years_to_discount_factor(years_elapsed)
 
-    cycle_cost <- one_cycle_cost_usd(hc_bio, hc_ct, occupancy_start_bio, is_dose_cycle, costs, dose_cost_usd)
+    cycle_cost <- one_cycle_cost_usd(hc_bio, hc_ct, occupancy_start_bio, is_dose_cycle, costs, dose_cost_usd, ct_drug_cost_usd_per_cycle)
     cycle_qaly <- (sum(hc_bio * utilities) + sum(hc_ct * utilities)) * CYCLE_YEARS
 
     discounted_cost_usd <- discounted_cost_usd + cycle_cost * df
