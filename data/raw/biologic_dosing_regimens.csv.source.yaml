@@ -1,0 +1,42 @@
+file: biologic_dosing_regimens.csv
+status: transcribed
+citation:
+  source: FDA-approved product labeling, retrieved via the openFDA drug label API
+  ustekinumab: >
+    Crohn's disease: single weight-banded intravenous induction (up to 55 kg,
+    260 mg / 2 vials; 55-85 kg, 390 mg / 3 vials; over 85 kg, 520 mg / 4
+    vials), then 90 mg subcutaneously 8 weeks after the intravenous dose and
+    every 8 weeks thereafter.
+  adalimumab: >
+    Crohn's disease, adults: 160 mg on Day 1 (one day or split over two
+    consecutive days), 80 mg on Day 15, then 40 mg every other week starting
+    Day 29.
+  url: https://api.fda.gov/drug/label.json
+table_or_page: "Dosage and Administration sections, Crohn's disease indication"
+retrieved: 2026-08-13
+retrieved_via: >
+  openFDA drug label API, queried by generic name and read directly from the
+  labeling text rather than from a review or secondary summary.
+sha256: 3079ad1cc3965e3bab9f8b97554f2a1f7b88f152f629f4c86fad600f891ba831
+notes: >
+  Supports SPEC.md scenario S5, which SPEC.md section 2 scopes as "frontier
+  checks only" for the secondary comparators. Infliximab's own regimen stays
+  in R/dosing.R, where L5's week-4 / week-8 induction-window pair lives.
+  Ustekinumab's induction is vial-banded rather than continuously
+  weight-scaled, so at the model's 70 kg body weight it is exactly three
+  130 mg vials -- no vial sharing, matching Aliyev's Induction assumption #8.
+  Induction windows follow each drug's own readout in Aliyev's parameter
+  table: week 6 for ustekinumab, week 4 for adalimumab. Unit costs are
+  Aliyev's Suppl. Table 5 figures, re-based to 2025 USD like every other
+  cost.
+unresolved:
+  - id: U1
+    issue: >
+      Subcutaneous maintenance carries no infusion administration cost here,
+      since the patient self-injects. Aliyev's own model charges a
+      monitoring/management cost for subcutaneous arms (Costs assumption #3),
+      which this repository does not yet implement for any arm, so the
+      secondary comparators are costed slightly low on administration
+      relative to infliximab. Direction: it makes ustekinumab and adalimumab
+      look cheaper, so a frontier check against them is conservative.
+    blocks: nothing; S5 is a check, not a primary result

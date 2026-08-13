@@ -14,6 +14,7 @@ source("R/life_table.R")
 source("R/dosing.R")
 source("R/costs_utilities.R")
 source("R/refractory.R")
+source("R/comparator_dosing.R")
 source("R/markov_engine.R")
 source("R/stamp.R")
 

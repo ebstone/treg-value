@@ -110,18 +110,17 @@ half_cycle_weighted_occupancy <- function(occupancy_start, occupancy_end) {
 #' cost and QALYs, plus validation series for T7/T8 and the trap tests.
 run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
                                   raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS,
-                                  population = "naive") {
-  induction_cycles <- window_weeks / 2
-  dose_weeks <- ifx_induction_dose_weeks(window_weeks)
-  stopifnot(all(dose_weeks < window_weeks)) # trap 3, asserted at run time too
+                                  population = "naive", product = IFX_PRICED_PRODUCT, life_table_vintage = "base") {
+  plan <- dosing_plan(therapy, window_weeks, raw_dir, product = product)
+  induction_cycles <- plan$induction_cycles
 
   costs <- health_state_costs_usd_per_cycle(raw_dir)
   utilities <- health_state_utilities(raw_dir)
-  lt <- load_life_table(raw_dir)
+  lt <- load_life_table(raw_dir, life_table_vintage)
   induction_matrix <- load_induction_matrix_for_population(therapy, population, raw_dir)
   biologic_matrix_base <- load_maintenance_matrix(therapy, raw_dir)
   ct_matrix_base <- load_maintenance_matrix("CT", raw_dir)
-  dose_cost_usd <- ifx_infusion_cost_usd_per_dose(raw_dir)
+  dose_cost_usd <- plan$maintenance_dose_cost_usd
   ct_drug_cost_usd_per_cycle <- conventional_therapy_cost_usd_per_cycle(raw_dir)
   cap_cycles <- if (cap_on) 2 * ALIYEV_CYCLES_PER_YEAR else Inf
 
@@ -137,11 +136,11 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
   # --- Induction: explicit cycles, cohort fully Moderate-Severe (trap 1) ---
   induction_state_cost <- costs[["Moderate-Severe"]]
   induction_state_utility <- utilities[["Moderate-Severe"]]
-  induction_dose_cycles <- ceiling((dose_weeks + 1) / 2) # week 0 -> cycle 1, week 2 -> cycle 2, week 6 -> cycle 4
+  induction_dose_cycles <- plan$induction_dose_cycles
   years_elapsed <- 0
   for (t in seq_len(induction_cycles)) {
-    is_dose_cycle <- t %in% induction_dose_cycles
-    cycle_cost <- induction_state_cost + if (is_dose_cycle) dose_cost_usd else 0
+    hit <- match(t, induction_dose_cycles)
+    cycle_cost <- induction_state_cost + if (!is.na(hit)) plan$induction_dose_costs[hit] else 0
     years_elapsed <- years_elapsed + CYCLE_YEARS
     df <- discount_factor_years_to_discount_factor(years_elapsed)
     discounted_cost_usd <- discounted_cost_usd + cycle_cost * df
@@ -163,7 +162,8 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
     }
   }
 
-  dose_cycles <- ifx_maintenance_dose_cycles(if (is.finite(cap_cycles)) cap_cycles else total_cycles)
+  dose_cycles <- seq(plan$maintenance_interval_cycles,
+    if (is.finite(cap_cycles)) cap_cycles else total_cycles, by = plan$maintenance_interval_cycles)
 
   # Background mortality is constant within an integer age band, so the
   # age-adjusted matrices only change 65 times across a lifetime horizon,

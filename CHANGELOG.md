@@ -286,3 +286,27 @@ One line per session: what changed, and which tests now cover it.
   therapy anyway. That is a statement about available evidence, not a
   finding that the populations are alike.
 - Full suite: 302 assertions across 85 tests, 0 failures, 0 skips.
+
+## 2026-08-13 (scenarios S4, S5, S7)
+- S4 (originator infliximab pricing): the priced product now threads through
+  the engine and the standard-care grid. J1745 costs $1,166/dose against
+  Q5104's $999.
+- S7 (pre-pandemic life-table vintage): data/raw/nchs_life_table_2019.csv
+  added with sidecar; load_life_table() takes a vintage. A parsing trap
+  found and recorded -- the 2019 report writes its terminal row as "100 and
+  over" where the 2023 report writes "100 and older", so a parser matching
+  only the newer wording silently drops the absorbing row and yields a
+  100-row table whose cohort never exhausts. Both spellings accepted; row
+  count and terminal row asserted.
+- S5 (ustekinumab / adalimumab as reference comparator):
+  data/raw/biologic_dosing_regimens.csv transcribed from the FDA labels via
+  the openFDA API, R/comparator_dosing.R turns a regimen into an engine
+  dosing plan, and the engine now consumes a plan rather than hardcoded
+  infliximab dosing. Ustekinumab's induction is vial-banded (three 130 mg
+  vials at 70 kg), adalimumab's two induction doses differ in size (four
+  syringes then two), and subcutaneous maintenance carries no infusion fee.
+- analysis/run_scenarios.R runs all three and stamps output/tables/scenarios.csv.
+- S3 and S6 deliberately not built, recorded as an amendment: S3 would
+  require assuming a redose cure probability, which is the parameter being
+  solved for; S6 is blocked on O3 and O4, both unsourced.
+- Full suite: 331 assertions across 92 tests, 0 failures, 0 skips.

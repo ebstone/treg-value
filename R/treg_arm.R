@@ -48,13 +48,14 @@ relapse_hazard_per_year_to_prob_2wk <- function(h_per_year, cycles_per_year = AL
 #' clock running from their own start date.
 standard_care_grid <- function(window_weeks, cap_on, raw_dir = "data/raw",
                                 ages = seq(MODEL_START_AGE_YEARS, 100, by = 1),
-                                population = "naive") {
+                                population = "naive", product = IFX_PRICED_PRODUCT,
+                                life_table_vintage = "base", therapy = "IFX") {
   cost <- numeric(length(ages))
   qaly <- numeric(length(ages))
   for (i in seq_along(ages)) {
     horizon <- 100 - ages[i]
     if (horizon <= 0) next
-    tr <- run_comparator_trace("IFX", window_weeks, cap_on, horizon, raw_dir, start_age_years = ages[i], population = population)
+    tr <- run_comparator_trace(therapy, window_weeks, cap_on, horizon, raw_dir, start_age_years = ages[i], population = population, product = product, life_table_vintage = life_table_vintage)
     cost[i] <- tr$discounted_cost_usd
     qaly[i] <- tr$discounted_qaly
   }

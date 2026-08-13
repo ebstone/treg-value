@@ -43,8 +43,12 @@ ifx_administration_cost_usd_per_dose <- function(raw_dir = "data/raw") {
 }
 
 #' Total cost of one infliximab infusion visit: drug + administration.
-ifx_infusion_cost_usd_per_dose <- function(raw_dir = "data/raw") {
-  ifx_drug_cost_usd_per_dose(raw_dir = raw_dir) + ifx_administration_cost_usd_per_dose(raw_dir)
+#' `product` selects which HCPCS code prices the drug -- Q5104 for the
+#' biosimilar base case (OPEN_QUESTIONS.md C10), J1745 for the originator,
+#' which is SPEC.md scenario S4.
+ifx_infusion_cost_usd_per_dose <- function(raw_dir = "data/raw", product = IFX_PRICED_PRODUCT) {
+  ifx_drug_cost_usd_per_dose(product = product, raw_dir = raw_dir) +
+    ifx_administration_cost_usd_per_dose(raw_dir)
 }
 
 #' Induction dose weeks for a given induction window, per SPEC.md L5 (S1:

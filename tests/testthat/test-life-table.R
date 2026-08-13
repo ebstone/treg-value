@@ -32,6 +32,7 @@ test_that("T8: undiscounted life-years from the model's start age match the life
   source_r("dosing.R")
   source_r("costs_utilities.R")
   source_r("refractory.R")
+source_r("comparator_dosing.R")
 source_r("markov_engine.R")
 
   lt <- load_life_table(RAW_DIR)

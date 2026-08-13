@@ -7,6 +7,7 @@ source_r("refractory.R")
 source_r("life_table.R")
 source_r("dosing.R")
 source_r("costs_utilities.R")
+source_r("comparator_dosing.R")
 source_r("markov_engine.R")
 
 RAW_DIR <- repo_root_relative("data", "raw")

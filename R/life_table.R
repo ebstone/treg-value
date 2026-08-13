@@ -24,9 +24,15 @@ annual_qx_prob_1yr_to_prob_2wk <- function(qx_prob_1yr, cycles_per_year = ALIYEV
   1 - exp(-hazard_per_year / cycles_per_year)
 }
 
-#' The NCHS life table, with a `qx_prob_2wk` column added.
-load_life_table <- function(raw_dir = "data/raw") {
-  lt <- read_csv_cached(file.path(raw_dir, "nchs_life_table_2023.csv"))
+# Life-table vintages. The base case uses the most recent NCHS publication;
+# SPEC.md scenario S7 asks for a pre-pandemic vintage as a contrast.
+LIFE_TABLE_VINTAGES <- c(base = "nchs_life_table_2023.csv", pre_pandemic = "nchs_life_table_2019.csv")
+
+#' The NCHS life table, with a `qx_prob_2wk` column added. `vintage` selects
+#' between the base case and SPEC.md scenario S7's pre-pandemic table.
+load_life_table <- function(raw_dir = "data/raw", vintage = "base") {
+  stopifnot(vintage %in% names(LIFE_TABLE_VINTAGES))
+  lt <- read_csv_cached(file.path(raw_dir, LIFE_TABLE_VINTAGES[[vintage]]))
   lt$qx_prob_2wk <- annual_qx_prob_1yr_to_prob_2wk(lt$qx_prob_1yr)
   lt
 }

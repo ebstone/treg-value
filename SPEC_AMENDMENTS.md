@@ -324,3 +324,39 @@ parameter carries Beta(116, 93). UNITI-2's ~6 mg/kg arm reports exactly 116
 responders of 209, leaving 93 non-responders, confirming that the base case
 this repository inherited is UNITI-2 and that UNITI-1 is its correct
 refractory counterpart. Asserted in tests/testthat/test-refractory.R.
+
+## 2026-08-13 — Scenarios S4, S5 and S7 built; S3 and S6 not
+
+**Signed off:** Stone
+**Supersedes:** nothing; this records the disposition of SPEC.md section 5's
+scenario grid.
+
+**Built.** S4 prices the comparator on the originator (J1745) rather than
+the biosimilar. S5 runs ustekinumab and adalimumab as reference comparator,
+each on its own FDA-label regimen and its own induction readout window
+(week 6 and week 4 respectively, per Aliyev's parameter table) rather than
+infliximab's -- reusing infliximab's window for another drug would repeat
+the W3 defect where the dosing schedule and the transition window described
+different numbers of weeks. S7 substitutes the pre-pandemic 2019 NCHS life
+table for the 2023 base case.
+
+**S3 (redosing on post-cure relapse) is not built.** L4 already states that
+redosing "requires an efficacy premise no data supports". Implementing it
+would require assuming a redose cure probability, and the only available
+value is the initial cure fraction, which is the parameter being solved for.
+That makes the price appear on both sides of the frontier equation and turns
+a stated scenario into an assumed one. The base case charges relapsed
+patients a full standard-care course instead, which is the conservative
+reading and is already recorded.
+
+**S6 (administration bundle) is not built.** It is blocked on
+OPEN_QUESTIONS.md O3 (preconditioning dose) and O4 (whether a Treg infusion
+qualifies for observation billing), both owned by Dula and both unsourced.
+No part of it can be built without inventing one of those values.
+
+**What the scenarios show.** Across every scenario, at $100,000 per QALY and
+a 5% relapse hazard, the required cure fraction at the median manufacturing
+benchmark stays between 22.8% and 24.7% against a base case of 24.0%. The
+originator-pricing scenario moves the comparator's lifetime cost by only
+0.7%, because the two-year maintenance cap means drug price acts on a small
+share of a lifetime horizon. No scenario changes any conclusion.

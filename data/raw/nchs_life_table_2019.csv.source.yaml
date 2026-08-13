@@ -1,0 +1,29 @@
+file: nchs_life_table_2019.csv
+status: transcribed
+citation:
+  publisher: National Center for Health Statistics (NCHS), National Vital Statistics System
+  authors: Arias E, Xu J
+  title: "United States Life Tables, 2019"
+  series: National Vital Statistics Reports
+  volume: 70
+  issue: 19
+  publication_date: 2022-03-22
+  url: https://www.cdc.gov/nchs/data/nvsr/nvsr70/nvsr70-19.pdf
+table_or_page: "Table 1 (Life table for the total population, sex-averaged, all races/origins)"
+retrieved: 2026-08-13
+retrieved_via: >
+  Downloaded from cdc.gov and parsed with the same routine used for the 2023
+  vintage, then row-count and terminal-row checked.
+sha256: e9747f28d12765f5f397e0ef8ec28145b81a4ee5d248555b3af9a44c51b39cb7
+notes: >
+  The pre-pandemic life-table vintage SPEC.md scenario S7 asks for, and the
+  counterpart to nchs_life_table_2023.csv which the base case uses. 2019 is
+  the last published year wholly unaffected by COVID-era mortality.
+  Life expectancy at the model's start age of 35 is 45.5 years here against
+  45.2 in the 2023 vintage, so the scenario tests roughly a third of a year
+  of additional survival.
+  A parsing trap worth recording: this report writes its terminal row as
+  "100 and over" where the 2023 report writes "100 and older". A parser
+  matching only the 2023 wording drops the absorbing row silently and
+  produces a 100-row table whose cohort never fully exhausts. Both spellings
+  are now accepted, and the row count is asserted.

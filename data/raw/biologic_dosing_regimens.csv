@@ -1,0 +1,3 @@
+therapy,induction_window_weeks,induction_dose_weeks,induction_route,induction_units_per_dose,maintenance_interval_cycles,maintenance_route,maintenance_units_per_dose,unit_cost_item
+UST,6,0,intravenous,3,4,subcutaneous,1,"UST unit cost (130 mg vial)|UST maintenance unit cost (90 mg syringe)"
+ADA,4,0;2,subcutaneous,4;2,1,subcutaneous,1,"ADA unit cost (40 mg syringe)|ADA unit cost (40 mg syringe)"
