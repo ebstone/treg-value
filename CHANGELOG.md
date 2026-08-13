@@ -331,3 +331,18 @@ One line per session: what changed, and which tests now cover it.
   limitations exist, ethical and equity considerations and generalisability
   do not.
 - Full suite: 344 assertions across 94 tests, 0 failures, 0 skips.
+
+## 2026-08-13 (final readout)
+- docs/results_readout.html: the co-author readout, versioned alongside the
+  analysis rather than living only as a published artifact. Headlines the
+  $100,000-$150,000 per QALY range that US value assessment conventionally
+  treats as the benchmark for a value-based price, with $50,000 retained
+  throughout as a conservative floor.
+- Carries the manufacturing benchmark and aim A3, the refractory co-primary,
+  the full robustness grid (comparator drug, originator pricing, life-table
+  vintage, discount rate), probabilistic intervals and per-patient EVPI.
+- One precision point recorded: the "no cure fraction justifies this product
+  at autologous cost of goods" finding holds at $100,000 per QALY at every
+  hazard, but at $150,000 a permanent cure requires 83.1%, which is
+  arithmetically attainable. The claim is threshold-dependent and is now
+  stated that way rather than absolutely.
