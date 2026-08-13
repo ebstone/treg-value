@@ -1,0 +1,24 @@
+file: fx_usd_per_eur_annual.csv
+status: transcribed
+citation:
+  publisher: Board of Governors of the Federal Reserve System, via FRED
+  title: "U.S. Dollars to Euro Spot Exchange Rate"
+  series_id: DEXUSEU
+  url: https://fred.stlouisfed.org/series/DEXUSEU
+table_or_page: "Full daily series, aggregated here to annual means"
+retrieved: 2026-08-13
+retrieved_via: >
+  Downloaded from FRED's machine-readable CSV endpoint with curl and
+  aggregated from daily to annual means in R, excluding non-trading days
+  reported as missing.
+sha256: b5786d010f80f886be4afa15e88bd72de540279eef1bacfd16544036cd3c7f0a
+notes: >
+  Needed because the analogy leg of the manufacturing benchmark is ten Ham
+  et al. 2020, whose figures are 2018 euros. Conversion follows the standard
+  order for international cost data: convert currency at the SOURCE year's
+  rate, then inflate in the target currency -- not inflate in euros and
+  convert at today's rate, which would mix two countries' price paths.
+  Market exchange rates, not purchasing-power parity: the inputs being
+  priced (GMP facility time, specialised reagents, cleanroom equipment) are
+  internationally traded, which is the case where market rates are the
+  conventional choice.

@@ -1,0 +1,6 @@
+product,modality,indication,us_list_price_usd,cogs_low_usd,cogs_high_usd,cogs_basis
+Kymriah (tisagenlecleucel),autologous CAR-T,B-ALL / DLBCL,475000,NA,NA,list price only
+Yescarta (axicabtagene ciloleucel),autologous CAR-T,DLBCL,373000,NA,NA,list price only
+Tecartus (brexucabtagene autoleucel),autologous CAR-T,MCL,373000,NA,NA,list price only
+Breyanzi (lisocabtagene maraleucel),autologous CAR-T,LBCL,410300,200000,360000,reported per-dose COGS 2023
+Carvykti (ciltacabtagene autoleucel),autologous CAR-T,multiple myeloma,465000,NA,NA,list price only

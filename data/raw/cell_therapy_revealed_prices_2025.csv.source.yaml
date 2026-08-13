@@ -1,0 +1,38 @@
+file: cell_therapy_revealed_prices_2025.csv
+status: transcribed
+citation:
+  publisher: Manufacturer list prices as reported in trade and health-policy press
+  title: "US list (WAC) prices for approved autologous CAR-T products, and reported per-dose cost of goods for one of them"
+  retrieved_from:
+    - https://hmpi.org/2026/02/18/car-t-therapy-escalating-costs-in-an-expanding-market/
+    - https://www.bioprocessintl.com/manufacturing/cost-of-goods-is-crucial-for-the-future-of-regenerative-medicine-car-t-cell-therapy-provides-a-case-study-in-perspective
+table_or_page: "Reported list prices; Breyanzi per-dose COGS range"
+retrieved: 2026-08-13
+retrieved_via: >
+  Web search of trade and health-policy sources. These are SECONDARY
+  citations, not manufacturer filings, and are the weakest-provenance
+  inputs in this repository.
+sha256: 7753f141482cdf260278e2765769f35dcbad3a026677097d5b7ab03027884344
+notes: >
+  Feeds the "revealed prices" leg of the SPEC.md section 8 manufacturing
+  benchmark, and nothing else. Under L8 no pricing function may read it, so
+  it cannot reach the frontier; T12 asserts that by grep.
+  List price is WAC and is not what a payer nets after confidential
+  discounts and rebates, so it overstates realised revenue.
+unresolved:
+  - id: U1
+    issue: >
+      Cost of goods is reported for one product only (Breyanzi, $200,000 to
+      $360,000 per dose as of 2023) and comes from trade press rather than
+      an audited filing. Every other product carries a list price and no
+      COGS. The benchmark therefore leans on a single COGS observation for
+      its autologous upper anchor.
+    blocks: nothing in the frontier; widens the benchmark range
+  - id: U2
+    issue: >
+      All five products are AUTOLOGOUS CAR-T, where one manufacturing run
+      serves one patient. An allogeneic Treg product amortises a batch
+      across many doses, so these figures are an upper bound on a
+      fundamentally different manufacturing model rather than a like-for-like
+      comparator. The allogeneic anchor comes from ten Ham instead.
+    blocks: nothing; recorded so the range is not read as like-for-like

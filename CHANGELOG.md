@@ -228,3 +228,35 @@ One line per session: what changed, and which tests now cover it.
   carries a commit hash and a SPEC.md hash -- an outcome test rather than a
   grep for a function name, with a violation fixture.
 - Full suite: 210 assertions across 71 tests, 0 failures, 1 skip.
+
+## 2026-08-13 (W5: manufacturing benchmark, and all five aims)
+- R/manufacturing_benchmark.R + analysis/run_manufacturing_benchmark.R:
+  triangulated benchmark from ten Ham analogy anchors (2018 EUR converted at
+  the source year's rate, then re-based to 2025 USD) and reported autologous
+  CAR-T cost of goods. Two new sourced inputs with sidecars: the FRED
+  USD/EUR series and approved cell-therapy list prices. $12,266-$380,336 per
+  course; allogeneic anchors $12,266-$68,958, median $38,634.
+- The techno-economic bottom-up leg is NOT built: the Treg dose in cells/kg
+  is not public (all three registered TRX103 trials disclose only "Dose
+  level 1/2/3"), and inventing it would defeat the benchmark's purpose.
+  Recorded as an amendment rather than filled with an assumption.
+- Aim A3 satisfied: required cure fraction at each benchmark, all-treated
+  denominator, with the section 7 analog comparison on matched timepoints.
+  Headline: at allogeneic batch-amortised cost 4.2-13.6% suffices at
+  $100k/QALY, but at autologous CAR-T cost of goods the required fraction
+  exceeds 100% at every hazard -- no cure fraction justifies the product on
+  that manufacturing model.
+- analysis/run_aims.R writes all five SPEC.md section 6 aim outputs under
+  their designated filenames. A4 reports per-patient EVPI plus the
+  break-even population as the arithmetic A4 asks to show (N = trial cost /
+  per-patient EVPI) across a schedule of trial costs, since O1 and O2 are
+  both unsourced.
+- **G6 had never been able to bind.** SPEC.md writes each aim's output path
+  in markdown backticks, which parse_aims_table() carried through, so every
+  file.exists() check tested a path that could not exist and every aim would
+  have been reported uncovered no matter what was produced. Fixed, with a
+  regression test asserting the parsed paths carry no backticks. T12 also
+  strengthened: it now greps five pricing-path files against every name the
+  benchmark module exports, rather than two files against a keyword list.
+- Full suite: 280 assertions across 77 tests, 0 failures, 0 skips -- the
+  first run in this project with nothing skipped.

@@ -254,3 +254,35 @@ conventional US deflator for healthcare-sector costs.
 covers eleven months (October 2025 is absent from the published BLS series)
 and the 2026 average seven. Both are documented in the index file's own
 sidecar. The eleven-month gap moves the re-basing factor by roughly 0.07%.
+
+## 2026-08-13 — Manufacturing benchmark built without a dose (W5)
+
+**Signed off:** Stone
+**Supersedes:** SPEC.md section 8's "Manufacturing benchmark | Range | TO
+BUILD (W5) | Triangulated: analogy anchors, techno-economic bottom-up,
+revealed prices"; W2 sourcing register item S-5.
+
+**Change:** the benchmark is built from two of the three specified legs.
+Analogy anchors come from ten Ham et al. 2020's eight case studies,
+converted at the 2018 euro/dollar rate and re-based to 2025 USD. Revealed
+prices come from approved autologous CAR-T list prices and one reported
+per-dose cost of goods. The **techno-economic bottom-up leg is not built.**
+
+**Reason the third leg is missing:** it requires the Treg dose in cells per
+kilogram, which S-5 identified as the single most important input. That dose
+is not public. All three registered TRX103 trials (NCT06721962 Crohn's,
+NCT06462365 GvHD, NCT07427628) describe their arms only as "Dose level
+1/2/3" and disclose no cells-per-kilogram figure; the registry records were
+retrieved and searched directly. Building the leg would require inventing
+the dose, which is precisely what a benchmark whose whole purpose is to be
+compared against a sourced price must not do.
+
+**Consequence:** the benchmark is a range, which is what SPEC.md section 8
+asks for. It spans $12,266 to $380,336 per course in 2025 USD, with the
+allogeneic anchors between $12,266 and $68,958 and a median of $38,634. The
+two-order-of-magnitude spread S-5 predicted is present and is driven by
+whether a batch amortises across many treatments or serves one.
+
+**L8 is unaffected.** No pricing function reads any of this; T12 now greps
+five files in the pricing path against every name the benchmark module
+exports, not two files against a keyword list.

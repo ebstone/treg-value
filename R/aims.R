@@ -4,8 +4,18 @@
 
 #' Aims table from SPEC.md section 6, as a data.frame with columns Aim,
 #' Statement, `Output file`.
+#'
+#' SPEC.md writes each output path in markdown backticks. They are stripped
+#' here: leaving them in makes every `file.exists()` check fail against a
+#' path that does not exist, so an aim whose output had genuinely landed
+#' would still be reported uncovered -- the guard would have been incapable
+#' of ever passing, which is a worse failure than a noisy one.
 parse_aims_table <- function(spec_path = "SPEC.md") {
-  parse_md_table(spec_path, heading = "Aims and their outputs")
+  tbl <- parse_md_table(spec_path, heading = "Aims and their outputs")
+  if ("Output file" %in% names(tbl)) {
+    tbl[["Output file"]] <- gsub("`", "", trimws(tbl[["Output file"]]))
+  }
+  tbl
 }
 
 #' Aim IDs (e.g. "A1") with neither their output file present under

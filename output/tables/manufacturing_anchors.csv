@@ -1,0 +1,11 @@
+# commit: bb7d7c4fbdeb64d12a65a083e7d0b6f6277740f7
+# spec_sha256: 33fb719c79072b1c1c98442899a3d3f77128b62342937afc902080c73dda6635
+"case_study","product_origin","allogeneic","treatments_per_batch","cost_per_treatment_usd"
+1,"Allogeneic peripheral blood",TRUE,1,49058.1783065177
+2,"Allogeneic peripheral blood",TRUE,1,32574.8679927935
+3,"Allogeneic bone marrow",TRUE,1,43392.6149331347
+4,"Autologous peripheral blood",FALSE,1,75922.2263038743
+5,"Allogeneic umbilical cord blood",TRUE,1,68958.3635853176
+6,"Autologous peripheral blood",FALSE,1,48078.0895851611
+7,"Allogeneic corneal tissue",TRUE,1,33874.5816074064
+8,"Allogeneic peripheral blood",TRUE,22,12265.9588460686

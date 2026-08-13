@@ -29,6 +29,15 @@ test_that("G6: every aim is covered, once output/tables/ is populated", {
   expect_length(problems, 0)
 })
 
+test_that("aim output paths are parsed without markdown backticks", {
+  # SPEC.md writes each path in backticks. If they survive parsing, every
+  # file.exists() check tests a path that cannot exist, and the guard can
+  # never pass no matter what has actually been produced.
+  aims <- parse_aims_table(repo_root_relative("SPEC.md"))
+  expect_false(any(grepl("`", aims[["Output file"]], fixed = TRUE)))
+  expect_true(all(grepl("^output/", aims[["Output file"]])))
+})
+
 test_that("G6 fires: a populated output/tables/ that still leaves an aim uncovered is caught", {
   fixture <- repo_root_relative("tests", "violations", "g6-aim-coverage")
   problems <- uncovered_aims(
