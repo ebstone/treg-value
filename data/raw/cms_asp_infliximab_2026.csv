@@ -1,0 +1,3 @@
+hcpcs_code,product,descriptor,billing_unit_mg,payment_limit_usd_per_unit,usd_per_mg,asp_file_quarter
+Q5103,Inflectra (infliximab-dyyb),"Injection, infliximab-dyyb, biosimilar, 10 mg",10,26.035,2.6035,2026-04
+Q5104,Renflexis (infliximab-abda),"Injection, infliximab-abda, biosimilar, 10 mg",10,26.803,2.6803,2026-04

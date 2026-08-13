@@ -1,12 +1,32 @@
 # G1 -- provenance. Every file in data/raw/ carries a `.source.yaml`
-# sidecar (citation, table or page, retrieval date, SHA-256). Every file in
+# sidecar (citation, retrieval date, SHA-256, status). Every file in
 # data/derived/ is produced by a script in derive/ and re-derived by a test
 # -- never hand-written.
+#
+# Schema below follows data/raw/cms_asp_infliximab_2026.csv.source.yaml, the
+# real precedent W2_session_prompt.md points future sessions at ("follow the
+# shape of the ASP sidecar already in data/raw/"), not W1's originally-guessed
+# field names -- reconciled 2026-08-12 when that file was merged in. Two
+# differences from the W1 guess: the retrieval date field may be named
+# `retrieved` (as well as `retrieval_date`), and `table_or_page` is optional
+# rather than required, since a source like a pricing file has no table or
+# page to name -- it has a quarter, recorded inside `citation` instead.
 
-REQUIRED_SOURCE_FIELDS <- c("citation", "table_or_page", "retrieval_date", "sha256")
+# Each element is either a single required field name, or a character vector
+# of alternative names of which at least one must be present and non-empty.
+REQUIRED_SOURCE_FIELDS <- list("citation", "sha256", "status", c("retrieval_date", "retrieved"))
+OPTIONAL_SOURCE_FIELDS <- c("table_or_page")
 
 is_sidecar <- function(path) grepl("\\.source\\.yaml$", path)
 is_gitkeep <- function(path) grepl("\\.gitkeep$", path)
+
+#' Is field `name` absent, NULL, or -- accounting for nested fields like the
+#' ASP sidecar's `citation` object -- entirely blank once flattened?
+field_is_empty <- function(meta, name) {
+  if (!(name %in% names(meta)) || is.null(meta[[name]])) return(TRUE)
+  vals <- trimws(as.character(unlist(meta[[name]])))
+  !any(nzchar(vals))
+}
 
 #' Validate one `.source.yaml` sidecar against the schema and, when the data
 #' file it documents exists, against that file's actual SHA-256. Returns
@@ -21,19 +41,17 @@ validate_source_yaml <- function(data_path, sidecar_path = paste0(data_path, ".s
   }
 
   problems <- character(0)
-  missing_fields <- setdiff(REQUIRED_SOURCE_FIELDS, names(meta))
-  if (length(missing_fields)) {
-    problems <- c(problems, sprintf(
-      "%s: sidecar missing field(s): %s", sidecar_path, paste(missing_fields, collapse = ", ")
-    ))
+  for (field in REQUIRED_SOURCE_FIELDS) {
+    satisfied <- any(!vapply(field, field_is_empty, logical(1), meta = meta))
+    if (!satisfied) {
+      label <- if (length(field) > 1) paste0("one of: ", paste(field, collapse = "/")) else field
+      problems <- c(problems, sprintf("%s: sidecar missing/empty required field (%s)", sidecar_path, label))
+    }
   }
-  present_fields <- intersect(names(meta), REQUIRED_SOURCE_FIELDS)
-  empty_fields <- present_fields[vapply(present_fields, function(f) {
-    is.null(meta[[f]]) || !nzchar(trimws(as.character(meta[[f]])))
-  }, logical(1))]
-  if (length(empty_fields)) {
+  empty_optional <- Filter(function(f) f %in% names(meta) && field_is_empty(meta, f), OPTIONAL_SOURCE_FIELDS)
+  if (length(empty_optional)) {
     problems <- c(problems, sprintf(
-      "%s: sidecar has empty field(s): %s", sidecar_path, paste(empty_fields, collapse = ", ")
+      "%s: sidecar has empty field(s): %s", sidecar_path, paste(empty_optional, collapse = ", ")
     ))
   }
   if ("sha256" %in% names(meta) && file.exists(data_path)) {

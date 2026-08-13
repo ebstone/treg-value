@@ -25,3 +25,22 @@ side, and should have been locked alongside it when the 12-week landmark was
 set. Granting the comparator's trajectory without its cost is the unearned
 intercept in a different place. Accepted consequence: A may be negative and the
 frontier may start below zero.
+
+## 2026-08-11 — Surgery-state costing corrected
+
+**Signed off:** Stone
+**Supersedes:** SPEC.md v1.0 section 8, which listed the surgery cost as
+TO SOURCE from HCUPnet colectomy; OPEN_QUESTIONS.md item O9; and W2 sourcing
+register item S-2 as originally written.
+
+**Change:** The Surgery state cost derives from Aliyev Suppl. Table 2's
+Severe-Fulminant PMPM through the same PMPM-to-cycle conversion as every other
+health state. No external episode cost is sourced. O9 closed as C7.
+
+**Reason:** Aliyev's Surgery state covers all surgeries and procedures
+(Lichtenstein 2005), many outpatient — not a colectomy admission. The retired
+workbook's substitution of a one-time inpatient colectomy episode cost was a
+category error inconsistent with the state's own transition structure. All four
+of Aliyev's published per-cycle health-state costs, Surgery included, reconcile
+to within about a dollar under the single conversion rule with no free
+parameters.
