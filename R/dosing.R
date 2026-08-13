@@ -1,17 +1,18 @@
 # Infliximab dosing schedule and per-dose cost.
 #
-# Two inputs here are provisional, clearly flagged, and distinct from the
-# well-specified Markov mechanics this session's traps are about:
+# IFX_PRICED_PRODUCT is Q5104 (Renflexis), the reference comparator's
+# biosimilar for the base case -- decided by Stone, OPEN_QUESTIONS.md C10,
+# recorded in SPEC_AMENDMENTS.md. At the current quarter it is the lowest
+# priced of the three infliximab biosimilars ($2.6615/mg against $2.7710 and
+# $3.0830), which makes the comparator arm cheapest and therefore makes `B`
+# and the justifiable price smallest -- the conservative direction. The
+# originator (J1745) prices scenario S4.
 #
-# - IFX_DOSE_MG assumes the standard 5 mg/kg dosing weight-scaled to the
-#   SONIC trial's median body weight (69.6-72.0 kg across arms, Colombel
-#   et al. NEJM 2010) -- not sourced from Aliyev, who doesn't state a
-#   modeled body weight anywhere available this session.
-# - IFX_PRICED_PRODUCT uses Q5104 (Renflexis) pending OPEN_QUESTIONS.md O8
-#   (which biosimilar prices the base case is still open for Eric/co-author
-#   sign-off). Renflexis matches what W2_sourcing_register.md flagged the
-#   prior project as having used, kept here only for continuity, not
-#   because it has been re-justified.
+# One input here remains provisional and is flagged as such:
+# IFX_DOSE_MG assumes standard 5 mg/kg dosing weight-scaled to the SONIC
+# trial's median body weight (69.6-72.0 kg across arms, Colombel et al.
+# NEJM 2010) -- not sourced from Aliyev, who states no modeled body weight
+# in any material available to this project.
 
 IFX_DOSE_MG_PER_KG <- 5
 IFX_BODY_WEIGHT_KG <- 70 # SONIC median, rounded

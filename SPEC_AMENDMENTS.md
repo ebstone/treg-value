@@ -192,3 +192,31 @@ cured, and the pre-landmark window is conventional-therapy dynamics (L9),
 not drug-free remission. Emitting a number there would be the section 7
 error — the right number against the wrong reference point — reintroduced
 by the very function written to prevent it.
+
+## 2026-08-13 — Reference comparator priced on Q5104 (Renflexis)
+
+**Signed off:** Stone
+**Supersedes:** OPEN_QUESTIONS.md O8, closed as C10; unresolved item U3 in
+`data/raw/cms_asp_infliximab_2026.csv.source.yaml`. SPEC.md section 2 names
+the reference comparator as "Infliximab, biosimilar pricing base case"
+without naming a product, and section 8 lists the unit cost as TO SOURCE.
+
+**Change:** the base case is priced on HCPCS Q5104 (Renflexis,
+infliximab-abda) at the current CMS ASP payment limit, $2.6615 per mg
+(2026-07 quarter). Three infliximab biosimilars carry payment limits in that
+file; this names which one the base case uses. The originator (J1745,
+$3.1479/mg) prices scenario S4.
+
+**Reason:** the choice was a decision rather than a lookup — SPEC.md
+requires a biosimilar but does not say which, and no sourcing exercise can
+settle it. Q5104 is the lowest priced of the three at the current quarter,
+which makes the comparator arm the cheapest available and therefore makes
+`B` and every justifiable price on the frontier the smallest — the
+conservative direction, and the one least likely to overstate what the
+therapy is worth. The two higher-priced biosimilars (Q5103 $2.7710, Q5121
+$3.0830) would each raise the frontier.
+
+**Effect on reported results:** none. Q5104 was already the value carried in
+`R/dosing.R` pending this decision, so every figure in the W4 readout stands
+as published. What changes is that the input is now decided and justified
+rather than inherited.

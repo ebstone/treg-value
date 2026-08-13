@@ -186,3 +186,15 @@ One line per session: what changed, and which tests now cover it.
   message stays explicit and visible instead.
 - Full suite: 127 assertions across 63 tests, 0 failures, 1 skip (G6 only).
   Tests cover T1, T2, T3, T4, T5, T7, T11, T12.
+
+## 2026-08-13 (comparator pricing decided)
+- OPEN_QUESTIONS.md O8 closed as C10: the reference comparator's base case is
+  priced on Q5104 (Renflexis) at $2.6615/mg, the current CMS ASP payment
+  limit. Recorded in SPEC_AMENDMENTS.md; unresolved item U3 in the ASP
+  sidecar resolved, leaving that file with none. Q5104 was already the value
+  carried in R/dosing.R pending the decision, so no reported figure changes
+  -- the input is now decided and justified rather than inherited. It is the
+  lowest priced of the three biosimilars, which makes the comparator arm
+  cheapest and B and P* smallest: the conservative direction. Originator
+  J1745 prices scenario S4.
+- Full suite unchanged: 127 assertions across 63 tests, 0 failures, 1 skip.

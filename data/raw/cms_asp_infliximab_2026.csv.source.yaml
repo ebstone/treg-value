@@ -37,16 +37,11 @@ notes: >
   U2 (was: 2026-04 is stale) -- this file now uses the 2026-07 quarter,
   current as of the 2026-08-12 retrieval date.
   U4 (was: J1745 not retrieved) -- now included, resolving the S4 blocker too.
-unresolved:
-  - id: U3
-    issue: >
-      Four infliximab products now have payment-limit figures in this file
-      (originator J1745 $31.479; biosimilars Q5103 $27.710, Q5104 $26.615,
-      Q5121 $30.830, all per 10 mg). SPEC.md names "biosimilar pricing" as
-      the reference-comparator base case without naming a specific product,
-      and three biosimilars qualify. This is a decision, not a lookup --
-      choose one and record it, or carry the biosimilars as a bounding pair
-      (SPEC.md's own pattern for L5/L6-type choices with no principled
-      single answer). Left open for Eric/co-author sign-off rather than
-      picked here.
-    blocks: W3
+
+  U3 (was: which of the three biosimilars prices the base case?) is resolved
+  as of 2026-08-13: Q5104 (Renflexis), $2.6615/mg at this quarter, decided by
+  Stone and recorded in OPEN_QUESTIONS.md C10 and SPEC_AMENDMENTS.md. It is
+  the lowest priced of the three biosimilars here, so the comparator arm is
+  the cheapest available and the resulting justifiable prices are the
+  smallest -- the conservative direction. J1745 (originator, $3.1479/mg)
+  prices scenario S4. No unresolved items remain against this file.
