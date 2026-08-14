@@ -10,10 +10,22 @@
 #' path that does not exist, so an aim whose output had genuinely landed
 #' would still be reported uncovered -- the guard would have been incapable
 #' of ever passing, which is a worse failure than a noisy one.
+#'
+#' SPEC.md also writes each aim ID in bold (`**A1**`), and the same argument
+#' applies in the other direction. Left in, the identifier compared against
+#' SPEC_AMENDMENTS.md is `**A1**`, which cannot match that file's unbolded
+#' convention, so the amendment branch of `uncovered_aims()` is unreachable:
+#' the guard passes today only because every aim's output happens to exist and
+#' short-circuits the check. The first time an aim is legitimately dropped and
+#' recorded as an amendment, the guard would fail on it. Both markers are
+#' stripped so bolded and unbolded IDs resolve alike.
 parse_aims_table <- function(spec_path = "SPEC.md") {
   tbl <- parse_md_table(spec_path, heading = "Aims and their outputs")
   if ("Output file" %in% names(tbl)) {
     tbl[["Output file"]] <- gsub("`", "", trimws(tbl[["Output file"]]))
+  }
+  if ("Aim" %in% names(tbl)) {
+    tbl$Aim <- gsub("\\*", "", trimws(tbl$Aim))
   }
   tbl
 }
