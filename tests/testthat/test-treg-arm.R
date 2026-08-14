@@ -46,6 +46,17 @@ test_that("pi_cure is declared on the all_treated denominator (guard 3)", {
 })
 
 test_that("T7: Treg-arm state vectors sum to 1.00 +/- 1e-10, every cycle, at every cure fraction", {
+  # WHAT THIS ESTABLISHES, AND WHAT IT DOES NOT. In this arm the three tracked
+  # quantities are running scalars: `dfr`, `cumulative_standard_care` and
+  # `cumulative_dead`. Each cycle moves `died` and `relapsed` out of the first
+  # and into the other two, so their total is invariant as an algebraic
+  # identity -- this assertion cannot fail whatever the arm charges or credits
+  # that mass. Measured: pricing every relapser at age 35 regardless, doubling
+  # standard-care cost, and inflating relapser QALYs by half each leave
+  # max|state_sum - 1| at 1.554e-15, unchanged to the last digit, while P*(0.5)
+  # changes sign twice. It is a check that no mass is dropped between the three
+  # buckets, and nothing more. The test below is the one that binds what
+  # happens to the mass once it has been handed over.
   for (p in c(0, 0.5, 1)) {
     for (h in c(0, 0.10)) {
       trace <- run_treg_trace(p, h, WINDOW, CAP_ON, SC_GRID, RAW_DIR)
@@ -53,6 +64,44 @@ test_that("T7: Treg-arm state vectors sum to 1.00 +/- 1e-10, every cycle, at eve
         tolerance = 1e-10, label = sprintf("pi=%s h=%s", p, h))
     }
   }
+})
+
+test_that("mass handed to standard care is charged at the age it was handed over, not at a fixed age", {
+  # The falsifiable companion to T7. Relapsers leave drug-free remission across
+  # the whole horizon and are handed to standard care at whatever age they
+  # reach, so the arm's result must depend on the grid AT THOSE AGES. Perturb
+  # the grid only at ages a relapser can reach and only a relapser can feel it:
+  #
+  #   h = 0    nobody ever relapses  -> the perturbation must NOT be felt
+  #   h > 0    relapsers arrive late -> the perturbation MUST be felt
+  #
+  # An implementation that looked up a fixed age, or ignored age entirely,
+  # passes T7 and fails here. So does one that hands relapsers over without
+  # charging them.
+  bump_above <- function(grid, age_from, factor) {
+    g <- grid
+    hit <- g$ages >= age_from
+    g$cost[hit] <- g$cost[hit] * factor
+    g
+  }
+  perturbed <- bump_above(SC_GRID, 70, 1.5)
+
+  # No relapse: the late grid is never consulted, so the answer must not move.
+  base_h0 <- run_treg_trace(1, 0, WINDOW, CAP_ON, SC_GRID, RAW_DIR)
+  pert_h0 <- run_treg_trace(1, 0, WINDOW, CAP_ON, perturbed, RAW_DIR)
+  expect_equal(pert_h0$discounted_cost_usd, base_h0$discounted_cost_usd, tolerance = 1e-8)
+
+  # With relapse: mass reaches those ages, so the answer must move, and upward.
+  base_h <- run_treg_trace(1, 0.10, WINDOW, CAP_ON, SC_GRID, RAW_DIR)
+  pert_h <- run_treg_trace(1, 0.10, WINDOW, CAP_ON, perturbed, RAW_DIR)
+  expect_gt(pert_h$discounted_cost_usd, base_h$discounted_cost_usd)
+
+  # And the arm must be sensitive to the handoff age specifically: a bump
+  # confined to ages beyond the horizon's reach changes nothing, while the
+  # same bump applied from the landmark onward changes strictly more than one
+  # applied only from age 70.
+  from_landmark <- run_treg_trace(1, 0.10, WINDOW, CAP_ON, bump_above(SC_GRID, 0, 1.5), RAW_DIR)
+  expect_gt(from_landmark$discounted_cost_usd, pert_h$discounted_cost_usd)
 })
 
 test_that("T1: P*(0) equals independently computed A to within $1, whatever its sign", {

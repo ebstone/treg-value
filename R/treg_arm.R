@@ -64,6 +64,33 @@ standard_care_grid <- function(window_weeks, cap_on, raw_dir = "data/raw",
 
 #' Linear interpolation into a `standard_care_grid()` result at an arbitrary
 #' age, returning discounted cost and QALYs to that patient's own start.
+#'
+#' THIS IS AN APPROXIMATION, NOT AN EXACT LOOKUP, and the size of it is
+#' recorded here because `A` is reported to the dollar and someone
+#' recomputing it at a different resolution will otherwise find an
+#' unexplained gap. Discounted lifetime cost is not linear in starting age --
+#' at age 46 the midpoint of the two neighbouring grid points misses the true
+#' value by about $19 -- so interpolating between integer ages is wrong by an
+#' amount that grows with age: measured against directly computed traces,
+#' about $3 at 35 and $23 at 95 in cost, up to $255 in net monetary benefit at
+#' $100,000 per QALY.
+#'
+#' Effect on the reported figures, measured by rebuilding the grid at
+#' quarter-year steps: `A` moves about $70 (from -$2,655 to -$2,585, 2.7%),
+#' `B` about $74 (0.04%), and the required cure fraction at the median
+#' benchmark from 24.00% to 23.97%. `P*(1)` does not move at all -- the
+#' landmark lookup is common to `A` and `B` and cancels in their sum. The
+#' grid was left at one-year steps deliberately: no conclusion turns on the
+#' difference, and the alternative costs 195 extra comparator runs.
+#'
+#' Adding a single grid point at the landmark age would recover 58% of it for
+#' one extra run, since the landmark (35.2308) is the one non-integer age
+#' every patient passes through and so the only lookup whose error is
+#' systematic rather than averaged out. Not done, because it would supersede
+#' an already-published `A` for a change no conclusion depends on.
+#'
+#' `T1` cannot see any of this: both routes to `A` consume the same grid, so
+#' both carry the identical error and agree with each other while agreeing.
 standard_care_at_age <- function(grid, age_years) {
   age <- min(max(age_years, min(grid$ages)), max(grid$ages))
   list(
