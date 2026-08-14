@@ -422,3 +422,38 @@ One line per session: what changed, and which tests now cover it.
 - Both found by ultra review round 2. Neither the standard_care_grid()
   exactness question nor the state_sums conservation question was examined by
   that review; both remain open.
+
+## 2026-08-14 (standard_care_grid verification)
+
+- Answered the two questions the round-2 review brief made its priority and
+  which neither ultra run addressed.
+- **The analytic grid accounting is not exact.** `standard_care_at_age()`
+  interpolates linearly between integer ages, and discounted lifetime cost is
+  not linear in starting age. Measured against directly computed traces the
+  error runs about $3 at age 35 to $23 at 95, up to $255 in net monetary
+  benefit. Rebuilding the grid at quarter-year steps moves `A` about $70
+  (-$2,655 to -$2,585, 2.7%), `B` about $74 (0.04%), and the required cure
+  fraction from 24.00% to 23.97%; `P*(1)` does not move, the landmark lookup
+  being common to `A` and `B` and cancelling in their sum. Left at one-year
+  steps deliberately and the magnitude recorded in `R/treg_arm.R` instead: no
+  conclusion turns on it, and superseding a published `A` for it is not worth
+  the churn. Adding one grid point at the landmark age would recover 58% for a
+  single extra run if that trade is ever wanted.
+- **T7's state-sum invariant proves less than it reads.** In the Treg arm the
+  three tracked quantities are running scalars and each cycle moves mass
+  between them, so their total is invariant as an algebraic identity. Pricing
+  every relapser at age 35, doubling standard-care cost, and inflating relapser
+  QALYs by half each leave `max|state_sum - 1|` at 1.554e-15 -- unchanged to
+  the last digit -- while `P*(0.5)` changes sign twice. T7 is a check that no
+  mass is dropped between buckets and nothing more; the test now says so.
+- Added the falsifiable companion T7 was missing: perturbing the standard-care
+  grid only at ages a relapser can reach must leave the no-relapse case
+  untouched and must move the relapsing case. Verified it fails against both
+  corruptions T7 sleeps through -- a fixed-age lookup and a handoff that never
+  charges.
+- No reported figure changes, so no amendment. Suite: 367 passing, 0 failures,
+  0 skips.
+- Standing count: three of the twelve acceptance criteria cannot fail as
+  written -- T3 (pi enters once as a scalar, so linearity is arithmetic), T7
+  (above), and T1 partially (both routes to `A` share the grid and the
+  pre-landmark loop, so they carry identical errors and agree anyway).
