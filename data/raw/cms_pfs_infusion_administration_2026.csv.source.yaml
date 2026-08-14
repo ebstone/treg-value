@@ -47,6 +47,7 @@ unresolved:
       policy documentation.
     blocks: derive/ script for administration cost (W3 or later)
   - id: U2
+    status: resolved 2026-08-14
     issue: >
       Meaning of the dropped price_ind=1 / $33.5675 rows is not confirmed --
       possibly a mid-year conversion factor update, an anesthesia-specific
@@ -54,4 +55,20 @@ unresolved:
       currently-effective CF rather than $33.4009, every payment figure in
       this file needs recomputing (33.5675/33.4009 = 1.005, a ~0.5% shift,
       small but not zero).
-    blocks: none currently -- flagged for whoever next touches CMS PFS data
+    resolution: >
+      Neither is a mid-year update: CY2026 is the first year with two
+      statutory conversion factors, required by MACRA. $33.5675 applies to
+      qualifying alternative payment model (APM) participants and $33.4009 to
+      practitioners who are not qualifying participants; the CY2026 final rule
+      sets the qualifying update at 0.75% and the non-qualifying at 0.25%,
+      which is exactly the 0.5% spread observed between the two rows. Both are
+      currently effective, for different billers. This file keeps $33.4009,
+      the non-qualifying figure, which is the right one for a model taking a
+      general payer perspective with no APM participation assumed, and is the
+      lower of the two -- so administration cost, and with it the comparator's
+      cost, is not overstated.
+      Re-verified 2026-08-14 against pfs.data.cms.gov's own indicators file:
+      96365 work 0.21, PE 1.76, MP 0.04, total 2.01, x 33.4009 = $67.14;
+      96366 work 0.18, PE 0.45, MP 0.01, total 0.64, x 33.4009 = $21.38.
+      Facility and non-facility RVUs identical for both codes, as recorded.
+    blocks: none

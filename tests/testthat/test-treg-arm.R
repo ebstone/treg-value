@@ -105,6 +105,23 @@ test_that("mass handed to standard care is charged at the age it was handed over
 })
 
 test_that("T1: P*(0) equals independently computed A to within $1, whatever its sign", {
+  # WHAT THIS CAN AND CANNOT CATCH. The two routes share inputs -- the CT
+  # matrix, the cost and utility vectors, LANDMARK_CYCLES -- but no longer
+  # share a derivation: the model route accumulates the pre-landmark window
+  # cycle by cycle, the independent route sums it as a matrix series (see
+  # R/frontier.R). That distinction is what makes the agreement mean something.
+  #
+  # Measured, with the window loop duplicated as it was before: dropping the
+  # half-cycle correction from the helper BOTH routes called left T1 passing at
+  # a difference of exactly 0.00, because both copies moved together. Against
+  # the closed form the same error surfaces as a $180.93 disagreement.
+  #
+  # It still cannot catch a wrong shared CONSTANT. Setting the rescue window to
+  # 7 cycles moves A by $232.83 and T1 passes at 0.00, because both routes read
+  # LANDMARK_CYCLES and are each faithful to it. No cross-check can validate its
+  # own inputs; that is what SPEC.md's locked decisions and the provenance
+  # guard are for, and it is the reason T1 is not the only thing standing
+  # between this model and a wrong A.
   a_model <- frontier_intercept_from_model(0.05, LAMBDA, COMPARATOR, SC_GRID, WINDOW, CAP_ON, RAW_DIR)
   a_independent <- frontier_intercept_independent(LAMBDA, COMPARATOR, SC_GRID, RAW_DIR)
   expect_lt(abs(a_model - a_independent), 1)
@@ -125,12 +142,34 @@ test_that("T2: (P*(1) - P*(0)) equals B computed directly as the cured-vs-standa
 })
 
 test_that("T3: P*(pi) is linear across a 101-point grid, deviation under $0.01", {
+  # WHY THIS ANCHORS ON INDEPENDENT A AND B, NOT ON ITS OWN ENDPOINTS.
+  # `pi_cure` enters the arm at exactly one line, as a scalar multiplier on the
+  # treated cohort, so cost and QALYs are affine in it as a matter of
+  # arithmetic. Fitting the line to `observed[1]` and `observed[101]` and then
+  # checking the interior therefore tests that a multiplication is a
+  # multiplication: measured, that form passes with deviation ~2e-08 when the
+  # relapse hazard is doubled, when cured-patient costs are inflated tenfold,
+  # and when `pi` is applied to a subset rather than all treated -- the exact
+  # defect this project has suffered twice, which collapses `B` by 80%.
+  #
+  # Anchoring instead on `A` from the code-disjoint route and `B` computed
+  # directly makes the assertion say what T3 is for: that the frontier the arm
+  # actually produces is the line those two independently computed quantities
+  # predict. A subset denominator moves the observed slope away from `B` and
+  # fails here.
   pis <- seq(0, 1, length.out = 101)
   h <- 0.05
   observed <- vapply(pis, function(p) price_at(p, h), numeric(1))
-  intercept <- observed[1]
-  slope <- observed[length(observed)] - intercept
-  affine <- intercept + pis * slope
+
+  a_independent <- frontier_intercept_independent(LAMBDA, COMPARATOR, SC_GRID, RAW_DIR)
+  b_direct <- value_of_one_cure_usd(h, LAMBDA, SC_GRID, RAW_DIR)
+  predicted <- a_independent + pis * b_direct
+
+  expect_lt(max(abs(observed - predicted)), 1)
+
+  # The interior must also be straight in its own right, which is what rules
+  # out a curve that merely happens to pass through both endpoints.
+  affine <- observed[1] + pis * (observed[length(observed)] - observed[1])
   expect_lt(max(abs(observed - affine)), 0.01)
 })
 

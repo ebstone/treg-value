@@ -457,3 +457,76 @@ One line per session: what changed, and which tests now cover it.
   written -- T3 (pi enters once as a scalar, so linearity is arithmetic), T7
   (above), and T1 partially (both routes to `A` share the grid and the
   pre-landmark loop, so they carry identical errors and agree anyway).
+
+## 2026-08-14 (T1 and T3 made to bind)
+
+- **T3 anchored on independently computed A and B.** It previously fitted a
+  line to its own first and last observations and checked the interior, which
+  `pi_cure` entering the arm at one line as a scalar makes true by arithmetic.
+  Measured: that form passed at deviation ~2e-08 with the relapse hazard
+  doubled, with cured-patient costs inflated tenfold, and with `pi` applied to
+  a subset rather than all treated. It now compares the observed frontier
+  against `frontier_intercept_independent()` plus `pi` times
+  `value_of_one_cure_usd()`. Against the subset denominator -- the defect this
+  project has suffered twice -- the old form passes at 1.73e-08 and the new one
+  fails by $137,636.
+- **T1's second route no longer duplicates the first.** The independent
+  intercept accumulated the pre-landmark window with the same cycle-by-cycle
+  loop `run_treg_trace()` uses, written out twice, so a mistake made once and
+  copied reproduced itself in both. The window is now summed as a matrix
+  series with no cycle loop. Measured: dropping the half-cycle correction from
+  the helper both routes called left the old T1 passing at exactly 0.00; the
+  closed form disagrees by $180.93.
+- T1's remaining limit is recorded in the test rather than left implicit: a
+  wrong shared constant is still invisible. Setting the rescue window to 7
+  cycles moves `A` by $232.83 and T1 passes at 0.00, because both routes read
+  `LANDMARK_CYCLES` and are each faithful to it. No cross-check validates its
+  own inputs.
+- No reported figure changes -- the closed form reproduces `A` to floating
+  point, verify_readout.R passes, and no output table moved. Suite: 368
+  passing, 0 failures, 0 skips.
+- Standing count updated: of the three acceptance criteria previously unable to
+  fail, T3 and T1 now bind, and T7 is honestly described with a falsifiable
+  companion alongside it.
+
+## 2026-08-14 (non-Aliyev transcriptions verified against public sources)
+
+- Verified every non-Aliyev figure that has a reachable primary source, against
+  that source rather than against the sidecar's description of it. No
+  discrepancy found in any of them.
+  - **Medical-care CPI**: all 22 annual averages recomputed from the monthly
+    FRED CPIMEDNS series and matched to four decimal places, including the
+    partial-year month counts (2025 has 11 months, 2026 has 7) -- which
+    independently confirms the sidecar's note that October 2025 is absent from
+    the published series.
+  - **EUR/USD**: 2018 = 1.1817 and 2025 = 1.1306, both matching FRED AEXUSEU.
+  - **NCHS life tables 2023 and 2019**: the source PDFs were re-downloaded from
+    cdc.gov and both CSVs re-derived through `derive/parse_nchs_life_table.R`.
+    Byte-identical to the committed files. This is also the first time that
+    script has been run against a real NCHS PDF since it was rewritten to
+    locate Table 1 itself; it did so with no line-range arguments, for both
+    report vintages.
+  - **CMS ASP infliximab**: all four rows (J1745, Q5103, Q5104, Q5121) match
+    the official July 2026 Medicare Part B Payment Limit File, including the
+    10 mg billing unit, and each `usd_per_mg` equals its payment limit divided
+    by that unit.
+  - **CMS PFS 96365/96366**: RVU components, totals and payments match
+    pfs.data.cms.gov's own indicators file, and facility and non-facility RVUs
+    are identical as recorded.
+  - **CAR-T list prices**: Kymriah $475,000, Yescarta $373,000, Breyanzi
+    $410,300 and Carvykti $465,000 all confirmed against independent reporting.
+- Closed U2 in the CMS PFS sidecar. The second conversion-factor row is not a
+  mid-year update: CY2026 is the first year with two statutory conversion
+  factors, $33.5675 for qualifying APM participants and $33.4009 for
+  non-participants, matching the final rule's 0.75% and 0.25% updates and
+  therefore the 0.5% spread observed. Both are current, for different billers.
+  The file keeps the non-qualifying figure, which is correct for a general
+  payer perspective and is the lower of the two.
+- **Not verified, and not verifiable here.** ten Ham et al. 2020 is not open
+  access (Europe PMC confirms no PMC record), so the manufacturing case-study
+  table behind the allogeneic benchmark anchors cannot be checked without
+  institutional access. The Breyanzi per-dose cost-of-goods range rests on a
+  single trade-press figure, as its own sidecar already states. Between them
+  these are the inputs to every manufacturing anchor, so the benchmark leg of
+  the analysis remains the least independently corroborated part of it.
+- No code or figure changes. Suite: 368 passing, 0 failures, 0 skips.
