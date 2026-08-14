@@ -375,3 +375,50 @@ One line per session: what changed, and which tests now cover it.
 - {digest} installed to the user library: G1 (provenance) and G5 (stamping)
   had been skipping silently for want of it, so two guards were inert. Suite
   now runs 349 assertions with no skips.
+
+## 2026-08-14 (transcription audit; C8 reconciled)
+- Audited every Aliyev-derived figure in data/raw/ against the source appendix
+  PDFs. Supplementary Table 2 (59 rows: parameter, base-case value, alpha,
+  beta) compared mechanically and matches in full; Supplementary Tables 3
+  (induction), 4 (maintenance, all of UST/IFX/ADA/CT) and 5 (costs, utilities,
+  unit costs, discount rate, indirect costs) are images in both the PDF and the
+  DOCX, so they were rendered and read cell by cell. Every value matches. The
+  appendix DEALE worked example independently reproduces the induction figure
+  0.133, and the renormalised induction rows the engine produces are exactly
+  the published rows divided by their own stated totals.
+- C8 is reconciled and the reason recorded as C8a. The $7.40 Moderate-Severe
+  gap was never unexplained: Appendix S2 page 3 builds that one state as its
+  PMPM mean total cost minus its own mean pharmacy cost plus the Mild-moderate
+  mean pharmacy cost. Under the same conversion, (374 - 123 + 111) * 0.60009 =
+  $217.23 against Table 5's $217, a $0.23 gap rather than $7.40. C8's decision
+  was correct on its own terms and no reported figure changes; only its stated
+  reason was incomplete. Now covered by a provenance re-derivation test in
+  tests/testthat/test-health-state-costs.R that also asserts the appendix rule
+  beats the plain rule, so it cannot pass for the wrong reason.
+- Not audited: the non-Aliyev sources (CMS ASP, NCHS life tables, ten Ham 2020,
+  cell-therapy list prices, medical-care CPI, EUR/USD). Their source documents
+  are not on the machine.
+
+## 2026-08-14 (round-2 review fixes)
+- Scenario S7 mixed life-table vintages: `value_of_one_cure_usd()` had no
+  vintage argument and silently used the base 2023 table while S7 built its
+  grid and comparator on the pre-pandemic 2019 one, so the cured stream and
+  the standard care it is differenced against came from different mortality
+  regimes. Threaded through `value_of_one_cure_usd()`,
+  `price_star_usd_per_course()`, `frontier_intercept_from_model()` and
+  `run_treg_trace()`. S7 B moves $167,229 to $172,606 and its required cure
+  fraction 24.7% to 24.0% — the base-case figure, so the apparent sensitivity
+  to the mortality table was the defect. scenarios.csv and the readout are
+  regenerated and the readout sentence corrected. See SPEC_AMENDMENTS.md.
+- G6 aim-coverage guard: `parse_aims_table()` stripped backticks from the
+  output column but not bold markers from the Aim column, so aim IDs compared
+  against SPEC_AMENDMENTS.md carried `**` and could never match its unbolded
+  convention. The amendment branch was unreachable, passing only because every
+  aim output happens to exist and short-circuits the check. The violation
+  fixture wrote IDs unbolded and so exercised a shape SPEC.md never produces.
+  Markers are now stripped, the fixture uses SPEC.md's own formatting, and it
+  gained an A3 that is amended but has no output file — covered by a new test
+  asserting the amendment branch clears it, which fails against the old parser.
+- Both found by ultra review round 2. Neither the standard_care_grid()
+  exactness question nor the state_sums conservation question was examined by
+  that review; both remain open.

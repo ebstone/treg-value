@@ -395,3 +395,40 @@ precedent of the conventional-therapy drug cost entry above. Covered by a
 property test in `tests/testthat/test-markov-engine.R` asserting that Death
 mass in the start-of-cycle vector cannot change the cycle cost; the test
 fails against the previous implementation.
+
+## 2026-08-14 — Scenario S7 mixed two life-table vintages
+
+**Signed off:** Stone (defect found by adversarial review round 2, corrected
+before merge)
+**Supersedes:** the S7 row of `output/tables/scenarios.csv` as first written,
+the S7 line of the results readout, and the readout sentence describing how
+far the mortality table moves the required cure fraction.
+
+**Change:** `value_of_one_cure_usd()` took no life-table vintage and loaded
+`load_life_table(raw_dir)`, which defaults to the base 2023 NCHS table. S7
+builds its standard-care grid and comparator on the pre-pandemic 2019 table
+and passes the vintage to both, but had no way to pass it to `B`. The cured
+patient therefore died on the 2023 table while the standard care that same `B`
+differences against used 2019. The argument is now threaded through
+`value_of_one_cure_usd()`, `price_star_usd_per_course()`,
+`frontier_intercept_from_model()` and `run_treg_trace()`, and passed from
+`analysis/run_scenarios.R`.
+
+**Effect:** S7 `B` at $100,000 per QALY moves from $167,229 to $172,606 (+3.2%);
+at h = 0 it moves +2.6% and at h = 0.10 +3.4%. The S7 required cure fraction at
+the median allogeneic benchmark moves from 24.7% to 24.0%. `A` is unaffected:
+it is evaluated at a cure fraction of zero, where there is no drug-free
+remission mass for a life table to act on.
+
+**Consequence for the reported conclusion, recorded because it is not merely a
+cell change.** Corrected, S7 lands on 24.0% — the base case figure. The
+apparent 0.7-point sensitivity to the mortality table was the defect, not a
+result. The readout previously said the comparator drug, drug price and
+mortality table each shift the required cure fraction by about one percentage
+point; the mortality table does not move it at all to the precision reported.
+No other scenario is affected, because S7 is the only one that varies the
+vintage.
+
+**Reason:** an argument that existed on two of the three call sites a scenario
+needs. Recorded here rather than silently fixed because it invalidates an
+already-reported figure and an already-stated conclusion.

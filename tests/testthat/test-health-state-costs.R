@@ -30,6 +30,41 @@ test_that("provenance re-derivation: PMPM-to-cycle rule reproduces Aliyev's publ
   }
 })
 
+test_that("provenance re-derivation: C8's gap closes under the rule Appendix S2 states for Moderate-Severe", {
+  # OPEN_QUESTIONS.md C8a. The plain PMPM rule leaves a $7.40 gap on this one
+  # state, which C8 recorded without a cause. Appendix S2 page 3 ("Health State
+  # Cost Calculations") gives the cause: Moderate-Severe is built as its own
+  # PMPM mean TOTAL cost, minus its own mean PHARMACY cost, plus the
+  # Mild-moderate mean PHARMACY cost -- then converted like every other state.
+  #
+  # Permitted value-snapshot under guard 4 on the same footing as the test
+  # above: it asks whether the source's own stated rule reproduces the source's
+  # own published figure. Every input is read from data/raw/, not restated here.
+  raw_dir <- repo_root_relative("data", "raw")
+  params <- read_csv_cached(file.path(raw_dir, "aliyev2019_source_parameters.csv"))
+
+  pharmacy_pmpm <- function(state_match) {
+    row <- params[grepl(state_match, params$parameter, fixed = TRUE) &
+      grepl("Mean Pharmacy Cost", params$parameter, fixed = TRUE), ]
+    expect_equal(nrow(row), 1)
+    as.numeric(gsub("[$,]", "", row$base_case_value))
+  }
+
+  ms_total <- aliyev_pmpm_2008_usd("Moderate-Severe", raw_dir)
+  combined <- ms_total - pharmacy_pmpm("Moderate-Severe") + pharmacy_pmpm("Mild-Moderate")
+  derived <- pmpm_2008_usd_to_cycle_2017_usd(combined)
+  published <- aliyev_adopted_cycle_2017_usd("Moderate-Severe", raw_dir)
+
+  # The plain rule is the wrong rule here and must remain visibly worse, or
+  # this test would pass for the wrong reason.
+  plain <- pmpm_2008_usd_to_cycle_2017_usd(ms_total)
+  expect_true(abs(derived - published) < abs(plain - published))
+  expect_lt(
+    abs(derived - published), 1,
+    label = sprintf("appendix rule gives %.2f, published figure is %d", derived, published)
+  )
+})
+
 test_that("health_state_cost_cycle_2017_usd() covers all five maintenance states with the right source per state", {
   raw_dir <- repo_root_relative("data", "raw")
   costs <- health_state_cost_cycle_2017_usd(raw_dir)

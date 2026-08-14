@@ -14,6 +14,15 @@
 # states use Suppl. Table 5's adopted per-cycle figure directly instead --
 # replicating what Aliyev's model actually used takes priority over a
 # reconciliation rule that appendix does not itself follow for this state.
+#
+# Why it does not reconcile, per OPEN_QUESTIONS.md C8a: Appendix S2 page 3
+# builds this one state as Moderate-Severe PMPM mean total cost MINUS its own
+# mean pharmacy cost PLUS the Mild-moderate PMPM mean pharmacy cost. Under the
+# same conversion, (374 - 123 + 111) * PMPM_2008_USD_TO_CYCLE_2017_USD_FACTOR
+# = $217.23 against Table 5's $217. The adopted figure used here is right; the
+# plain rule was simply the wrong rule for this state. Not re-derived that way
+# because the adopted figure is what Aliyev's model ran on, and deriving it
+# would add two more Table 2 lookups to reproduce a number already published.
 
 PMPM_2008_USD_TO_CYCLE_2017_USD_FACTOR <- (14 / 30.44) * (1.03^9)
 
