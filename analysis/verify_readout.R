@@ -1,7 +1,18 @@
 # Verify every headline figure in the readout against the stamped CSVs.
 # Numbers were typed into HTML by hand; this checks them mechanically.
-setwd("/home/eric/treg-value")
-html <- paste(readLines("/tmp/claude-1000/-home-eric/a05865ce-08a3-4f9e-a63c-c47b13d06169/scratchpad/treg_value_readout.html", warn = FALSE), collapse = "\n")
+#
+# Run from the repository root.
+#
+# READS THE COMMITTED READOUT, BY RELATIVE PATH. Earlier versions of this
+# file pointed at a scratchpad copy under /tmp and setwd() to one absolute
+# checkout. Both are invisible failures rather than loud ones: the script
+# then verifies whichever pair of files those two paths happen to name,
+# which after a re-derivation is neither the readout being shipped nor the
+# outputs it should be checked against, and it still prints ALL FIGURES
+# MATCH. The readout went stale behind exactly that.
+READOUT <- "docs/results_readout.html"
+stopifnot(file.exists(READOUT), file.exists("output/tables/price_frontier.csv"))
+html <- paste(readLines(READOUT, warn = FALSE), collapse = "\n")
 
 fails <- character(0)
 check <- function(label, expected, present_as) {
