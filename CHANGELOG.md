@@ -346,3 +346,32 @@ One line per session: what changed, and which tests now cover it.
   hazard, but at $150,000 a permanent cure requires 83.1%, which is
   arithmetically attainable. The claim is threshold-dependent and is now
   stated that way rather than absolutely.
+
+## 2026-08-13 (adversarial review fixes)
+- Maintenance dose cost was charged to the whole biologic cohort including its
+  accumulated Death mass, so dead patients were billed infusion drug plus
+  administration on every dose cycle. Death is absorbing in the maintenance
+  matrix and the Moderate-Severe redirect gives it no exit path, so the error
+  grew across the horizon. `one_cycle_cost_usd()` now charges living biologic
+  mass only, mirroring the conventional-therapy drug cost on the adjacent line.
+  Covered by a new property test in tests/testthat/test-markov-engine.R
+  asserting that adding Death mass to the start-of-cycle vector cannot change
+  the cycle cost, that the charge scales with living mass, and that a fully
+  dead cohort is charged nothing; the test fails against the previous code.
+  Effect on reported figures: comparator lifetime cost falls $495.00 with the
+  maintenance cap off and $5.35 with it on; A moves $1.71, B moves $111.34,
+  and P* at a cure fraction of 1 rises $113.06 (cap off, $100k/QALY, h=0.05).
+  The bug was conservative -- it understated the justifiable price.
+- derive/parse_nchs_life_table.R no longer takes hard-coded line ranges. It
+  locates Table 1 by scanning for the first contiguous age 0-100 block, which
+  removes a dependence on poppler version that had gone stale and made the
+  documented 2023 command select an unrelated table and crash. The age-row
+  regex now matches the interval separator literally instead of via an
+  unescaped wildcard, the pdf path is shQuote-d, a row parsing to too few
+  numeric fields raises an error naming the file and line, and duplicate ages
+  are a hard error rather than being silently deduplicated. Verified by
+  round-tripping data/raw/nchs_life_table_2023.csv through synthesised
+  pdftotext output carrying both decoys that defeated the old parser.
+- {digest} installed to the user library: G1 (provenance) and G5 (stamping)
+  had been skipping silently for want of it, so two guards were inert. Suite
+  now runs 349 assertions with no skips.

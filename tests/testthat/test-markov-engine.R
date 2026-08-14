@@ -60,6 +60,38 @@ test_that("trap 2: number of maintenance dose cycles charged equals the dosing s
   expect_true(uncapped$dose_cycles_charged > capped$dose_cycles_charged)
 })
 
+test_that("maintenance dose is charged to living biologic mass only -- Death mass in the biologic cohort is never billed an infusion", {
+  costs <- health_state_costs_usd_per_cycle(RAW_DIR)
+  zero <- setNames(numeric(length(MAINTENANCE_STATES)), MAINTENANCE_STATES)
+  dose_cost_usd <- 7 # arbitrary unit price; the assertions are proportional
+  ct_drug <- 0
+
+  alive <- zero
+  alive[["Remission"]] <- 0.6
+  with_dead <- alive
+  with_dead[["Death"]] <- 0.3 # same living mass, Death mass added on top
+
+  # The dose charge depends on living biologic mass alone, so adding Death
+  # mass to the start-of-cycle vector must not change the cycle's cost.
+  cost_alive <- one_cycle_cost_usd(zero, zero, alive, TRUE, costs, dose_cost_usd, ct_drug)
+  cost_with_dead <- one_cycle_cost_usd(zero, zero, with_dead, TRUE, costs, dose_cost_usd, ct_drug)
+  expect_equal(cost_alive, cost_with_dead)
+
+  # And the charge scales with the living mass, so the mechanism is a
+  # per-living-patient dose rather than a constant that ignores the vector.
+  doubled <- alive
+  doubled[["Remission"]] <- 2 * alive[["Remission"]]
+  expect_equal(
+    one_cycle_cost_usd(zero, zero, doubled, TRUE, costs, dose_cost_usd, ct_drug),
+    2 * cost_alive
+  )
+
+  # A cohort that is entirely dead is charged nothing on a dose cycle.
+  all_dead <- zero
+  all_dead[["Death"]] <- 1
+  expect_equal(one_cycle_cost_usd(zero, zero, all_dead, TRUE, costs, dose_cost_usd, ct_drug), 0)
+})
+
 test_that("trap 3: induction dosing schedule never has a dose outside its own window", {
   for (window in c(4, 8)) {
     doses <- ifx_induction_dose_weeks(window)
