@@ -457,3 +457,34 @@ One line per session: what changed, and which tests now cover it.
   written -- T3 (pi enters once as a scalar, so linearity is arithmetic), T7
   (above), and T1 partially (both routes to `A` share the grid and the
   pre-landmark loop, so they carry identical errors and agree anyway).
+
+## 2026-08-14 (T1 and T3 made to bind)
+
+- **T3 anchored on independently computed A and B.** It previously fitted a
+  line to its own first and last observations and checked the interior, which
+  `pi_cure` entering the arm at one line as a scalar makes true by arithmetic.
+  Measured: that form passed at deviation ~2e-08 with the relapse hazard
+  doubled, with cured-patient costs inflated tenfold, and with `pi` applied to
+  a subset rather than all treated. It now compares the observed frontier
+  against `frontier_intercept_independent()` plus `pi` times
+  `value_of_one_cure_usd()`. Against the subset denominator -- the defect this
+  project has suffered twice -- the old form passes at 1.73e-08 and the new one
+  fails by $137,636.
+- **T1's second route no longer duplicates the first.** The independent
+  intercept accumulated the pre-landmark window with the same cycle-by-cycle
+  loop `run_treg_trace()` uses, written out twice, so a mistake made once and
+  copied reproduced itself in both. The window is now summed as a matrix
+  series with no cycle loop. Measured: dropping the half-cycle correction from
+  the helper both routes called left the old T1 passing at exactly 0.00; the
+  closed form disagrees by $180.93.
+- T1's remaining limit is recorded in the test rather than left implicit: a
+  wrong shared constant is still invisible. Setting the rescue window to 7
+  cycles moves `A` by $232.83 and T1 passes at 0.00, because both routes read
+  `LANDMARK_CYCLES` and are each faithful to it. No cross-check validates its
+  own inputs.
+- No reported figure changes -- the closed form reproduces `A` to floating
+  point, verify_readout.R passes, and no output table moved. Suite: 368
+  passing, 0 failures, 0 skips.
+- Standing count updated: of the three acceptance criteria previously unable to
+  fail, T3 and T1 now bind, and T7 is honestly described with a falsifiable
+  companion alongside it.

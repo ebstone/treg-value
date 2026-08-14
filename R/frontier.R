@@ -55,11 +55,36 @@ frontier_intercept_from_model <- function(h_per_year, lambda_usd_per_qaly, compa
 #' `A`, the intercept, computed independently of the Treg arm: price the
 #' 12-week conventional-therapy window directly, add one full comparator
 #' course deferred to the landmark, and subtract the comparator course begun
-#' at time zero. Shares no code path with `run_treg_trace()`.
+#' at time zero.
 #'
 #' This is SPEC.md section 1's own definition of A read literally -- the
 #' deferral of the comparator induction course across the rescue window,
 #' less the health and non-drug cost penalty of that window.
+#'
+#' WHY THE WINDOW IS SUMMED IN CLOSED FORM. T1 is only worth having if the two
+#' routes to `A` can disagree. An earlier version of this function advanced the
+#' cohort with the same cycle-by-cycle loop `run_treg_trace()` uses -- same
+#' initial vector, same matrix, same half-cycle correction, same discount
+#' indexing, written out twice. Agreement was then close to automatic: setting
+#' the rescue window to the wrong length moved `A` by $232.83 and T1 still
+#' passed with a difference of exactly 0.00, because both copies moved
+#' together. The two routes may share inputs -- the CT matrix and the cost and
+#' utility vectors are the same data either way -- but they must not share the
+#' derivation.
+#'
+#' So the discounted half-cycle-weighted occupancy over the window is summed
+#' as a matrix series rather than accumulated in a loop. With `v` the
+#' per-cycle discount factor, `M` the mortality-free CT matrix, `e` the
+#' all-Moderate-Severe starting vector and `T` the landmark, the occupancy at
+#' cycle `t` is `e M^t`, and
+#'
+#'     sum_{t=1..T} v^t * 0.5 * (e M^(t-1) + e M^t)
+#'       = 0.5 * e * (v I + v M) * sum_{t=0..T-1} (v M)^t
+#'       = 0.5 * e * (v I + v M) * (I - (v M)^T) (I - v M)^-1
+#'
+#' which is evaluated below with a matrix inverse and no cycle loop. An
+#' off-by-one in either route's cycle count, a mis-indexed discount factor or a
+#' dropped half-cycle term now shows up as disagreement instead of cancelling.
 frontier_intercept_independent <- function(lambda_usd_per_qaly, comparator, sc_grid,
                                            raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS) {
   costs <- health_state_costs_usd_per_cycle(raw_dir)
@@ -67,27 +92,30 @@ frontier_intercept_independent <- function(lambda_usd_per_qaly, comparator, sc_g
   ct_drug_cost <- conventional_therapy_cost_usd_per_cycle(raw_dir)
   ct_matrix <- age_adjust_maintenance_matrix(load_maintenance_matrix("CT", raw_dir), 0)
 
-  cohort <- setNames(numeric(length(MAINTENANCE_STATES)), MAINTENANCE_STATES)
-  cohort[["Moderate-Severe"]] <- 1
+  m <- as.matrix(ct_matrix[MAINTENANCE_STATES, MAINTENANCE_STATES])
+  n <- length(MAINTENANCE_STATES)
+  identity <- diag(n)
+  v <- discount_factor_years_to_discount_factor(CYCLE_YEARS)
+  vm <- v * m
 
-  window_cost <- 0
-  window_qaly <- 0
-  years_elapsed <- 0
-  for (t in seq_len(LANDMARK_CYCLES)) {
-    start <- cohort
-    end <- setNames(numeric(length(MAINTENANCE_STATES)), MAINTENANCE_STATES)
-    for (s in MAINTENANCE_STATES) end <- end + cohort[[s]] * ct_matrix[s, ]
-    cohort <- end
-    hc <- half_cycle_weighted_occupancy(start, end)
-    years_elapsed <- years_elapsed + CYCLE_YEARS
-    df <- discount_factor_years_to_discount_factor(years_elapsed)
-    alive <- sum(hc) - hc[["Death"]]
-    window_cost <- window_cost + (sum(hc * costs) + alive * ct_drug_cost) * df
-    window_qaly <- window_qaly + sum(hc * utilities) * CYCLE_YEARS * df
-  }
+  # sum_{t=0..T-1} (vM)^t, in closed form.
+  vm_to_t <- diag(n)
+  for (i in seq_len(LANDMARK_CYCLES)) vm_to_t <- vm_to_t %*% vm # (vM)^T, by definition
+  geometric <- (identity - vm_to_t) %*% solve(identity - vm)
+
+  e <- matrix(0, nrow = 1, ncol = n)
+  e[1, match("Moderate-Severe", MAINTENANCE_STATES)] <- 1
+  weighted <- setNames(
+    as.vector(0.5 * e %*% (v * identity + vm) %*% geometric),
+    MAINTENANCE_STATES
+  )
+
+  alive <- sum(weighted) - weighted[["Death"]]
+  window_cost <- sum(weighted * costs) + alive * ct_drug_cost
+  window_qaly <- sum(weighted * utilities) * CYCLE_YEARS
 
   landmark_age <- start_age_years + LANDMARK_CYCLES * CYCLE_YEARS
-  landmark_discount <- discount_factor_years_to_discount_factor(years_elapsed)
+  landmark_discount <- discount_factor_years_to_discount_factor(LANDMARK_CYCLES * CYCLE_YEARS)
   deferred <- standard_care_at_age(sc_grid, landmark_age)
 
   nmb_window <- nmb_usd(window_cost, window_qaly, lambda_usd_per_qaly)
