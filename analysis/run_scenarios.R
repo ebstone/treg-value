@@ -64,9 +64,10 @@ for (sc in SCENARIOS) {
   comparator <- run_comparator_trace(sc$therapy, sc$window, CAP_ON,
     100 - MODEL_START_AGE_YEARS, product = sc$product, life_table_vintage = sc$vintage)
   for (lambda in LAMBDAS_USD_PER_QALY) {
-    a <- frontier_intercept_from_model(0, lambda, comparator, grid, sc$window, CAP_ON)
+    a <- frontier_intercept_from_model(0, lambda, comparator, grid, sc$window, CAP_ON,
+      life_table_vintage = sc$vintage)
     for (h in HAZARDS_PER_YEAR) {
-      b <- value_of_one_cure_usd(h, lambda, grid)
+      b <- value_of_one_cure_usd(h, lambda, grid, life_table_vintage = sc$vintage)
       rows[[length(rows) + 1]] <- data.frame(
         scenario = sc$id, label = sc$label, comparator_therapy = sc$therapy,
         lambda_usd_per_qaly = lambda, h_per_year = h,

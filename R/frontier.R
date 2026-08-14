@@ -34,8 +34,10 @@ nmb_usd <- function(cost_usd, qaly, lambda_usd_per_qaly) {
 #' `A + pi * B` here would make T3 vacuous and hide exactly the kind of
 #' pi-dependence downstream of the split that T3 exists to catch.
 price_star_usd_per_course <- function(pi_cure, h_per_year, lambda_usd_per_qaly,
-                                       comparator, sc_grid, window_weeks, cap_on, raw_dir = "data/raw") {
-  treg <- run_treg_trace(pi_cure, h_per_year, window_weeks, cap_on, sc_grid, raw_dir)
+                                       comparator, sc_grid, window_weeks, cap_on, raw_dir = "data/raw",
+                                       life_table_vintage = "base") {
+  treg <- run_treg_trace(pi_cure, h_per_year, window_weeks, cap_on, sc_grid, raw_dir,
+    life_table_vintage = life_table_vintage)
   nmb_treg <- nmb_usd(treg$discounted_cost_usd, treg$discounted_qaly, lambda_usd_per_qaly)
   nmb_comparator <- nmb_usd(comparator$discounted_cost_usd, comparator$discounted_qaly, lambda_usd_per_qaly)
   nmb_treg - nmb_comparator
@@ -44,8 +46,10 @@ price_star_usd_per_course <- function(pi_cure, h_per_year, lambda_usd_per_qaly,
 #' `A`, the intercept, from the model: the frontier evaluated at a cure
 #' fraction of zero.
 frontier_intercept_from_model <- function(h_per_year, lambda_usd_per_qaly, comparator, sc_grid,
-                                          window_weeks, cap_on, raw_dir = "data/raw") {
-  price_star_usd_per_course(0, h_per_year, lambda_usd_per_qaly, comparator, sc_grid, window_weeks, cap_on, raw_dir)
+                                          window_weeks, cap_on, raw_dir = "data/raw",
+                                          life_table_vintage = "base") {
+  price_star_usd_per_course(0, h_per_year, lambda_usd_per_qaly, comparator, sc_grid, window_weeks, cap_on, raw_dir,
+    life_table_vintage = life_table_vintage)
 }
 
 #' `A`, the intercept, computed independently of the Treg arm: price the
@@ -105,11 +109,18 @@ frontier_intercept_independent <- function(lambda_usd_per_qaly, comparator, sc_g
 #' discounted to the landmark instead is larger by exactly 1/v^6 (0.68% at
 #' 3% annual over 12 weeks) and breaks T2 by ~$1,100 while leaving T1 and T3
 #' untouched -- which is how it was found, and why T2 is worth having.
+#' LIFE-TABLE VINTAGE. `sc_grid` is built by the caller at some vintage, and
+#' the cured stream below is differenced against it. Both sides must read the
+#' same table or the result mixes two mortality regimes and belongs to neither.
+#' This argument existed only on the grid and comparator before, so scenario S7
+#' shipped a `B` whose cured patient died on the base table while the standard
+#' care it was differenced against used the pre-pandemic one.
 value_of_one_cure_usd <- function(h_per_year, lambda_usd_per_qaly, sc_grid,
-                                   raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS) {
+                                   raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS,
+                                   life_table_vintage = "base") {
   costs <- health_state_costs_usd_per_cycle(raw_dir)
   utilities <- health_state_utilities(raw_dir)
-  lt <- load_life_table(raw_dir)
+  lt <- load_life_table(raw_dir, life_table_vintage)
   p_relapse_2wk <- relapse_hazard_per_year_to_prob_2wk(h_per_year)
 
   landmark_age <- start_age_years + LANDMARK_CYCLES * CYCLE_YEARS

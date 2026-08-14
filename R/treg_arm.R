@@ -84,14 +84,21 @@ standard_care_at_age <- function(grid, age_years) {
 #' in this arm is downstream of the landmark, and the pre-landmark window is
 #' conventional-therapy MAINTENANCE dynamics, for which no refractory
 #' multiplier is derivable (see R/refractory.R).
+#' `life_table_vintage` must match the vintage `sc_grid` was built at, for the
+#' same reason it must in `value_of_one_cure_usd()`: the post-landmark cured
+#' stream here is accounted against that grid. No current caller passes
+#' `pi_cure > 0` together with a non-base vintage, so the omission this
+#' argument closes was latent rather than live -- at `pi_cure = 0` there is no
+#' drug-free-remission mass for the table to act on.
 run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
-                            raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS) {
+                            raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS,
+                            life_table_vintage = "base") {
   stopifnot(pi_cure >= 0, pi_cure <= 1, h_per_year >= 0)
 
   costs <- health_state_costs_usd_per_cycle(raw_dir)
   utilities <- health_state_utilities(raw_dir)
   ct_drug_cost <- conventional_therapy_cost_usd_per_cycle(raw_dir)
-  lt <- load_life_table(raw_dir)
+  lt <- load_life_table(raw_dir, life_table_vintage)
   ct_matrix_base <- load_maintenance_matrix("CT", raw_dir)
 
   discounted_cost_usd <- 0
