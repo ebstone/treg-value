@@ -375,3 +375,26 @@ One line per session: what changed, and which tests now cover it.
 - {digest} installed to the user library: G1 (provenance) and G5 (stamping)
   had been skipping silently for want of it, so two guards were inert. Suite
   now runs 349 assertions with no skips.
+
+## 2026-08-14 (transcription audit; C8 reconciled)
+- Audited every Aliyev-derived figure in data/raw/ against the source appendix
+  PDFs. Supplementary Table 2 (59 rows: parameter, base-case value, alpha,
+  beta) compared mechanically and matches in full; Supplementary Tables 3
+  (induction), 4 (maintenance, all of UST/IFX/ADA/CT) and 5 (costs, utilities,
+  unit costs, discount rate, indirect costs) are images in both the PDF and the
+  DOCX, so they were rendered and read cell by cell. Every value matches. The
+  appendix DEALE worked example independently reproduces the induction figure
+  0.133, and the renormalised induction rows the engine produces are exactly
+  the published rows divided by their own stated totals.
+- C8 is reconciled and the reason recorded as C8a. The $7.40 Moderate-Severe
+  gap was never unexplained: Appendix S2 page 3 builds that one state as its
+  PMPM mean total cost minus its own mean pharmacy cost plus the Mild-moderate
+  mean pharmacy cost. Under the same conversion, (374 - 123 + 111) * 0.60009 =
+  $217.23 against Table 5's $217, a $0.23 gap rather than $7.40. C8's decision
+  was correct on its own terms and no reported figure changes; only its stated
+  reason was incomplete. Now covered by a provenance re-derivation test in
+  tests/testthat/test-health-state-costs.R that also asserts the appendix rule
+  beats the plain rule, so it cannot pass for the wrong reason.
+- Not audited: the non-Aliyev sources (CMS ASP, NCHS life tables, ten Ham 2020,
+  cell-therapy list prices, medical-care CPI, EUR/USD). Their source documents
+  are not on the machine.
