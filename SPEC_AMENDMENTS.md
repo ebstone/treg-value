@@ -360,3 +360,38 @@ benchmark stays between 22.8% and 24.7% against a base case of 24.0%. The
 originator-pricing scenario moves the comparator's lifetime cost by only
 0.7%, because the two-year maintenance cap means drug price acts on a small
 share of a lifetime horizon. No scenario changes any conclusion.
+
+## 2026-08-13 — Maintenance dose was charged to dead biologic mass
+
+**Signed off:** Stone (defect found by adversarial review, corrected before merge)
+**Supersedes:** the cap-off leg of every cost figure reported before this
+entry, including `output/tables/comparator_ifx_trace.csv`,
+`price_frontier.csv`, `required_cure_fraction.csv` and `scenarios.csv` as
+first written. Cap-on figures move by less than $6 and are superseded only
+to the precision of their fifth significant figure.
+
+**Change:** `one_cycle_cost_usd()` charged the maintenance dose against
+`sum(occupancy_start_biologic)`, the whole biologic cohort, including the
+Death mass accumulated in it. Death is absorbing in the maintenance matrix
+and the Moderate-Severe redirect gives it no exit path from the biologic
+cohort, so that mass grows monotonically across the horizon and was billed
+infusion drug plus administration on every dose cycle. The adjacent line
+already charged the conventional-therapy drug cost to living CT mass only;
+the dose charge now mirrors it.
+
+**Effect:** lifetime discounted comparator cost at the 8-week window falls
+$495.00 with the cap off ($141,589.85 to $141,094.84, -0.35%) and $5.35
+with the cap on. A moves $1.71, B moves $111.34, and P* at a cure fraction
+of 1 rises $113.06 (cap off, $100,000 per QALY, h=0.05). QALYs are
+unchanged. The error was conservative: it overstated comparator cost and so
+understated the justifiable price. No scenario changes any conclusion, and
+`analysis/verify_readout.R` confirms the readout figures still match the
+regenerated outputs at their reported precision.
+
+**Reason:** a straightforward accounting error, not a modelling choice — a
+dead patient cannot receive an infusion. Recorded here rather than silently
+fixed because it invalidates already-reported numbers, following the
+precedent of the conventional-therapy drug cost entry above. Covered by a
+property test in `tests/testthat/test-markov-engine.R` asserting that Death
+mass in the start-of-cycle vector cannot change the cycle cost; the test
+fails against the previous implementation.

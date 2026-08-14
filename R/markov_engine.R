@@ -93,7 +93,13 @@ age_adjust_maintenance_matrix <- function(m, age_death_prob_2wk) {
 #' over (the file header's half-cycle correction note).
 one_cycle_cost_usd <- function(hc_occupancy_biologic, hc_occupancy_ct, occupancy_start_biologic, is_dose_cycle, costs, dose_cost_usd, ct_drug_cost_usd_per_cycle) {
   state_cost <- sum(hc_occupancy_biologic * costs) + sum(hc_occupancy_ct * costs)
-  dose_cost <- if (is_dose_cycle) sum(occupancy_start_biologic) * dose_cost_usd else 0
+  # Maintenance dose, charged to living biologic-cohort mass only. Death is
+  # absorbing in the maintenance matrix and the Moderate-Severe redirect gives
+  # it no exit path, so Death mass accumulates in the biologic cohort across
+  # the horizon; billing it an infusion would charge drug and administration
+  # to patients who cannot receive either.
+  bio_alive <- sum(occupancy_start_biologic) - occupancy_start_biologic[["Death"]]
+  dose_cost <- if (is_dose_cycle) bio_alive * dose_cost_usd else 0
   # Conventional-therapy drug cost, charged to living CT-cohort mass only.
   ct_alive <- sum(hc_occupancy_ct) - hc_occupancy_ct[["Death"]]
   state_cost + dose_cost + ct_alive * ct_drug_cost_usd_per_cycle

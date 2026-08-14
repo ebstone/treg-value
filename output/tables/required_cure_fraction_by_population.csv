@@ -1,75 +1,75 @@
-# commit: fb942911985cac92f26b2f24e3e11b4a265f5249
+# commit: 843a4593a9392c776349f95e968cd36a2910a22e
 # spec_sha256: 33fb719c79072b1c1c98442899a3d3f77128b62342937afc902080c73dda6635
 "population","lambda_usd_per_qaly","h_per_year","benchmark_anchor","benchmark_cost_usd_per_course","required_cure_fraction_all_treated","achievable"
-"naive",50000,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0580515819525312,TRUE
-"naive",50000,0,"Allogeneic median",38633.5982702705,0.167517520193251,TRUE
-"naive",50000,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.293411569096787,TRUE
-"naive",50000,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.58610481426087,FALSE
-"naive",50000,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.11865523003711,TRUE
-"naive",50000,0.05,"Allogeneic median",38633.5982702705,0.342399452783729,TRUE
-"naive",50000,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.599722110160527,TRUE
-"naive",50000,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,3.24193803629645,FALSE
-"naive",50000,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.186549652424165,TRUE
-"naive",50000,0.1,"Allogeneic median",38633.5982702705,0.538320130406826,TRUE
-"naive",50000,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.942882594947923,TRUE
-"naive",50000,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,5.09697224186945,FALSE
-"naive",1e+05,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0424600994710724,TRUE
-"naive",1e+05,0,"Allogeneic median",38633.5982702705,0.117491755335245,TRUE
-"naive",1e+05,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.20378379379478,TRUE
-"naive",1e+05,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.08983945885289,FALSE
-"naive",1e+05,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0867308100398823,TRUE
-"naive",1e+05,0.05,"Allogeneic median",38633.5982702705,0.239993670296884,TRUE
-"naive",1e+05,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.416257468281792,TRUE
-"naive",1e+05,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,2.2261525586895,FALSE
-"naive",1e+05,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.136418015589743,TRUE
-"naive",1e+05,0.1,"Allogeneic median",38633.5982702705,0.377483621344537,TRUE
-"naive",1e+05,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.654727169863862,TRUE
-"naive",1e+05,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,3.50149288720816,FALSE
-"naive",150000,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0343304750483789,TRUE
-"naive",150000,0,"Allogeneic median",38633.5982702705,0.0914075981528089,TRUE
-"naive",150000,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.157050575711551,TRUE
-"naive",150000,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,0.831079526418054,TRUE
-"naive",150000,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0701012979704523,TRUE
-"naive",150000,0.05,"Allogeneic median",38633.5982702705,0.186650236148596,TRUE
-"naive",150000,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.320690266851008,TRUE
-"naive",150000,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.69702730406364,FALSE
-"naive",150000,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.110286864177093,TRUE
-"naive",150000,0.1,"Allogeneic median",38633.5982702705,0.293647476419326,TRUE
-"naive",150000,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.504525949263027,TRUE
-"naive",150000,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,2.66984813700556,FALSE
-"refractory",50000,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0578010480394401,TRUE
-"refractory",50000,0,"Allogeneic median",38633.5982702705,0.166844665696762,TRUE
-"refractory",50000,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.292253014216838,TRUE
-"refractory",50000,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.57995903710679,FALSE
-"refractory",50000,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.11821304213851,TRUE
-"refractory",50000,0.05,"Allogeneic median",38633.5982702705,0.341225914850867,TRUE
-"refractory",50000,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.597707464770325,TRUE
-"refractory",50000,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,3.23128681167133,FALSE
-"refractory",50000,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.185886147804042,TRUE
-"refractory",50000,0.1,"Allogeneic median",38633.5982702705,0.536566606315892,TRUE
-"refractory",50000,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.939875466614706,TRUE
-"refractory",50000,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,5.08109297422367,FALSE
-"refractory",1e+05,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0421904951401533,TRUE
-"refractory",1e+05,0,"Allogeneic median",38633.5982702705,0.11681211941796,TRUE
-"refractory",1e+05,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.202632590763419,TRUE
-"refractory",1e+05,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.0838461554338,FALSE
-"refractory",1e+05,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0862538153298891,TRUE
-"refractory",1e+05,0.05,"Allogeneic median",38633.5982702705,0.238809498279168,TRUE
-"refractory",1e+05,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.414259989257415,TRUE
-"refractory",1e+05,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,2.21580395836184,FALSE
-"refractory",1e+05,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.135699971992758,TRUE
-"refractory",1e+05,0.1,"Allogeneic median",38633.5982702705,0.375710246603528,TRUE
-"refractory",1e+05,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.651740085061161,TRUE
-"refractory",1e+05,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,3.4860433007066,FALSE
-"refractory",150000,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0340708851179275,TRUE
-"refractory",150000,0,"Allogeneic median",38633.5982702705,0.0907883925952297,TRUE
-"refractory",150000,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.156017785178812,TRUE
-"refractory",150000,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,0.825800002156862,TRUE
-"refractory",150000,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0696403262700697,TRUE
-"refractory",150000,0.05,"Allogeneic median",38633.5982702705,0.18556997448065,TRUE
-"refractory",150000,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.318897775217148,TRUE
-"refractory",150000,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.68792156073949,FALSE
-"refractory",150000,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.109591418691233,TRUE
-"refractory",150000,0.1,"Allogeneic median",38633.5982702705,0.292027304567223,TRUE
-"refractory",150000,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.501842272650948,TRUE
-"refractory",150000,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,2.65624428242324,FALSE
+"naive",50000,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0580528075187241,TRUE
+"naive",50000,0,"Allogeneic median",38633.5982702705,0.167521183683996,TRUE
+"naive",50000,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.293418036383832,TRUE
+"naive",50000,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.58614007122122,FALSE
+"naive",50000,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.118651774686042,TRUE
+"naive",50000,0.05,"Allogeneic median",38633.5982702705,0.342389741188684,TRUE
+"naive",50000,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.59970520341512,TRUE
+"naive",50000,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,3.24184724899552,FALSE
+"naive",50000,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.186545384976742,TRUE
+"naive",50000,0.1,"Allogeneic median",38633.5982702705,0.538308223801426,TRUE
+"naive",50000,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.942861902737217,TRUE
+"naive",50000,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,5.0968613381457,FALSE
+"naive",1e+05,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0424607015019217,TRUE
+"naive",1e+05,0,"Allogeneic median",38633.5982702705,0.117493502742606,TRUE
+"naive",1e+05,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.203786858471137,TRUE
+"naive",1e+05,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.0898560493849,FALSE
+"naive",1e+05,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0867290546014648,TRUE
+"naive",1e+05,0.05,"Allogeneic median",38633.5982702705,0.239988979320552,TRUE
+"naive",1e+05,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.416249401216425,TRUE
+"naive",1e+05,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,2.22610982558925,FALSE
+"naive",1e+05,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.136415837186088,TRUE
+"naive",1e+05,0.1,"Allogeneic median",38633.5982702705,0.377477855372527,TRUE
+"naive",1e+05,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.654717277918848,TRUE
+"naive",1e+05,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,3.50144062934135,FALSE
+"naive",150000,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.034330838611972,TRUE
+"naive",150000,0,"Allogeneic median",38633.5982702705,0.091408624515295,TRUE
+"naive",150000,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.157052364342534,TRUE
+"naive",150000,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,0.831089142101595,TRUE
+"naive",150000,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0701002052554008,TRUE
+"naive",150000,0.05,"Allogeneic median",38633.5982702705,0.186647445844842,TRUE
+"naive",150000,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.320685524192771,TRUE
+"naive",150000,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.69700251442562,FALSE
+"naive",150000,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.110285503020536,TRUE
+"naive",150000,0.1,"Allogeneic median",38633.5982702705,0.293644039664358,TRUE
+"naive",150000,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.504520125414027,TRUE
+"naive",150000,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,2.66981780222568,FALSE
+"refractory",50000,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0578017487847733,TRUE
+"refractory",50000,0,"Allogeneic median",38633.5982702705,0.166846761105095,TRUE
+"refractory",50000,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.292256713592348,TRUE
+"refractory",50000,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.57997920618483,FALSE
+"refractory",50000,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.118211064024569,TRUE
+"refractory",50000,0.05,"Allogeneic median",38633.5982702705,0.341220353604285,TRUE
+"refractory",50000,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.597697782652143,TRUE
+"refractory",50000,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,3.2312348160131,FALSE
+"refractory",50000,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.185883704957221,TRUE
+"refractory",50000,0.1,"Allogeneic median",38633.5982702705,0.536559788697909,TRUE
+"refractory",50000,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.939863617681379,TRUE
+"refractory",50000,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,5.08102946321882,FALSE
+"refractory",1e+05,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0421908380467815,TRUE
+"refractory",1e+05,0,"Allogeneic median",38633.5982702705,0.116813115449756,TRUE
+"refractory",1e+05,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.202634337938202,TRUE
+"refractory",1e+05,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.08385561542324,FALSE
+"refractory",1e+05,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0862528134220743,TRUE
+"refractory",1e+05,0.05,"Allogeneic median",38633.5982702705,0.238806819645709,TRUE
+"refractory",1e+05,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.414255382263558,TRUE
+"refractory",1e+05,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,2.21577955076197,FALSE
+"refractory",1e+05,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.135698728567056,TRUE
+"refractory",1e+05,0.1,"Allogeneic median",38633.5982702705,0.375706953934228,TRUE
+"refractory",1e+05,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.651734435607845,TRUE
+"refractory",1e+05,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,3.48601345154881,FALSE
+"refractory",150000,0,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0340710917342267,TRUE
+"refractory",150000,0,"Allogeneic median",38633.5982702705,0.090788976523327,TRUE
+"refractory",150000,0,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.15601880304381,TRUE
+"refractory",150000,0,"Autologous CAR-T cost of goods (upper)",380336.221596575,0.825805475731285,TRUE
+"refractory",150000,0.05,"Allogeneic, batch-amortised (low)",12265.9588460686,0.0696397036605206,TRUE
+"refractory",150000,0.05,"Allogeneic median",38633.5982702705,0.185568383603483,TRUE
+"refractory",150000,0.05,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.318895070759512,TRUE
+"refractory",150000,0.05,"Autologous CAR-T cost of goods (upper)",380336.221596575,1.68790742192128,FALSE
+"refractory",150000,0.1,"Allogeneic, batch-amortised (low)",12265.9588460686,0.109590642984962,TRUE
+"refractory",150000,0.1,"Allogeneic median",38633.5982702705,0.292025344851011,TRUE
+"refractory",150000,0.1,"Allogeneic, single-treatment batch (high)",68958.3635853176,0.501838951234396,TRUE
+"refractory",150000,0.1,"Autologous CAR-T cost of goods (upper)",380336.221596575,2.65622697892535,FALSE
