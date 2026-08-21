@@ -75,9 +75,11 @@ for (i in seq_len(nrow(sc))) {
   if (!grepl(pct, html, fixed = TRUE)) fails <- c(fails, sprintf("scenario %s required %s%% NOT FOUND", sc$scenario[i], pct))
 }
 
-rc <- read.csv("output/tables/refractory_coprimary.csv", comment.char = "#")
-rc <- rc[rc$induction_window_weeks == 8 & rc$maintenance_cap == "on" & rc$lambda_usd_per_qaly == 1e5 & rc$h_per_year == 0.05, ]
-for (i in seq_len(nrow(rc))) check(paste("refractory", rc$population[i]), rc$value_of_one_cure_b_usd[i], usd(rc$value_of_one_cure_b_usd[i]))
+# The refractory co-primary population is retired (SPEC_AMENDMENTS.md,
+# 2026-08-21) and its section removed from the readout, so its output table
+# is no longer checked against readout text here. output/tables/
+# refractory_coprimary.csv still regenerates correctly; it is simply no
+# longer reported.
 
 cat(if (length(fails) == 0) "ALL READOUT FIGURES MATCH THE STAMPED OUTPUTS\n" else
     paste0(length(fails), " MISMATCH(ES):\n", paste(fails, collapse = "\n"), "\n"))

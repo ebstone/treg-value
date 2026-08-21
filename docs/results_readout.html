@@ -152,7 +152,7 @@
         <tr><th scope="row">Perspective</th><td class="lab">US healthcare sector</td></tr>
         <tr><th scope="row">Currency</th><td class="lab">2025 USD; costs re-based via medical-care CPI</td></tr>
         <tr><th scope="row">Comparator</th><td class="lab">Infliximab biosimilar, Renflexis (Q5104), $2.6615/mg</td></tr>
-        <tr><th scope="row">Populations</th><td class="lab">Biologic-naive base case; treatment-refractory co-primary</td></tr>
+        <tr><th scope="row">Population</th><td class="lab">Comparator dynamics as estimated in the source trials, which pool biologic-naive and biologic-experienced patients rather than one uniform stratum (see Limitations)</td></tr>
         <tr><th scope="row">Cohort</th><td class="lab">Starting age 35 (SONIC trial median)</td></tr>
         <tr><th scope="row">Structure</th><td class="lab">Induction decision tree into a 6-state Markov model; 2-week cycles; half-cycle correction</td></tr>
         <tr><th scope="row">Health states</th><td class="lab">Remission · Mild · Moderate-Severe Responder · Moderate-Severe · Surgery · Death, plus drug-free remission in the Treg arm</td></tr>
@@ -164,7 +164,7 @@
       </tbody>
     </table>
   </div>
-  <p class="note">All results below are the central case: 8-week induction window, cap on, biologic-naive. Bounding pairs vary every figure by under 1.6%.</p>
+  <p class="note">All results below are the central case: 8-week induction window, cap on. Bounding pairs vary every figure by under 1.6%.</p>
 </section>
 
 <section>
@@ -366,22 +366,6 @@
 </section>
 
 <section>
-  <h2>Refractory co-primary population</h2>
-  <p class="note">Induction outcomes adjusted to the anti-TNF-refractory setting, derived from two trials sharing a protocol and differing only in prior therapy (response multiplier 0.608, remission 0.520). λ $100,000, h = 5%.</p>
-  <div class="scroller">
-    <table>
-      <caption>Biologic-naive versus refractory</caption>
-      <thead><tr><th scope="col" style="text-align:left">Population</th><th scope="col">A</th><th scope="col">B</th></tr></thead>
-      <tbody>
-        <tr><th scope="row">Biologic-naive</th><td class="num neg">−$2,655</td><td class="num">$172,045</td></tr>
-        <tr><th scope="row">Refractory</th><td class="num neg">−$2,642</td><td class="num">$172,841</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="note">The two differ by under 1%. The adjustment available from published trials covers induction only — every randomised maintenance trial in the refractory setting enrolled induction responders, so no maintenance adjustment can be derived without conditioning on response. An induction-only adjustment acts over four cycles of a lifetime horizon. The populations are not distinguishable in this model on current evidence.</p>
-</section>
-
-<section>
   <h2>Comparison against published analogs</h2>
   <p class="note">π is assessed at 12 weeks; analogs report at their own timepoints. Comparison uses the decayed quantity π·exp(−h·t) at each analog's readout, never π itself. Illustrated at the cure fraction the median benchmark requires.</p>
   <div class="scroller">
@@ -399,6 +383,7 @@
 <section>
   <h2>Limitations</h2>
   <ul class="plain">
+    <li><strong>Comparator transition probabilities come from trial populations with mixed biologic experience, not a single naive stratum.</strong> UNITI-1 enrolled anti-TNF-refractory patients and UNITI-2 enrolled anti-TNF-naive patients failing conventional therapy; both feed the induction and maintenance parameters this model inherits via IM-UNITI, without separating the two prior-therapy strata. No refractory-specific population is reported separately: the only adjustment available from published trials (UNITI-1 against UNITI-2) covers induction alone, since every randomised maintenance trial in the refractory setting enrolled induction responders — extending it to maintenance would condition the adjustment on response, the denominator error this project's own guards exist to prevent.</li>
     <li><strong>Manufacturing benchmark rests on two of three intended legs.</strong> A bottom-up build from dose and lot size is absent because the dose in cells/kg is not public — all three registered trials of this product report only "dose level 1/2/3".</li>
     <li><strong>The upper benchmark anchor is a different manufacturing model.</strong> Reported cost of goods is available only for autologous products, where one run serves one patient. It bounds what this product must not cost rather than estimating what it will, and rests on a single trade-press figure.</li>
     <li><strong>Starting age 35 is from the SONIC trial</strong>, not from the model this analysis rebuilds, whose own figure was not accessible. Background mortality drives most of the lifetime QALY total.</li>

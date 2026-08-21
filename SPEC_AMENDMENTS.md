@@ -396,6 +396,48 @@ property test in `tests/testthat/test-markov-engine.R` asserting that Death
 mass in the start-of-cycle vector cannot change the cycle cost; the test
 fails against the previous implementation.
 
+## 2026-08-21 — Refractory co-primary population retired
+
+**Signed off:** Stone, after deliberation
+
+**Supersedes:** SPEC.md v1.0 §2's population row ("Biologic-naïve base case;
+refractory co-primary, run identically") and §5's S2 row; the 2026-08-13
+amendment "Refractory co-primary adjusted at induction only", which
+described how S2 was implemented rather than whether it should exist;
+`docs/results_readout.html`'s "Refractory co-primary population" section
+as first published; and OPEN_QUESTIONS.md O10, closed below as moot.
+
+**Change:** the refractory-adjusted population is no longer run as a
+co-primary output. §2's population row is restated instead: the model has
+one population, and its comparator transition probabilities are already
+estimated from trial data that pools biologic-naïve and biologic-experienced
+patients rather than one uniform stratum — UNITI-1 (anti-TNF-refractory) and
+UNITI-2 (anti-TNF-naïve, conventional-therapy failure) both feed the induction
+and maintenance parameters this model inherits via IM-UNITI. This is now
+stated as a limitation of the underlying evidence base rather than
+represented as a solved contrast between two cleanly-separated populations.
+`docs/results_readout.html`'s comparison table is removed and replaced with
+a Limitations entry describing the mixed-population source data.
+`R/refractory.R`, `analysis/run_refractory_coprimary.R`,
+`tests/testthat/test-refractory.R` and the two output tables they produce
+are left in place, unchanged and still passing — they are accurate as far
+as they go, just no longer reported as a co-primary result.
+
+**Reason:** already recorded, not newly discovered, by the 2026-08-13
+amendment this one supersedes: the refractory adjustment this repository can
+derive from published trials covers induction only, because every
+randomised maintenance trial in the refractory setting enrolled induction
+responders and using it would commit the conditional-denominator error
+guard 3 and T4 exist to prevent. That amendment's own stated consequence —
+the two co-primary populations differed by under 1% on `B`, "a statement
+about the available evidence, not a finding that the populations are
+alike" — is the basis for this decision: an induction-only adjustment was
+never able to produce a genuine refractory-population estimate, only a
+near-identical one that risked being read as though it were.
+
+**OPEN_QUESTIONS.md O10 closed as C11**, moot now that no separation between
+the two populations is attempted.
+
 ## 2026-08-14 — Scenario S7 mixed two life-table vintages
 
 **Signed off:** Stone (defect found by adversarial review round 2, corrected
