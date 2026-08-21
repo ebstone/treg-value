@@ -41,7 +41,7 @@ P*(π, h, λ)  =  A(λ)  +  π · B(h, λ)
 | Horizon | Lifetime primary; 30-year and 40-year secondary |
 | Reference comparator | Infliximab, biosimilar pricing base case |
 | Secondary comparators | Ustekinumab, adalimumab — frontier checks only |
-| Population | Biologic-naïve base case; refractory co-primary, run identically |
+| Population | Single population: comparator dynamics as estimated in the source trials, which pool biologic-naïve and biologic-experienced patients rather than a uniform stratum. No refractory-adjusted population is run separately (§11 amendment, 2026-08-21) |
 | WTP thresholds | $50,000 / $100,000 / $150,000 per QALY |
 | Reporting standard | CHEERS 2022 |
 | Study type | **Early health technology assessment.** Not a cost-effectiveness analysis. No efficacy data exist for this product in this indication and no ICER is reported |
@@ -91,7 +91,6 @@ Swept, not assumed. No prior is placed on any of these.
 | Scenario | Content |
 |---|---|
 | S1 | Infliximab induction window: week 4 vs week 8 |
-| S2 | Refractory population, run identically to base case |
 | S3 | Redosing on post-cure relapse |
 | S4 | Originator infliximab pricing |
 | S5 | Ustekinumab and adalimumab as reference comparator |
