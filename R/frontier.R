@@ -97,6 +97,57 @@ frontier_intercept_independent <- function(lambda_usd_per_qaly, comparator, sc_g
   nmb_window + nmb_deferred_course - nmb_comparator
 }
 
+#' The independent route's cost, resolved by cycle: the 12-week conventional-
+#' therapy window priced directly, then one full comparator course deferred to
+#' the landmark, discounted to t = 0 and indexed from t = 0.
+#'
+#' This is the only genuinely independent check available on the Treg arm's
+#' cost stream. `run_treg_trace()` has no horizon argument to vary, so T18's
+#' two-independent-routes construction has no Treg-side analogue; what this
+#' gives instead is a second construction of the same quantity. At a cure
+#' fraction of zero the Treg arm is exactly this -- everyone spends the window
+#' on conventional therapy and is then handed one standard-care course at the
+#' landmark, with no drug-free-remission mass and no relapsers -- so the two
+#' streams must agree cycle by cycle, and they are built by different code
+#' reading the same inputs.
+#'
+#' The window loop below duplicates `frontier_intercept_independent()`'s rather
+#' than sharing a helper with it, for the reason stated in this file's header:
+#' the value of an independent route is that it shares no code path with what
+#' it checks, and a helper factored out for tidiness is how that property gets
+#' lost a session later. `frontier_intercept_independent()`'s own signature and
+#' arithmetic are untouched, so T1 continues to compare exactly what it did.
+frontier_intercept_independent_cost_stream_usd <- function(sc_cost_stream_grid, raw_dir = "data/raw",
+                                                            start_age_years = MODEL_START_AGE_YEARS) {
+  costs <- health_state_costs_usd_per_cycle(raw_dir)
+  ct_drug_cost <- conventional_therapy_cost_usd_per_cycle(raw_dir)
+  ct_matrix <- age_adjust_maintenance_matrix(load_maintenance_matrix("CT", raw_dir), 0)
+
+  cohort <- setNames(numeric(length(MAINTENANCE_STATES)), MAINTENANCE_STATES)
+  cohort[["Moderate-Severe"]] <- 1
+
+  stream <- numeric(LANDMARK_CYCLES + ncol(sc_cost_stream_grid$streams))
+  years_elapsed <- 0
+  for (t in seq_len(LANDMARK_CYCLES)) {
+    start <- cohort
+    end <- setNames(numeric(length(MAINTENANCE_STATES)), MAINTENANCE_STATES)
+    for (s in MAINTENANCE_STATES) end <- end + cohort[[s]] * ct_matrix[s, ]
+    cohort <- end
+    hc <- half_cycle_weighted_occupancy(start, end)
+    years_elapsed <- years_elapsed + CYCLE_YEARS
+    df <- discount_factor_years_to_discount_factor(years_elapsed)
+    alive <- sum(hc) - hc[["Death"]]
+    stream[t] <- (sum(hc * costs) + alive * ct_drug_cost) * df
+  }
+
+  landmark_age <- start_age_years + LANDMARK_CYCLES * CYCLE_YEARS
+  landmark_discount <- discount_factor_years_to_discount_factor(years_elapsed)
+  deferred <- standard_care_cost_stream_at_age(sc_cost_stream_grid, landmark_age)
+  at <- LANDMARK_CYCLES + seq_along(deferred)
+  stream[at] <- stream[at] + landmark_discount * deferred
+  stream
+}
+
 #' `B`, the slope -- what one durable cure is worth. Computed directly as
 #' the discounted lifetime NMB difference between a cured patient and a
 #' patient on standard first-line biologic therapy, both followed from the
