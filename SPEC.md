@@ -4,7 +4,7 @@
 
 **Authors:** Jadambaa, Stone, Abraham (Johns Hopkins Bloomberg School of Public Health)
 **Repository:** `treg-value`
-**Version:** 1.0 — 2026-08-11
+**Version:** 1.1 — 2026-08-21
 **Status:** Governing authority. This file supersedes every prior memo, code comment, README paragraph and conversation. Any departure from it is an entry in `SPEC_AMENDMENTS.md`, made in the same commit as the change it describes.
 
 ---
@@ -48,6 +48,29 @@ P*(π, h, λ)  =  A(λ)  +  π · B(h, λ)
 
 ---
 
+## 2a. Budget impact frame — A6 only
+
+§2 governs A1–A5 and is unchanged by this section. A6 answers a different
+question — what a payer writes in cheques, and when — and needs commitments §2
+refuses. They are stated here rather than folded into §2 so that no reader takes
+a budget figure for a frontier figure.
+
+| | |
+|---|---|
+| Perspective | US commercial payer (L14) |
+| Reporting horizon | Base case 3 years; 1 and 5 reported as sensitivity — together these three are **the budget impact analysis proper**. 10 and 30 reported and separately labelled as an **extended offset-accrual projection**, which is not a budget impact analysis. A lifetime leg is retained as the reconciliation fixture (T13) and as the offset-capture denominator, and is never reported as a budget impact (L10) |
+| Discounting | By horizon class (L11): 1/3/5 undiscounted base case with a 3% column; 10/30 and lifetime 3% base case with an undiscounted column. Both columns produced at every horizon |
+| Denomination | Population-level annual dollars, and per member per month on a stated 1e6-member plan |
+| Comparator displaced | Infliximab biosimilar base case, as §2 (L13); full treatment mix is S9 |
+| Uptake | Linear ramp over a fixed 5-year ramp period to a swept terminal share; a single adoption wave, with no treatment after the ramp ends (L12, L15) |
+| Population base | Eligible pool, held fixed (L16) — unsourced (O11); reported on a labelled illustrative schedule and as PMPM |
+| Horizon semantics | The reporting horizon is **calendar-exact from t = 0** and is NOT the `horizon_years` argument of `run_comparator_trace()`, which governs the maintenance loop only and excludes the induction cycles that run before and in addition to it. The BIA's column is named `reporting_horizon_years` to keep the two distinguishable inside one `output/tables/` directory |
+| Headline | A progression, not a figure: `offset_captured(H) = D(H) / D(lifetime)`, where `D(H)` is the discounted cumulative current-care-world-minus-Treg-world cost per treated patient excluding the course price, and `D(lifetime) = P*(π, h, λ = 0)`. λ does not enter — a budget holds no QALYs. It depends on π, h and the cap setting and not on the eligible population |
+| Sign convention | Net budget impact is **positive when the Treg world costs the payer more** |
+| Status | **Scenario-conditional.** Every A6 figure is conditional on a committed price, cure fraction, uptake level and reporting horizon, and is reported as a grid, never as a point estimate |
+
+---
+
 ## 3. Model structure
 
 Decision tree for induction using Aliyev's binary Response / No Response structure, feeding a cohort Markov model over six states — Remission, Mild, Moderate-Severe Responder, Moderate-Severe, Surgery, Death — on 2-week cycles, with background mortality from US life tables. The Treg arm adds a two-fate split at the landmark.
@@ -72,6 +95,18 @@ Induction accrues cost and QALYs as explicit cycles in every arm. It is not a fr
 
 **Consequence of L9, recorded so it is not a surprise in a results table.** `A` is the discounted value of deferring one infliximab induction course by 12 weeks, *less* the health penalty of spending those 12 weeks on conventional therapy rather than infliximab. **`A` may be small and negative.** That is correct behaviour: a therapy that cures nobody has cost the patient a quarter-year of effective treatment. The frontier may therefore start below zero, and this is a stronger position than an intercept sitting at a few thousand dollars of unexplained savings. `T1` asserts `P*(0)` equals this quantity and nothing else, whatever its sign.
 
+**L10–L16 govern A6 (the budget impact analysis) only.** No figure in A1–A5 depends on any of them.
+
+| # | Decision | Locked | Date | Rationale |
+|---|---|---|---|---|
+| **L10** | **The reporting horizon is a stated analyst choice, not a swept parameter. Base case: 3 years**, with 1 and 5 years as the sensitivity range around it — together the budget impact analysis proper. 10 and 30 years are reported and separately labelled as an extended offset-accrual projection, which is not a budget impact analysis. A lifetime leg is retained as the T13 reconciliation fixture and as the offset-capture denominator and is never reported as a budget impact. **The horizon is a reporting boundary and never a model parameter: streams are computed once at the lifetime horizon and truncated at reporting time** | 2026-08-21 | Stone | CHEERS 2022 item 9 asks the analyst to state and justify a horizon. π and uptake are epistemic — facts nobody knows, so sweeping them is the honest response — but a time horizon is a normative reporting choice determined by the decision-maker's budget cycle, and declining to make it would be a refusal rather than a justification. Three years is the ISPOR/AMCP centre of mass; 1 and 5 bracket it. The extended projection exists because a short window applied to a one-time cure measures front-loading rather than affordability. **10 and 30 are round exploratory endpoints chosen for the readability of the offset-capture progression. They are not anchored to any figure this study publishes: no 30-year price frontier exists here to compare them against, every `A`, `B` and `P*` being computed at the lifetime horizon and only there.** The citations behind the ISPOR/AMCP and ICER readings are sourcing-register item S-8 and are not yet retrieved |
+| **L11** | **The discounting convention follows the horizon's class, and that mapping is what is locked — not a rate.** Budget impact analysis proper (1/3/5 years): undiscounted base case, 3% reported alongside. Extended offset-accrual projection (10/30 years) and the lifetime reconciliation leg: 3% base case, undiscounted reported alongside. **Both columns produced at every horizon without exception** | 2026-08-21 | Stone | ISPOR's nominal-cash-flow argument applies to a budget forecast and not to a cost-accrual projection, so the crossover sits at the class boundary because that is where the object being reported changes. Undiscounting a backloaded offset over decades overstates it — the non-conservative direction. Under 3% the long arm converges to the lifetime leg where T13's identity holds exactly; undiscounted it converges to a quantity with no counterpart in this study. Producing both columns everywhere makes the convention a labelling decision about which figure the readout leads with rather than a computation that hides an alternative. **The base-case convention changes between the 5-year and 10-year rows of the same table; this is deliberate and is marked by a `discounting_base_case` column and a footnote** |
+| **L12** | **Uptake shape locked, uptake level swept.** Cumulative share of the eligible population treated follows a linear ramp over a 5-year ramp period to a swept terminal share `u`. S-curve and immediate-full-uptake are the bounding scenario pair (S8) | 2026-08-21 | Stone | No uptake data exist for a product with no efficacy data, so a specific curve would be an assumption with no owner. **The 5-year ramp period is itself a chosen level, not structure**, recorded as an analyst's assumption under O12 rather than defended as a derivation. **The ramp period is held fixed across every reported horizon**, or the same terminal share would mean a different adoption speed at each horizon and the horizon comparison would be confounded with an uptake comparison |
+| **L13** | **The comparator displaced is the same infliximab biosimilar base case (Q5104) as the frontier's.** The full current-treatment mix is S9, blocked on O13 | 2026-08-21 | Stone | Keeps the BIA reconcilable to `A` and `B`, which is what makes T13 possible; US market shares are unsourced. **Direction:** Q5104 is the cheapest of the three biosimilars (C10) and S5 showed ustekinumab and adalimumab comparators both raise `B`, so displacing the cheapest agent yields the smallest offset and the largest net budget impact — conservative for an affordability question |
+| **L14** | **BIA perspective: US commercial payer**, distinct from §2's healthcare-sector perspective. The difference is the denominator and the horizon, not the unit costs | 2026-08-21 | Stone | Every unit cost here is already a payer payment amount — CMS ASP payment limits (C10) and CMS PFS national payment amounts (C9) — so the two perspectives coincide on inputs. Recorded so no reader infers that a second, differently-costed model was built. **Known gap:** ASP payment limits are not net-of-rebate commercial prices (O14) |
+| **L15** | **Single adoption wave.** Cumulative treated caps at `u × N` at the end of the 5-year ramp; nobody is treated after year 5. Years 6 onward are pure offset accrual on the already-treated cohorts | 2026-08-21 | Stone | The alternative "flow" reading — the terminal annual rate persisting for the full horizon — would treat roughly six times the eligible pool over 30 years, incoherent with a pool held fixed (L16) unless incidence replenishes it, and incidence is unsourced (O15); that reading is **not well-defined until O15 closes**. A single wave is cleanly interpretable as one adoption wave followed by offset accrual, which is what the offset-capture progression measures, and leaves the 1/3/5-year horizons numerically unchanged since the ramp and those horizons coincide. **Direction:** a single wave produces the smaller long-horizon expenditure and therefore the more favourable-looking 30-year figure — the non-conservative direction, chosen for coherence rather than for conservatism. **T16 does not discriminate between the two readings**, so this decision has no mechanical guard and must be checked by reading the uptake function |
+| **L16** | **The eligible pool is held fixed over the reporting horizon; no incidence or turnover is modelled** | 2026-08-21 | Stone | Defensible over 1–5 years, where incidence is second-order against a pool level that is itself entirely unsourced. **Not defensible at 10 and 30 years, and stated as a limitation there rather than absorbed** (O15). Interacts with L15: under a single adoption wave a fixed pool is drawn down toward `u` and never replenished |
+
 The decision set is closed. No item in `SPEC.md` awaits a co-author.
 
 ---
@@ -87,6 +122,10 @@ Swept, not assumed. No prior is placed on any of these.
 | `λ` | $50k / $100k / $150k per QALY |
 | Horizon | Lifetime / 30-year / 40-year |
 | Maintenance cap | On (2-year) / off |
+| `u` (terminal uptake share of the eligible pool) — A6 only | 0 to 1; 0 and 1 must both be present (T16) |
+| BIA price — A6 only | `P*(π, h, λ)` from A2, plus a separately-labelled axis of observed analog list prices |
+
+The A6 **reporting horizon is not swept** and is deliberately absent from this table: L10 makes it a stated analyst choice with a designated base case, not a parameter with a prior.
 
 | Scenario | Content |
 |---|---|
@@ -96,6 +135,8 @@ Swept, not assumed. No prior is placed on any of these.
 | S5 | Ustekinumab and adalimumab as reference comparator |
 | S6 | Administration bundle included (infusion, preconditioning, observation stay) |
 | S7 | Pre-pandemic life-table vintage |
+| S8 | Uptake shape: linear / logistic / immediate full uptake (A6) |
+| S9 | Current-treatment-mix comparator in place of infliximab alone (A6) — blocked on O13 |
 
 ---
 
@@ -110,6 +151,7 @@ Per guard G6, every aim maps to a named output file. An aim with neither an outp
 | **A3** | Required cure fraction at each manufacturing benchmark, on the all-treated denominator, with the analog comparison on matched timepoints (§7) | `output/tables/required_cure_fraction.csv` |
 | **A4** | Per-patient EVPI and break-even eligible population, arithmetic shown | `output/tables/voi_breakeven.csv` |
 | **A5** | Probabilistic analysis over π, h, comparator prices, transition rows sampled whole, and health-state costs | `output/tables/psa_summary.csv` |
+| **A6** | Payer budget impact at a 3-year base-case horizon with a reported 1–30 year range, across the price, cure-fraction and uptake grid, with the share of lifetime cost offset captured at each horizon, reported as scenario-conditional cells with the required cure fraction attached to each | `output/tables/budget_impact.csv` |
 
 ---
 
@@ -142,6 +184,9 @@ evaluated at each analog's own timepoint, never on π itself. An acceptance test
 | Observation stay | — | **TO SOURCE** | CMS OPPS APC 8011 |
 | Treg dose (cells/kg) | — | **TO SOURCE** | RESTORE protocol, NCT06721962. Benchmark only |
 | Manufacturing benchmark | Range | **TO BUILD (W5)** | Triangulated: analogy anchors, techno-economic bottom-up, revealed prices. Margin sourced, not invented |
+| US eligible population, moderate-to-severe CD (A6) | — | **TO SOURCE** | O11 / register item S-6. Prevalence × severity share × a swept eligibility fraction; the third link is not sourceable for a product with no label and is swept, not assumed |
+| Uptake trajectory (A6) | Linear ramp, 5-year ramp period, terminal share swept | **SWEPT** | O12 / register item S-7. Shape locked by L12; no uptake-analogy leg is built |
+| Plan membership for PMPM (A6) | 1e6 members | **STATED CONVENTION** | A labelled denominator for reporting per-member-per-month, not an estimate of any real plan |
 
 ---
 
@@ -157,6 +202,11 @@ Anything listed here is a required argument. Functions refuse to run rather than
 | O4 | Whether a Treg infusion qualifies for observation billing | S6 only |
 | O5 | Real-world biologic persistence | Would replace L6's bounding pair |
 | O6 | Productivity costs in a societal scenario | Out of base case |
+| O11 | US eligible population for a one-time allogeneic Treg course in moderate-to-severe CD — a count, not a fraction | A6 reports on a labelled illustrative schedule and as PMPM meanwhile |
+| O12 | Adoption/uptake trajectory for a first-in-class one-time cell therapy in a chronic non-oncology indication | A6's uptake level swept; S8 reports the shape pair |
+| O13 | US market shares across advanced therapies in moderate-to-severe CD | S9 only |
+| O14 | Net-of-rebate commercial price relative to the ASP payment limit | A6 level; direction stated |
+| O15 | Eligible-population incidence and turnover over a 10–30 year window | Extended projection only; also blocks the "flow" uptake reading L15 rejects |
 
 ---
 
@@ -176,6 +226,14 @@ Anything listed here is a required argument. Functions refuse to run rather than
 | T10 | Every aim in §6 has an output file or a signed amendment |
 | T11 | The analog comparison uses `π · exp(−h·t)` at each analog's timepoint, never π |
 | T12 | No pricing function reads the manufacturing benchmark (grep, zero call sites) |
+| T13 | At λ = 0, on the lifetime reconciliation leg, with 3% discounting and a single cohort treated at t = 0, the BIA's discounted net budget impact per treated patient equals `price − P*(π, h, λ = 0)` to within $1. The lifetime leg exists for this test and is never reported as a budget impact |
+| T14 | Net budget impact per treated patient is affine in π across the 101-point grid at every reported horizon; deviation under $0.01. **On the lifetime leg only**, the slope equals exactly `−B(h, λ = 0)` and the intercept `price − A(λ = 0)` |
+| T15 | In each world separately, **gross** annual expenditure undiscounted ≥ discounted, per year and cumulatively, at every horizon; cumulative gross expenditure in each world is non-decreasing in horizon length. **No sign is asserted for the discounting effect on the net series, and no monotonicity is asserted for net budget impact or for `offset_captured(H)` in the horizon** |
+| T16 | At uptake `u = 0` the two worlds' annual budgets are identical to the cent in every year at every horizon, and net budget impact is exactly $0. Net budget impact scales exactly linearly in the number treated |
+| T17 | Per-cycle cost streams sum to the pre-existing scalar `discounted_cost_usd` in both `run_comparator_trace()` and `run_treg_trace()`, to within 1e-6, for every induction window and cap setting |
+| T18 | **Independent-route horizon truncation.** For each reported horizon H and every window/cap combination, `run_comparator_trace("IFX", w, cap, H)$discounted_cost_usd` equals the prefix sum of the lifetime stream through cycle `induction_cycles + round(H · ALIYEV_CYCLES_PER_YEAR)` — the index that reproduces that argument's own semantics (§2a), not the calendar-exact reporting boundary — to within 1e-6. Additionally, `sum(interpolated stream) == interpolated total` from `standard_care_at_age()`, at a set of non-integer ages including the landmark age |
+
+**T13–T18 belong to A6.** T17 and T18 govern the engine capability A6 rests on — per-cycle cost streams and their truncation — and are the reason a horizon never reaches the Treg arm as an argument. **Monotonicity in the horizon is deliberately not asserted at any relapse hazard, including h = 0**: a relapser re-entering standard care starts a second induction course and their own cap clock, and independently of any relapse the Treg cohort's 12-week landmark deferral (L9) shifts its 2-year cap clock 12 weeks later than the comparator world's, so there is a window in which the Treg world pays biologic and the comparator world does not. A passing monotonicity test would mean one of those two has stopped being charged.
 
 **T1 and T2 are the gate.** They are the intercept and the slope stated as properties rather than as values, which is why they cannot pass on a false premise.
 
