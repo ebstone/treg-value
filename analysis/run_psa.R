@@ -31,6 +31,11 @@ ILLUSTRATIVE_PI <- 0.25
 
 all_draws <- run_psa(N_DRAWS, HAZARDS_PER_YEAR, LAMBDAS_USD_PER_QALY, WINDOW_WEEKS, CAP_ON)
 
+# The raw per-draw (A, B) pairs, not just their summary statistics -- lets
+# the readout's PSA scatter plot show the joint draw cloud rather than only
+# the marginal credible intervals psa_summary.csv reports.
+stamp_output(all_draws, "output/tables/psa_draws.csv")
+
 summary_rows <- list()
 evpi_rows <- list()
 
