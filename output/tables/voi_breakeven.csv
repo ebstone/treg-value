@@ -1,5 +1,5 @@
-# commit: 843a4593a9392c776349f95e968cd36a2910a22e
-# spec_sha256: 33fb719c79072b1c1c98442899a3d3f77128b62342937afc902080c73dda6635
+# commit: 071ee670109eecee3fde0862813132b404b6426a
+# spec_sha256: 72c494e5c8fb78b58130275e379db2640b88dace9f0ae67dd922f8e14fca2026
 "lambda_usd_per_qaly","h_per_year","pi_cure","price_usd_per_course","evpi_per_patient_usd","assumed_trial_cost_usd","breakeven_eligible_population"
 50000,0,0.25,20000,0,2.5e+07,NA
 50000,0,0.25,20000,0,5e+07,NA
