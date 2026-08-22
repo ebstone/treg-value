@@ -11,6 +11,11 @@ A function that needs one of these refuses to run rather than assume a value.
 | O4 | Whether a Treg infusion qualifies for observation billing, and wage-index adjustment | `observation_billing_eligible` | Dula | S6 only | 2026-08-11 |
 | O5 | Real-world biologic persistence (time to discontinuation) | `biologic_persistence` | Unsourced | Would replace L6's bounding pair | 2026-08-11 |
 | O6 | Whether durable remission is exempt from productivity costs | `productivity_cost_exempt` | Co-authors | Societal scenario, out of base case | 2026-08-11 |
+| O11 | US eligible population for a one-time allogeneic Treg course in moderate-to-severe CD — a count, not a fraction | `eligible_population_patients` | Unsourced | A6 reports on a labelled illustrative schedule and as PMPM meanwhile | 2026-08-21 |
+| O12 | Adoption/uptake trajectory for a first-in-class one-time cell therapy in a chronic non-oncology indication | `uptake_trajectory` | Unsourced | A6's uptake level swept; S8 reports the shape pair. The 5-year ramp period is an assumption under this item, not a derivation (L12) | 2026-08-21 |
+| O13 | US market shares across advanced therapies in moderate-to-severe CD | `current_treatment_mix_shares` | Unsourced | S9 only | 2026-08-21 |
+| O14 | Net-of-rebate commercial price relative to the ASP payment limit | `net_price_ratio` | Unsourced | A6 level; direction stated (L14) | 2026-08-21 |
+| O15 | Eligible-population incidence and turnover over a 10–30 year window | `eligible_population_incidence` | Unsourced | Extended projection only; also blocks the "flow" uptake reading L15 rejects | 2026-08-21 |
 
 `Arg name` is the canonical R argument name guard G7 checks: no function in
 `R/` may supply a default for a parameter with one of these names.

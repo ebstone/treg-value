@@ -28,6 +28,44 @@ test_that("G5: every file in output/ carries a commit hash and a SPEC.md hash", 
   }
 })
 
+test_that("G5: every file in output/ was stamped against the SPEC.md now committed, not merely against some SPEC.md", {
+  # SPEC.md section 11 promises that "a run whose spec hash differs from the
+  # last committed one fails". Nothing asserted it: every other check in this
+  # file matches the stamp's FORMAT, `^# spec_sha256: [0-9a-f]{64}$`, which a
+  # stamp from any spec version satisfies equally well. So the guard that
+  # actually binds -- results and the specification they were produced under
+  # move together -- was documented and absent, and a spec amendment could ship
+  # alongside outputs computed under the superseded text with the suite green.
+  #
+  # A red result here means the outputs are stale, not that the check is wrong:
+  # re-run the analysis scripts against the committed SPEC.md.
+  spec_hash <- digest::digest(repo_root_relative("SPEC.md"), algo = "sha256", file = TRUE)
+  outputs <- list.files(repo_root_relative("output"), pattern = "\\.csv$",
+    recursive = TRUE, full.names = TRUE)
+  skip_if(length(outputs) == 0, "no outputs written yet")
+  for (f in outputs) {
+    header <- readLines(f, n = 2, warn = FALSE)
+    expect_identical(header[2], sprintf("# spec_sha256: %s", spec_hash), label = basename(f))
+  }
+})
+
+test_that("G5 fires: an output stamped under a superseded SPEC.md is caught", {
+  # The falsification for the check above: a well-formed stamp carrying a hash
+  # that is not this SPEC.md's passes every format assertion in this file and
+  # must still be rejected.
+  fake_output <- file.path(tempdir(), "g5_stale_spec")
+  dir.create(fake_output, showWarnings = FALSE)
+  on.exit(unlink(fake_output, recursive = TRUE), add = TRUE)
+  superseded <- digest::digest("an earlier SPEC.md", algo = "sha256", serialize = FALSE)
+  writeLines(c("# commit: 0123456789abcdef0123456789abcdef01234567",
+    sprintf("# spec_sha256: %s", superseded), "a,b", "1,2"),
+    file.path(fake_output, "stale.csv"))
+  header <- readLines(file.path(fake_output, "stale.csv"), n = 2, warn = FALSE)
+  expect_match(header[2], "^# spec_sha256: [0-9a-f]{64}$") # the format check passes
+  spec_hash <- digest::digest(repo_root_relative("SPEC.md"), algo = "sha256", file = TRUE)
+  expect_false(identical(header[2], sprintf("# spec_sha256: %s", spec_hash))) # the hash check does not
+})
+
 test_that("G5 fires: an unstamped file in an output directory is caught", {
   fake_output <- file.path(tempdir(), "g5_unstamped")
   dir.create(fake_output, showWarnings = FALSE)

@@ -62,6 +62,92 @@ standard_care_grid <- function(window_weeks, cap_on, raw_dir = "data/raw",
   list(ages = ages, cost = cost, qaly = qaly)
 }
 
+#' The same standard-care course as `standard_care_grid()`, resolved by cycle
+#' instead of summed into a lump: row `i` is the per-cycle discounted cost
+#' stream of a course begun at `ages[i]`, discounted to that patient's own
+#' start, element 1 being their first induction cycle.
+#'
+#' WHY THIS EXISTS. `standard_care_grid()` returns one discounted lifetime lump
+#' per starting age, and a lump cannot be truncated at a reporting horizon --
+#' both the non-cured mass at the landmark and every relapser receive one, so
+#' without a stream the Treg world has no per-year cost at all.
+#'
+#' THREE CONSTRUCTION REQUIREMENTS, and they are the whole reason the two
+#' routes stay reconcilable. Each age's stream covers a different number of
+#' cycles (`horizon <- 100 - ages[i]`), so (i) every stream is zero-padded to
+#' one common length, (ii) interpolation between neighbouring ages is
+#' element-wise and linear, and (iii) it uses the same weight
+#' `standard_care_at_age()` gives the totals. Summation is linear, so
+#' `sum(alpha*v1 + (1-alpha)*v2) = alpha*sum(v1) + (1-alpha)*sum(v2)`, which is
+#' the interpolated total itself. The interpolation error documented above --
+#' about $70 on `A` -- therefore lands identically on both routes and cancels
+#' in their difference, instead of opening a gap between a stream and the lump
+#' it is supposed to resolve.
+standard_care_cost_stream_grid <- function(window_weeks, cap_on, raw_dir = "data/raw",
+                                            ages = seq(MODEL_START_AGE_YEARS, 100, by = 1),
+                                            population = "naive", product = IFX_PRICED_PRODUCT,
+                                            life_table_vintage = "base", therapy = "IFX") {
+  streams <- vector("list", length(ages))
+  for (i in seq_along(ages)) {
+    horizon <- 100 - ages[i]
+    if (horizon <= 0) {
+      streams[[i]] <- numeric(0)
+      next
+    }
+    tr <- run_comparator_trace(therapy, window_weeks, cap_on, horizon, raw_dir, start_age_years = ages[i], population = population, product = product, life_table_vintage = life_table_vintage)
+    streams[[i]] <- tr$discounted_cost_stream_usd
+  }
+  cycles <- max(c(0L, vapply(streams, length, integer(1))))
+  padded <- matrix(0, nrow = length(ages), ncol = cycles)
+  for (i in seq_along(streams)) {
+    if (length(streams[[i]])) padded[i, seq_along(streams[[i]])] <- streams[[i]]
+  }
+  list(ages = ages, streams = padded)
+}
+
+#' The same grid with no discounting applied, for the reporting legs that ask
+#' for nominal cash flow (SPEC.md L11).
+#'
+#' It cannot be derived from `standard_care_cost_stream_grid()` by relabelling:
+#' that grid's contents are discounted to each patient's own start, so an
+#' undiscounted leg needs the trace re-run at a zero rate rather than the same
+#' numbers read differently. The mechanism is the discount-rate option the
+#' engine already reads, set and restored exactly as `analysis/run_scenarios.R`
+#' does for its `disc-0` scenario -- no rate argument is threaded through the
+#' arm, and nothing else about the trace changes, since the option's only
+#' consumer is the discount factor.
+standard_care_undiscounted_cost_stream_grid <- function(window_weeks, cap_on, raw_dir = "data/raw",
+                                                         ages = seq(MODEL_START_AGE_YEARS, 100, by = 1),
+                                                         population = "naive", product = IFX_PRICED_PRODUCT,
+                                                         life_table_vintage = "base", therapy = "IFX") {
+  old <- getOption("treg_value.discount_rate")
+  options(treg_value.discount_rate = 0)
+  on.exit(options(treg_value.discount_rate = old), add = TRUE)
+  standard_care_cost_stream_grid(window_weeks, cap_on, raw_dir, ages = ages, population = population, product = product, life_table_vintage = life_table_vintage, therapy = therapy)
+}
+
+#' Element-wise linear interpolation into a `standard_care_cost_stream_grid()`
+#' at an arbitrary age -- the stream counterpart of `standard_care_at_age()`,
+#' clamped at the grid's ends and weighted identically, so the two agree by
+#' construction rather than by coincidence.
+#'
+#' The weight is written in `approx()`'s own form, `v1 + (v2 - v1) * t`, rather
+#' than the algebraically equal `(1 - t)*v1 + t*v2`: the two differ in their
+#' last bits, and this route is checked against a column-by-column `approx()`
+#' in tests/testthat/test-markov-engine.R. A per-column `approx()` call is what
+#' this replaces -- correct, and far too slow to sit inside a relapse loop that
+#' looks up an age on every cycle of a lifetime horizon.
+standard_care_cost_stream_at_age <- function(grid, age_years) {
+  ages <- grid$ages
+  age <- min(max(age_years, min(ages)), max(ages))
+  i1 <- findInterval(age, ages, all.inside = TRUE)
+  i2 <- i1 + 1L
+  alpha <- (age - ages[i1]) / (ages[i2] - ages[i1])
+  v1 <- grid$streams[i1, ]
+  v2 <- grid$streams[i2, ]
+  v1 + (v2 - v1) * alpha
+}
+
 #' Linear interpolation into a `standard_care_grid()` result at an arbitrary
 #' age, returning discounted cost and QALYs to that patient's own start.
 #'
@@ -117,9 +203,35 @@ standard_care_at_age <- function(grid, age_years) {
 #' `pi_cure > 0` together with a non-base vintage, so the omission this
 #' argument closes was latent rather than live -- at `pi_cure = 0` there is no
 #' drug-free-remission mass for the table to act on.
+#'
+#' PER-CYCLE COST STREAM (W7). Supply `sc_cost_stream_grid` -- a
+#' `standard_care_cost_stream_grid()` built for the same window, cap and
+#' vintage as `sc_grid` -- and the arm additionally returns
+#' `discounted_cost_stream_usd`, the same discounted cost resolved by cycle
+#' from t = 0. Omit it and the arm behaves exactly as it did before, which is
+#' what keeps a 101-point sweep and a 1,000-draw PSA at their present cost: the
+#' stream is opt-in because building it is the only part of this arm that is
+#' not free, not because it is optional to the result.
+#'
+#' It has no horizon argument, and adding one would be a design violation
+#' rather than a convenience: computing at the lifetime horizon and truncating
+#' a prefix at reporting time is what keeps a reported horizon a reporting
+#' boundary (SPEC.md L10). The stream runs past `total_cycles`, because a
+#' patient handed to standard care near the end of the horizon carries a course
+#' whose own cycles continue past it; those tail cycles are part of what that
+#' patient costs and are dropped by any truncation short enough to matter.
+#'
+#' There is deliberately no separate undiscounted stream here, unlike
+#' `run_comparator_trace()` where it is free. An undiscounted Treg stream needs
+#' an undiscounted standard-care grid to account the handed-over mass against,
+#' so it is produced by running the whole arm under
+#' `options(treg_value.discount_rate = 0)` with the matching
+#' `standard_care_undiscounted_cost_stream_grid()` -- the `disc-0` idiom
+#' `analysis/run_scenarios.R` already uses, where the "discounted" figures a
+#' trace returns are the undiscounted ones because the rate in force is zero.
 run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
                             raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS,
-                            life_table_vintage = "base") {
+                            life_table_vintage = "base", sc_cost_stream_grid = NULL) {
   stopifnot(pi_cure >= 0, pi_cure <= 1, h_per_year >= 0)
 
   costs <- health_state_costs_usd_per_cycle(raw_dir)
@@ -131,6 +243,12 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
   discounted_cost_usd <- 0
   discounted_qaly <- 0
   state_sum_log <- numeric(LANDMARK_CYCLES + round((100 - start_age_years) * ALIYEV_CYCLES_PER_YEAR))
+  emit_cost_stream <- !is.null(sc_cost_stream_grid)
+  discounted_cost_stream_usd <- if (emit_cost_stream) {
+    numeric(round((100 - start_age_years) * ALIYEV_CYCLES_PER_YEAR) + ncol(sc_cost_stream_grid$streams))
+  } else {
+    NULL
+  }
   log_i <- 0L
   age <- start_age_years
   years_elapsed <- 0
@@ -153,6 +271,7 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
     df <- discount_factor_years_to_discount_factor(years_elapsed)
     ct_alive <- sum(hc) - hc[["Death"]]
     discounted_cost_usd <- discounted_cost_usd + (sum(hc * costs) + ct_alive * ct_drug_cost) * df
+    if (emit_cost_stream) discounted_cost_stream_usd[t] <- (sum(hc * costs) + ct_alive * ct_drug_cost) * df
     discounted_qaly <- discounted_qaly + sum(hc * utilities) * CYCLE_YEARS * df
 
     log_i <- log_i + 1L; state_sum_log[log_i] <- sum(cohort)
@@ -170,6 +289,16 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
   sc_landmark <- standard_care_at_age(sc_grid, age)
   discounted_cost_usd <- discounted_cost_usd + entering_standard_care * landmark_discount * sc_landmark$cost
   discounted_qaly <- discounted_qaly + entering_standard_care * landmark_discount * sc_landmark$qaly
+  if (emit_cost_stream) {
+    # The handed-over course begins at the landmark, so its own cycle k is
+    # global cycle LANDMARK_CYCLES + k and its own discount factor composes
+    # with the landmark's: v^(6/26) * v^(k/26) = v^((6+k)/26). That is the same
+    # composition the scalar above performs on the lump, resolved by cycle.
+    sc_landmark_stream <- standard_care_cost_stream_at_age(sc_cost_stream_grid, age)
+    at <- LANDMARK_CYCLES + seq_along(sc_landmark_stream)
+    discounted_cost_stream_usd[at] <- discounted_cost_stream_usd[at] +
+      entering_standard_care * landmark_discount * sc_landmark_stream
+  }
 
   cycle6_drug_free_remission_share <- in_drug_free_remission / treated_cohort
 
@@ -199,6 +328,9 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
     # SPEC_AMENDMENTS.md "Drug-free remission costing".
     discounted_cost_usd <- discounted_cost_usd + hc_dfr * costs[["Remission"]] * df
     discounted_qaly <- discounted_qaly + hc_dfr * utilities[["Remission"]] * CYCLE_YEARS * df
+    if (emit_cost_stream) {
+      discounted_cost_stream_usd[t] <- discounted_cost_stream_usd[t] + hc_dfr * costs[["Remission"]] * df
+    }
 
     # Relapsers rejoin standard care in full at this cycle (L4 + the
     # second-induction amendment), each carrying their own whole future.
@@ -206,6 +338,14 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
       sc <- standard_care_at_age(sc_grid, age)
       discounted_cost_usd <- discounted_cost_usd + relapsed * df * sc$cost
       discounted_qaly <- discounted_qaly + relapsed * df * sc$qaly
+      if (emit_cost_stream) {
+        # Their course begins at the end of this cycle, so their own cycle k is
+        # global cycle t + k -- the same reference point the scalar uses when it
+        # discounts their whole future by this cycle's `df`.
+        sc_stream <- standard_care_cost_stream_at_age(sc_cost_stream_grid, age)
+        at <- t + seq_along(sc_stream)
+        discounted_cost_stream_usd[at] <- discounted_cost_stream_usd[at] + relapsed * df * sc_stream
+      }
     }
 
     cumulative_standard_care <- cumulative_standard_care + relapsed
@@ -217,6 +357,8 @@ run_treg_trace <- function(pi_cure, h_per_year, window_weeks, cap_on, sc_grid,
   list(
     discounted_cost_usd = discounted_cost_usd,
     discounted_qaly = discounted_qaly,
+    discounted_cost_stream_usd = discounted_cost_stream_usd,
+    landmark_cycles = LANDMARK_CYCLES,
     cycle6_drug_free_remission_share = cycle6_drug_free_remission_share,
     state_sums = state_sum_log[seq_len(log_i)],
     final_drug_free_remission = dfr

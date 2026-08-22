@@ -474,3 +474,212 @@ vintage.
 **Reason:** an argument that existed on two of the three call sites a scenario
 needs. Recorded here rather than silently fixed because it invalidates an
 already-reported figure and an already-stated conclusion.
+
+## 2026-08-21 — Budget impact analysis added as aim A6 (SPEC.md v1.1)
+
+**Signed off:** Stone
+**Supersedes:** SPEC.md v1.0 §2 (single analytic frame, perspective and
+discounting convention); §5's swept-parameter and scenario tables; §6's
+five-aim list; §8's parameter register; §9's open items; §10's twelve
+acceptance criteria. SPEC.md is bumped to **v1.1**. Every previous change to
+this specification was a clarification, correction or reduction and the version
+correctly stayed at 1.0; this is the first additive scope expansion. Nothing in
+§1 is superseded: the frontier `P*(π, h, λ) = A(λ) + π·B(h, λ)` remains the
+study's primary, prior-free result and is unchanged.
+
+**Change:** a population-level budget impact analysis is added as aim A6,
+alongside — not in place of — the price frontier. New locked decisions L10–L16.
+New scenarios S8 and S9. New open items O11–O15. New acceptance criteria
+T13–T18. A new §2a states the BIA's analytic frame separately from §2's.
+
+**A6 is scenario-conditional and is labelled as such in every artifact.**
+Unlike A1–A5 it requires committing to a price, a cure fraction, an uptake
+level and a reporting horizon. Price is taken from this study's own
+`P*(π, h, λ)`; the cure fraction is swept as in §5; the uptake level is swept
+and only its shape is locked; the reporting horizon is a stated analyst choice
+with a designated base case. Each cell carries the required cure fraction that
+price implies (A3's machinery), so a reader can see which budget cells describe
+a defensible adoption at all.
+
+**The reporting horizon is a stated choice, not a swept parameter (L10).** An
+earlier draft of this amendment treated the horizon as a swept parameter by
+analogy with π. That analogy is wrong and is withdrawn: π is epistemic — a fact
+about the world nobody knows — while a time horizon is a normative reporting
+choice determined by the decision-maker's budget cycle, and CHEERS 2022 item 9
+asks the analyst to state and justify it rather than to decline to. The base
+case is three years, the ISPOR/AMCP centre of mass; one and five years bracket
+it; together these are the budget impact analysis proper. Ten and thirty years
+are reported as an extended offset-accrual projection and are labelled as such:
+they exist because a short window applied to a one-time potentially curative
+therapy measures the front-loading rather than the affordability, the critique
+underlying the cell- and gene-therapy literature on amortised, annuity and
+outcomes-based payment models and ICER's methods work on single- and short-term
+transformative therapies. **Ten and thirty are round exploratory endpoints
+chosen for the readability of the offset-capture progression. They are not
+anchored to any figure this study publishes.** In particular, this study
+publishes no thirty-year price frontier: every `A`, `B` and `P*` in this
+repository is computed at the lifetime horizon and only there, and the thirty-
+and forty-year runs in `output/tables/comparator_ifx_trace.csv` are
+comparator-arm cost and QALYs alone. A thirty-year BIA's current-care world is
+comparable to that published comparator figure; its Treg world and the frontier
+are not. **The citations underlying this paragraph are sourcing-register item
+S-8 and are not yet retrieved; this rationale must not enter a manuscript
+before they are.**
+
+**The headline of A6 is a progression, not a figure, and it is a cost
+quantity.** A6 reports first the share of the lifetime cost offset captured at
+each horizon: `offset_captured(H) = D(H)/D(lifetime)`, where `D(H)` is the
+discounted cumulative current-care-world-minus-Treg-world cost per treated
+patient excluding the course price, and `D(lifetime) = P*(π, h, λ = 0)`.
+Willingness to pay does not enter — a budget holds no QALYs, which is the same
+logic T13 rests on. The statistic depends on π, h and the cap setting and not
+on the eligible population, which makes it the one headline finding of this aim
+that survives O11 never being sourced.
+
+**Discounting follows the horizon's class (L11).** One to five years:
+undiscounted base case, per ISPOR — a budget forecast is nominal cash flow.
+Ten and thirty years and the lifetime leg: 3% base case, per SPEC.md §2 — that
+class is not a budget forecast, undiscounting a backloaded offset over decades
+overstates it (the non-conservative direction), and under 3% the long arm
+converges to the lifetime leg where T13's identity holds exactly. Both columns
+are produced at every horizon, so the convention is a decision about which
+figure the readout leads with rather than a computation that hides an
+alternative. The base-case convention changes between the five- and ten-year
+rows of the same table; this is deliberate and is marked in the table.
+
+**Uptake is a single adoption wave (L12, L15).** A linear ramp over a fixed
+five-year ramp period to a swept terminal share, after which nobody further is
+treated. The alternative reading — a terminal annual rate persisting for the
+full horizon — would treat several times the eligible pool over thirty years
+and is not well-defined until O15 closes. **The five-year ramp period is
+itself a chosen level, not structure**, and is recorded as an assumption under
+an open question rather than defended as a derivation. **Direction:** a single
+wave produces the smaller long-horizon expenditure and therefore the more
+favourable-looking thirty-year figure — the non-conservative direction, chosen
+for coherence rather than for conservatism.
+
+**L8 is unaffected and T12's scope is unchanged.** `R/budget_impact.R` takes
+the course price as a required argument with no default, supplied by
+`analysis/run_bia.R` from `output/tables/price_frontier.csv` and, separately
+labelled, from an observed-analog-price axis. **The BIA files are deliberately
+NOT added to T12's file set**, which stays the five `R/` pricing-path files it
+covers today: T12 greps for raw-data basenames as well as function names, and
+adding an analysis script that legitimately reads a raw price file would make
+T12 fail on first run and invite weakening it. The invariant is instead
+asserted directly in `tests/testthat/test-budget-impact.R`: `R/budget_impact.R`
+supplies no default for the price and calls no export of the benchmark module.
+For the avoidance of doubt, **using benchmark values downstream of a computed
+frontier is already sanctioned and needs no amendment** — §6 A3 is defined as
+"required cure fraction at each manufacturing benchmark" and does exactly that.
+L8 forbids a pricing *function* reading the benchmark, which is what T12
+enforces and what `R/frontier.R`'s own header describes.
+
+**T13 is the gate, and it is a statement about one leg.** At λ = 0, net
+monetary benefit is the negative of cost, so `A(0) + π·B(0)` is a pure
+discounted lifetime cost difference and the net budget impact of treating one
+patient is exactly `price − P*(π, h, λ = 0)`. λ = 0 is the budget corner of
+§1's own equation. The identity holds at the lifetime horizon and only there,
+because `A` and `B` are lifetime quantities, so the analysis retains a lifetime
+leg as a test fixture that is never reported as a budget impact.
+
+**T18 replaces an earlier draft's nesting property, which was vacuous.** That
+draft asserted that the streams at one horizon equal the leading years of the
+streams at a longer one — but streams are computed once at the lifetime horizon
+and truncated at reporting time, so both sides were the same vector and the
+assertion could not fail against any permitted implementation. T18 instead
+compares an independently re-run `run_comparator_trace()` at each horizon
+against the prefix sum of the lifetime stream at the corresponding cycle index,
+sharing no truncation logic between the two routes. Its principal target is the
+induction-offset indexing error: `total_cycles` governs the maintenance loop
+only, so truncating at `round(H · cycles_per_year)` rather than at
+`induction_cycles + round(H · cycles_per_year)` is silently wrong by two to
+four cycles in a direction that varies with the induction window. **That index
+reproduces the `horizon_years` argument's own semantics and is not the
+calendar-exact reporting boundary** — §2a keeps the two apart, and A6's
+`reporting_horizon_years` column is the calendar-exact one.
+
+**Monotonicity in the horizon is deliberately not asserted, at any relapse
+hazard.** Two independent mechanisms make the annual incremental cost
+difference able to turn against the Treg world. First, a patient relapsing out
+of drug-free remission is charged a full standard-care course on re-entry —
+induction included, with their own two-year cap clock starting then — while
+their comparator-world counterpart, induced at t = 0, returned to conventional
+therapy at year two. Second, and independent of any relapse: under L9 the
+Treg arm's whole cohort spends twelve weeks on conventional therapy, so the
+non-cured enter standard care at the landmark and their cap clock expires
+twelve weeks later than the comparator world's; in that window the Treg world
+is still paying biologic and the comparator world is not. The second mechanism
+operates at a relapse hazard of zero and at a cure fraction of zero. There is
+therefore no corner of the grid where monotonicity is guaranteed, and the
+offset-capture share inherits the same behaviour: it is neither monotone in the
+horizon nor bounded above by 100%, and the readout states how to read a dip or
+an above-100% cell rather than suppressing one.
+
+**T15 is deliberately weaker than first drafted.** "Undiscounted ≥ discounted"
+holds for a non-negative gross expenditure stream and NOT for a net-impact
+stream, since undiscounting weights later years more heavily and later years
+are where the offsets fall. T15 asserts the inequality on gross expenditure in
+each world separately and asserts no sign for the discounting effect on the net
+series.
+
+**What A6 does not resolve.**
+
+The eligible population is not sourced (O11) and no uptake data exist for a
+first-in-class one-time therapy in this indication (O12). A6 therefore reports
+against a schedule of explicitly illustrative round population sizes and as
+per-member-per-month on a stated one-million-member plan — the same treatment
+`assumed_trial_cost_usd` already gives O2 in A4 — rather than a single figure
+carrying false precision. Sourcing is recorded as S-6: US prevalence and the
+moderate-to-severe share are sourceable and are real work with a named owner;
+the share of moderate-to-severe patients who would be offered and accept a
+one-time cell therapy is not sourceable for a product with no label and no
+efficacy data, and is swept rather than assumed.
+
+**A6 also does not resolve, and must not be read as resolving, the
+mixed-population limitation recorded in the 2026-08-21 amendment above.** The
+budget impact analysis inherits the comparator's transition probabilities
+unchanged, and therefore inherits in full the limitation that those
+probabilities are estimated from trial populations pooling biologic-naïve and
+biologic-experienced patients rather than one uniform stratum — UNITI-1
+(anti-TNF-refractory) and UNITI-2 (anti-TNF-naïve, conventional-therapy
+failure) both feed the induction and maintenance parameters this model inherits
+via IM-UNITI. **The gap is more consequential in A6 than on the frontier, which
+is why it is restated here rather than left to be inherited.** A payer's
+eligible population is defined by treatment line — who has failed what — and
+that is precisely the distinction the source trials pool. Every A6 figure
+therefore counts a denominator defined on a stratum whose cost dynamics the
+numerator does not separately describe. No refractory-specific budget impact is
+reported, for the reason that amendment gives: the only adjustment derivable
+from published trials covers induction alone, and extending it to maintenance
+would condition the adjustment on response — the conditional-denominator error
+guard 3 and T4 exist to prevent. This is stated as its own limitation in the
+readout's budget-impact section, not only in the readout's general Limitations
+list, so that a reader of that section alone is not left to find it elsewhere.
+
+Over the ten- and thirty-year windows the eligible pool is additionally held
+fixed, with no incidence or turnover modelled (O15, L16). That is defensible
+over one to five years and is a stated limitation beyond it.
+
+**Direction, stated because a payer will read this.** L13 displaces infliximab
+biosimilar Q5104 alone, the cheapest agent in the model (C10), rather than a
+mix. Scenario S5 showed ustekinumab and adalimumab comparators both raise `B`.
+Displacing the cheapest agent yields the smallest offset and the largest net
+budget impact — conservative for an affordability question, as C10 was
+conservative for a value question.
+
+**Effect on reported results: none.** No figure in A1–A5 changes. The engine
+work this amendment authorises is additive — per-cycle cost streams alongside
+the existing scalars, an opt-in argument on the Treg arm, and three new unit
+suffixes — and T17 requires the streams to sum to those scalars to within 1e-6.
+Existing outputs are regenerated only so their spec hashes match v1.1; that
+regeneration requires re-running the 1,000-draw probabilistic analysis first,
+since `analysis/run_aims.R` reads two `_w6` files that `analysis/run_psa.R`
+produces and that are not committed to the tree.
+
+**G6's exemption for A6, recorded so it is not mistaken for coverage.** §6 now
+names A6 with an output file that does not exist, and `uncovered_aims()`
+clears it because this entry contains the string "A6". That is the sanctioned
+amendment branch, not a defect — but the exemption never expires, so **G6 will
+never again assert that `budget_impact.csv` exists.** The gate for the session
+that builds A6 is T13 passing and `budget_impact_reconciliation.csv` existing,
+not a green G6.

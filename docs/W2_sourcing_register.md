@@ -109,6 +109,34 @@ cycling in and out. That was a category error and is not carried forward.
 
 ---
 
+## S-6. US eligible population — CDC/NHIS prevalence + published CD severity distribution
+
+**Status:** not sourced. Opened with A6 (SPEC.md v1.1, O11).
+
+**How to close:** NHIS adult IBD prevalence for the most recent published year, then a published moderate-to-severe or advanced-therapy share with its cohort definition recorded. Decide and record which prevalence source is used and whether severity is a point or a bounding pair — candidates disagree materially, so this is real work, not a lookup, and the direction of the choice is recorded as C10 recorded its own.
+
+**Record each link with its own sidecar. Do not multiply through to a single "eligible patients" figure and record only that** — the third link (the share of moderate-to-severe patients who would be offered and accept a one-time allogeneic cell therapy) is not sourceable for a product with no label and no efficacy data, and a single product figure would hide that. That link is swept, not sourced, exactly as π is.
+
+---
+
+## S-7. Uptake analogs
+
+**Status:** not sourced, and recommended not to be. Recorded so that the decision not to source is visible rather than looking like an omission.
+
+**How to close, if it is ever wanted:** the nearest evidence is analogy, and this repository has a respectable way to handle analogy (the manufacturing benchmark's `tenham_analogy_anchors()` leg — labelled, bounded, never pointed). The candidate analogs (CAR-T uptake in approved indications; new IBD biologic launches) are weak for different reasons. The recommendation instead is L12's: sweep the terminal share, bound the shape (S8).
+
+---
+
+## S-8. BIA horizon-convention citations
+
+**Status:** not sourced. **Blocking for the manuscript**, not for the code.
+
+**How to close:** retrieve and record Sullivan et al. 2014 (*Value in Health*, ISPOR Budget Impact Analysis Good Practice II Task Force) for the one-to-three-year guidance; the current AMCP Format; and the ICER methods documents on single- and short-term transformative therapies, plus the amortised/outcomes-based payment literature.
+
+**Why this one is blocking.** L10's rationale currently rests on a paraphrase of those bodies of work from memory. The planning document that proposed A6 committed exactly this error one revision earlier — a paraphrase from memory asserted as a repository fact, in a document that contained the warning against it — and it survived to review. **If the retrieved sources are narrower than the paraphrase, L10's rationale is rewritten, not defended.** The recommendation itself (a three-year base case) survives a weaker justification, which is precisely why the justification could weaken unnoticed.
+
+---
+
 ## Rule
 
 A sidecar with `status: transcribed` and a recorded unresolved item is

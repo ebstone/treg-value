@@ -2,6 +2,61 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-08-21 (W7: SPEC v1.1 amendment, per-cycle cost streams)
+
+- Adds a budget impact analysis (BIA) as aim A6, alongside -- not replacing --
+  the price frontier. SPEC.md bumped to v1.1: new section 2a (the BIA's own
+  analytic frame, kept separate from section 2's so a budget figure is never
+  mistaken for a frontier figure), L10-L16 locked (reporting horizon is a
+  stated 3-year base case with a 1/5/10/30-year reported range, not a swept
+  parameter; discounting by horizon class; uptake as a single 5-year adoption
+  wave; comparator, perspective and eligible-pool decisions), new scenarios
+  S8/S9, new open items O11-O15, new acceptance criteria T13-T18. Full
+  SPEC_AMENDMENTS.md entry recorded in the same commit as the spec change,
+  before anything downstream wrote output (stamp_output() refuses on a dirty
+  SPEC.md).
+- This is W7 of a two-session sequence. **No budget-impact modelling in this
+  session** -- no uptake curve, no eligible population, no price-times-
+  population, no PMPM. W7's job is only to make the engine able to report cost
+  by cycle, without letting a horizon reach the model. W8 (the BIA itself)
+  is separate future work.
+- `run_comparator_trace()` and `run_treg_trace()` now additionally return
+  per-cycle discounted and undiscounted cost streams alongside their existing
+  scalars. Strictly additive: every pre-existing scalar (`discounted_cost_usd`
+  etc.) is unchanged, verified by snapshotting the full set of comparator
+  traces, both standard-care grids, Treg traces, and A/B/P* across the whole
+  window/cap/lambda/hazard grid before and after -- byte-identical.
+- New `standard_care_cost_stream_grid()`: the standard-care lifetime lump
+  resolved by cycle instead of summed, zero-padded and interpolated
+  element-wise with the same weight `standard_care_at_age()` already uses for
+  totals, so `sum(stream_interp) == total_interp` holds exactly rather than
+  approximately -- this is what keeps a future reconciliation test's dollar
+  tolerance safe against the grid's own known ~$70 interpolation error on `A`.
+- New T17 (per-cycle streams sum to the pre-existing scalars) and T18
+  (independent-route horizon truncation: a re-run at a shorter horizon must
+  agree with a prefix-sum of the lifetime stream, targeting the
+  induction-vs-maintenance cycle-indexing error specifically -- a naive
+  "streams nest" version of this test was considered and rejected as
+  unfalsifiable under this design, since every reported horizon is a slice of
+  one lifetime run by construction). New tests/testthat/test-cost-streams.R,
+  144 assertions.
+- Guard 2 (units): `_usd_per_year` inserted *before* the pre-existing generic
+  `_per_year` entry in ALLOWED_UNIT_SUFFIXES, not appended after it -- appending
+  would have let it be silently absorbed by `_per_year`'s existing membership
+  in DIMENSIONLESS_RATIO_SUFFIXES, disabling guard coverage on annual-dollar
+  figures rather than triggering it. Added `_usd_pmpm`, `_patients`,
+  `_members`, an ordering-pinning test, and a positive-control test that would
+  have caught the reclassification bug.
+- test-stamping.R strengthened: previously only checked the spec-hash
+  header's *format*, not that it matched the currently-committed SPEC.md --
+  SPEC.md section 11's promise that "a run whose spec hash differs from the
+  last committed one fails" was unenforced. Closed.
+- All existing outputs regenerated under the v1.1 spec hash (full pipeline:
+  run_psa.R, run_aims.R, run_price_frontier.R, run_manufacturing_benchmark.R,
+  run_scenarios.R, run_infliximab_trace.R, run_refractory_coprimary.R,
+  run_cheers_assessment.R). No reported figure changed. Full suite green, 0
+  failures. verify_readout.R: all figures match.
+
 ## 2026-08-11
 - Repository initialised. SPEC.md v1.0 committed as governing authority.
   No code, no tests yet.

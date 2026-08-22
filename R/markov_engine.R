@@ -121,9 +121,55 @@ half_cycle_weighted_occupancy <- function(occupancy_start, occupancy_end) {
   0.5 * (occupancy_start + occupancy_end)
 }
 
+#' Aggregate a per-cycle cost stream into calendar years, counting from t = 0.
+#'
+#' Cycle `t` covers calendar time [(t-1)/cycles_per_year, t/cycles_per_year),
+#' so year `k` is exactly cycles `(k-1)*cycles_per_year + 1` through
+#' `k*cycles_per_year`. The stream a trace returns is indexed from t = 0 with
+#' the induction cycles first, which is what makes this bucketing
+#' calendar-exact (SPEC.md section 2a, "Horizon semantics"): it is NOT the
+#' `horizon_years` argument's own clock, which counts maintenance cycles only
+#' and therefore runs `induction_cycles` behind the calendar.
+#'
+#' A final partial year is returned as a partial year rather than dropped or
+#' padded -- a stream ending mid-year is a horizon boundary, not a missing
+#' value.
+cost_stream_usd_per_cycle_to_usd_per_year <- function(cost_stream_usd, cycles_per_year = ALIYEV_CYCLES_PER_YEAR) {
+  if (length(cost_stream_usd) == 0) return(numeric(0))
+  year_index <- ((seq_along(cost_stream_usd) - 1L) %/% cycles_per_year) + 1L
+  as.vector(tapply(cost_stream_usd, factor(year_index, levels = seq_len(max(year_index))), sum))
+}
+
 #' Run the full induction-then-maintenance comparator trace for one therapy,
 #' induction window, cap setting and horizon. Returns discounted lifetime
 #' cost and QALYs, plus validation series for T7/T8 and the trap tests.
+#'
+#' PER-CYCLE COST STREAMS (W7). Alongside the scalars, the trace returns the
+#' same cost accrual resolved by cycle: `discounted_cost_stream_usd[t]` is what
+#' cycle `t` contributes to `discounted_cost_usd`, and
+#' `undiscounted_cost_stream_usd[t]` is the same amount before the discount
+#' factor is applied. Element 1 is the first induction cycle, so the index is
+#' calendar time from t = 0.
+#'
+#' The streams are written from the same `cycle_cost` and `df` the scalars
+#' consume, in the same order, and the scalar accumulations below are left
+#' exactly as they were rather than replaced by `sum()` over the streams:
+#' `sum()` accumulates in long double and a running R-level `+` does not, so
+#' rewriting the scalars in terms of the streams would move published figures
+#' in their last bits for no gain. T17 asserts the two agree to 1e-6.
+#'
+#' Truncating the stream is exact, which is why no horizon argument reaches
+#' the Treg arm and why a reported horizon is a reporting boundary rather than
+#' a model parameter. The discount factor comes from `years_elapsed`
+#' accumulated from t = 0 and never reads `total_cycles`; `cap_cycles` is
+#' independent of the horizon; the half-cycle correction is per-cycle. The one
+#' place `total_cycles` enters a cycle-level quantity is the cap-off dose
+#' schedule below, and `seq(a, b1, by = d)` and `seq(a, b2, by = d)` agree on
+#' every element <= b1, so the cost prefix is identical at any horizon. What is
+#' NOT prefix-safe is the returned `dose_cycles_charged`, which counts the
+#' whole schedule: it describes the run's own horizon and means nothing about a
+#' truncated prefix of it. T18 checks the prefix property against an
+#' independently re-run trace.
 run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
                                   raw_dir = "data/raw", start_age_years = MODEL_START_AGE_YEARS,
                                   population = "naive", product = IFX_PRICED_PRODUCT, life_table_vintage = "base") {
@@ -146,6 +192,8 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
   discounted_qaly <- 0
   undiscounted_life_years <- 0
   state_sum_log <- numeric(induction_cycles + total_cycles)
+  discounted_cost_stream_usd <- numeric(induction_cycles + total_cycles)
+  undiscounted_cost_stream_usd <- numeric(induction_cycles + total_cycles)
   log_i <- 0L
   age <- start_age_years
 
@@ -160,6 +208,8 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
     years_elapsed <- years_elapsed + CYCLE_YEARS
     df <- discount_factor_years_to_discount_factor(years_elapsed)
     discounted_cost_usd <- discounted_cost_usd + cycle_cost * df
+    discounted_cost_stream_usd[t] <- cycle_cost * df
+    undiscounted_cost_stream_usd[t] <- cycle_cost
     discounted_qaly <- discounted_qaly + induction_state_utility * CYCLE_YEARS * df
     undiscounted_life_years <- undiscounted_life_years + CYCLE_YEARS
     log_i <- log_i + 1L; state_sum_log[log_i] <- 1 # induction cohort is 100% Moderate-Severe
@@ -246,6 +296,8 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
     cycle_qaly <- (sum(hc_bio * utilities) + sum(hc_ct * utilities)) * CYCLE_YEARS
 
     discounted_cost_usd <- discounted_cost_usd + cycle_cost * df
+    discounted_cost_stream_usd[induction_cycles + t] <- cycle_cost * df
+    undiscounted_cost_stream_usd[induction_cycles + t] <- cycle_cost
     discounted_qaly <- discounted_qaly + cycle_qaly * df
 
     # Alive fraction this cycle (half-cycle corrected, same convention as
@@ -261,6 +313,9 @@ run_comparator_trace <- function(therapy, window_weeks, cap_on, horizon_years,
     discounted_cost_usd = discounted_cost_usd,
     discounted_qaly = discounted_qaly,
     undiscounted_life_years = undiscounted_life_years,
+    discounted_cost_stream_usd = discounted_cost_stream_usd,
+    undiscounted_cost_stream_usd = undiscounted_cost_stream_usd,
+    induction_cycles = induction_cycles,
     state_sums = state_sum_log,
     final_on_biologic = on_biologic,
     final_on_ct = on_ct,

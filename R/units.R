@@ -9,6 +9,18 @@ ALLOWED_UNIT_SUFFIXES <- c(
   "_usd_per_cycle",
   "_usd_per_qaly",
   "_prob_2wk",
+  # ORDER IS LOAD-BEARING HERE, and it is the only place in this list where it
+  # is. `unnamed_converters()` takes `hit[1]`, the FIRST suffix in this list a
+  # name ends with, and `_per_year` is a member of DIMENSIONLESS_RATIO_SUFFIXES
+  # below. A dollars-per-calendar-year figure ends with `_per_year` as well as
+  # with `_usd_per_year`, so appending `_usd_per_year` at the end of this list
+  # -- where W3's block sensibly put its own additions -- would let `_per_year`
+  # win the match, classify an annual dollar figure as a dimensionless ratio,
+  # and drop it out of the guard's coverage entirely. The guard would not fire
+  # inconveniently; it would quietly stop watching, and a genuine
+  # per-course-to-per-year conflation would pass unremarked. Hence the
+  # placement, and hence the ordering assertion in tests/testthat/test-units.R.
+  "_usd_per_year", # dollars accruing over one calendar year -- a flow of money, NOT a rate like _per_year
   "_per_year",
   "_qaly",
   "_cycles",
@@ -26,7 +38,13 @@ ALLOWED_UNIT_SUFFIXES <- c(
   "_kg", # body weight, kilograms
   "_mg", # a drug dose mass, milligrams
   "_mg_per_kg", # a weight-scaled dosing rate
-  "_year" # a calendar year (a point on the calendar, not a duration like _years)
+  "_year", # a calendar year (a point on the calendar, not a duration like _years)
+  # Added in W7 (per-year cost streams, and the budget impact frame SPEC.md
+  # section 2a states). `_usd_per_year` is above, where its ordering is
+  # explained; these three carry no ordering constraint.
+  "_usd_pmpm", # dollars per member per month. Shares no numerator with _usd or _usd_per_course: `suffix_numerator()` splits on "_per_", and this suffix contains none, so it yields "usd_pmpm" and can collide with nothing
+  "_patients", # a count of people, e.g. an eligible population
+  "_members" # a count of plan members -- the PMPM denominator, a different population from _patients
 )
 
 # Suffixes naming a dimensionless ratio/weight/rate rather than a stock or
@@ -43,6 +61,12 @@ DIMENSIONLESS_RATIO_SUFFIXES <- c(
   # rather than a conflation risk -- unlike `_usd_per_dose` vs
   # `_usd_per_course`, which are two prices of two different things.
   "_usd_per_qaly"
+  # `_usd_per_year` does NOT belong in this list. It is a quantity of money a
+  # payer spends in a year, in the same sense `_usd_per_course` is a quantity
+  # of money spent on a course -- the two are exactly the pair a budget impact
+  # analysis is at risk of conflating, and adding either here would disable the
+  # only guard watching for it. tests/testthat/test-units.R pins this with a
+  # case that fails if it is added.
 )
 
 #' The numerator of a unit suffix: everything before `_per_`, or the whole
