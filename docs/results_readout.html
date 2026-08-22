@@ -125,7 +125,7 @@
   <div class="byline">
     <span>Jadambaa · Stone · Abraham</span>
     <span>Johns Hopkins Bloomberg School of Public Health</span>
-    <span>13 August 2026</span>
+    <span>21 August 2026</span>
     <span>All figures 2025 USD</span>
   </div>
 </header>
@@ -309,6 +309,72 @@
     </table>
   </div>
   <p class="note">At $50,000 per QALY the requirements are roughly a third higher than at $100,000: 8.7% / 24.0% / 41.6% at h = 5% becomes 18.4% / 34.2% / 60.0% for the three allogeneic anchors.</p>
+</section>
+
+<section>
+  <h2>Budget impact — what a payer pays, and when</h2>
+  <p class="note">Everything above this point avoids committing to a price or a cure fraction. This section cannot. A budget impact analysis needs a price, a number of patients, a speed of adoption and a window to look through, so every figure below is a cell conditional on the four inputs printed in its own row, and none of them is a forecast. The base case is a three-year window; one and five years bracket it. The ten- and thirty-year columns are not budget forecasts and are labelled as such. The eligible population is not sourced, so figures are shown against a ladder of round illustrative pool sizes, and alongside them per member per month on a stated one-million-member plan.</p>
+
+  <div class="scroller">
+    <table>
+      <caption>What is committed here</caption>
+      <tbody>
+        <tr><th scope="row">Price</th><td class="lab">This study's own frontier — P*(π, h, λ) at λ $100,000 — plus a separately labelled axis of observed cell-therapy list prices, $410,300, the median US list price of five approved products</td></tr>
+        <tr><th scope="row">Cure fraction</th><td class="lab">Swept, shown at four points. Net budget impact is exactly affine in π, so four points determine the line</td></tr>
+        <tr><th scope="row">Uptake</th><td class="lab">Shape locked, level swept — a linear ramp over five years to a swept terminal share of the eligible pool, as a single adoption wave. Nobody is treated after year five</td></tr>
+        <tr><th scope="row">Horizon</th><td class="lab">Three years base case, one to thirty reported. A stated analyst choice, not a swept parameter</td></tr>
+        <tr><th scope="row">Discounting</th><td class="lab">By horizon class — one to five years undiscounted, ten and thirty years at 3%. Both columns are produced at every horizon</td></tr>
+        <tr><th scope="row">Population</th><td class="lab">Illustrative round pool sizes, unsourced. Held fixed over the window; no incidence or turnover modelled</td></tr>
+        <tr><th scope="row">Comparator displaced</th><td class="lab">Infliximab biosimilar alone, as everywhere above — not the current treatment mix</td></tr>
+        <tr><th scope="row">Perspective</th><td class="lab">US commercial payer</td></tr>
+        <tr><th scope="row">Sign convention</th><td class="lab">Positive means the Treg world costs the payer more</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="note">The headline of this section is a progression, not a dollar figure. Write D(H) for the discounted cumulative current-care-world-minus-Treg-world cost per treated patient over H years, excluding the course price, at 3%. Then <strong>offset captured(H) = D(H) / D(lifetime)</strong>, where D(lifetime) is P*(π, h, λ = 0). Willingness to pay does not enter it — a budget holds no QALYs. Neither does the eligible population, which is why this is the one figure in the section that survives the population never being sourced.</p>
+
+  <div class="scroller">
+    <table>
+      <caption>Share of the lifetime cost offset captured by horizon · π = 0.50 · cap on / cap off</caption>
+      <thead><tr><th scope="col" style="text-align:left">Horizon</th><th scope="col">h = 0%</th><th scope="col">h = 5%</th><th scope="col">h = 10%</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">1 year</th><td class="num">5.6 / 5.5%</td><td class="num">11.3 / 11.1%</td><td class="num">17.5 / 17.3%</td></tr>
+        <tr><th scope="row">3 years — base case</th><td class="num">13.6 / 13.7%</td><td class="num">25.9 / 26.1%</td><td class="num">37.9 / 38.3%</td></tr>
+        <tr><th scope="row">5 years</th><td class="num">20.8 / 21.2%</td><td class="num">37.6 / 38.4%</td><td class="num">52.5 / 53.8%</td></tr>
+        <tr class="rule-above"><th scope="row">10 years — projection</th><td class="num">36.8 / 37.5%</td><td class="num">59.7 / 60.9%</td><td class="num">75.9 / 77.6%</td></tr>
+        <tr><th scope="row">30 years — projection</th><td class="num">79.7 / 79.9%</td><td class="num">94.3 / 94.5%</td><td class="num">98.8 / 98.9%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">A three-year window sees a quarter of the offset at h = 5% and an eighth of it at h = 0%. The rule above the ten-year row is where the reported object changes from a budget forecast to a cost-accrual projection, and with it the base-case discounting convention. The share is not guaranteed to rise with the horizon and is not bounded by 100%: a dip between two horizons would mean the intervening years contributed negative offset, which is the cap-clock or relapse window and is a finding rather than an artefact, and a cell above 100% would mean later years drag the lifetime denominator back down. Where D(lifetime) is not positive no share is reported — which is why the cure-fraction axis starts at 0.25, since at π = 0 the denominator is A(λ = 0), and A is negative in this model at every threshold.</p>
+  <p class="note">The 2-year maintenance cap moves the progression by at most 1.3 percentage points anywhere in this table. That was not expected: the cap decides whether the comparator's drug cost stops at two years, and it was the most likely candidate for a short-window result that fails to hold across its own bounding pair. It does hold. The offset is dominated by what a cured patient stops costing over a lifetime, and that is a slow quantity whichever bound is taken.</p>
+
+  <div class="scroller">
+    <table>
+      <caption>Net budget impact over the 3-year base case · undiscounted · cap on · h = 5% · 100,000 eligible patients</caption>
+      <thead><tr><th scope="col" style="text-align:left">Cure fraction</th><th scope="col">Price per course</th><th scope="col">u = 0.25</th><th scope="col">u = 1.00</th><th scope="col">PMPM at u = 0.25</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">π = 0.25</th><td class="num">$40,356</td><td class="num">$548.3M</td><td class="num">$2,193.3M</td><td class="num">$14.33</td></tr>
+        <tr><th scope="row">π = 0.50</th><td class="num">$83,367</td><td class="num">$1,125.6M</td><td class="num">$4,502.5M</td><td class="num">$29.38</td></tr>
+        <tr><th scope="row">π = 0.75</th><td class="num">$126,379</td><td class="num">$1,702.9M</td><td class="num">$6,811.8M</td><td class="num">$44.44</td></tr>
+        <tr><th scope="row">π = 1.00</th><td class="num">$169,390</td><td class="num">$2,280.3M</td><td class="num">$9,121.0M</td><td class="num">$59.50</td></tr>
+        <tr class="rule-above"><th scope="row">Analog list price, π = 0.50</th><td class="num neg">$410,300</td><td class="num neg">$5,888.2M</td><td class="num neg">$23,552.7M</td><td class="num neg">$157.79</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Each frontier row is priced at exactly what that cure fraction justifies, so the required cure fraction equals the row's own π by construction and every one of these adoptions is defensible on the frontier's terms. The analog row is not: $410,300 needs a cure fraction of 240.0% at these settings, so it is included to show what a CAR-T-shaped price would cost a payer, not as a price this analysis supports. The PMPM column restates the same cell per member of a one-million-member plan and must be read together with the population column — 100,000 eligible patients inside a one-million-member plan is a national-scale pool expressed per plan member, not an eligibility rate any plan would see. At a plan-scale pool of 1,000 patients the π = 0.50 cell is $11.3M over three years and $0.29 per member per month.</p>
+  <p class="note">Lengthening the window does not settle the question in one direction. At π = 0.50, h = 5%, cap on, u = 0.25 and 100,000 eligible, the cumulative net impact runs $399.1M at one year, $1,125.6M at three and $1,769.7M at five undiscounted; on the projection's own 3% convention it is $1,586.6M at ten years and $1,286.3M at thirty. It falls between those two because the years after the adoption wave return money to the payer. That non-monotonicity is why no monotonicity in the horizon is asserted anywhere in this analysis, at any relapse hazard including zero. Discounting does not have a fixed sign here either: over three years the discounted figure, $1,128.0M, is larger than the undiscounted one, because the offsets that discounting shrinks arrive later than the price it does not.</p>
+
+  <ul class="plain">
+    <li><strong>Every figure in this section rests on an unsourced eligible population.</strong> This is the same gap as the break-even population in the Limitations list below — one open question surfacing twice. The pool sizes here are round illustrative numbers chosen for legibility and estimate nothing.</li>
+    <li><strong>No uptake data exist for a first-in-class one-time therapy in this indication.</strong> The level is swept and the shape is bounded, and the five-year ramp period is an analyst's assumption rather than a finding.</li>
+    <li><strong>The ten- and thirty-year columns are not budget impact analyses.</strong> Payer guidance directs a one- to three-year window aligned to a budget cycle, and the base case here is three years. The longer columns exist because a short window applied to a one-time therapy measures the front-loading rather than the affordability. They are round exploratory endpoints and are not anchored to any figure this study publishes — no thirty-year price frontier exists to compare them against. Over such a window the eligible population, the treatment landscape and prices would all have moved, and none of that movement is modelled.</li>
+    <li><strong>Only one adoption wave is modelled.</strong> Nobody is treated after the five-year ramp, so the long columns describe one cohort's offset accruing rather than an ongoing programme. This is the smaller of the two readings at thirty years, and therefore the more favourable-looking one; it is chosen for coherence with a fixed pool, not for conservatism.</li>
+    <li><strong>The therapy is assumed to displace infliximab biosimilar alone, not the current treatment mix.</strong> Q5104 is the cheapest agent in the model, so the offset is the smallest available and the net budget impact the largest — the conservative direction for an affordability question.</li>
+    <li><strong>The population this section counts and the population the model's transitions describe are not the same population.</strong> The budget impact inherits the comparator's transition probabilities unchanged, and with them the mixed biologic experience of the source trials. The gap bites harder here than on the frontier: a payer's eligible population is defined by treatment line — who has failed what — and that is precisely the distinction UNITI-1 and UNITI-2 are pooled across. The denominator of every figure in this section is therefore defined on a stratum whose cost dynamics the numerator does not separately describe.</li>
+    <li><strong>Unit costs are ASP-based payment limits, not net-of-rebate commercial prices.</strong> A commercial payer's realised cost of the displaced comparator is lower than modelled, which makes the offset smaller and the net impact larger than shown.</li>
+  </ul>
 </section>
 
 <section>
@@ -1416,7 +1482,7 @@
     <li><strong>Manufacturing benchmark rests on two of three intended legs.</strong> A bottom-up build from dose and lot size is absent because the dose in cells/kg is not public — all three registered trials of this product report only "dose level 1/2/3".</li>
     <li><strong>The upper benchmark anchor is a different manufacturing model.</strong> Reported cost of goods is available only for autologous products, where one run serves one patient. It bounds what this product must not cost rather than estimating what it will, and rests on a single trade-press figure.</li>
     <li><strong>Starting age 35 is from the SONIC trial</strong>, not from the model this analysis rebuilds, whose own figure was not accessible. Background mortality drives most of the lifetime QALY total.</li>
-    <li><strong>Break-even eligible population not reportable.</strong> Converting per-patient EVPI into a justifiable trial budget needs an eligible-population estimate and a trial-cost benchmark, neither sourced.</li>
+    <li><strong>Break-even eligible population not reportable.</strong> Converting per-patient EVPI into a justifiable trial budget needs an eligible-population estimate and a trial-cost benchmark, neither sourced. The same missing figure is what puts the budget impact section on a ladder of illustrative pool sizes: one open question, surfacing in two places.</li>
     <li><strong>No distributional analysis and no patient or public involvement.</strong> Results are not disaggregated by socioeconomic group, race or geography, and no patient, clinician or payer was consulted in study design.</li>
   </ul>
 </section>
