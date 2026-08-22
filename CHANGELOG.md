@@ -2,6 +2,79 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-08-21 (W8: the budget impact analysis, aim A6)
+
+- A6 built on W7's cost streams: `R/budget_impact.R` (uptake path, eligible-pool
+  handling, cohort stacking, reporting-horizon truncation, net impact, PMPM),
+  `analysis/run_bia.R` (the scenario grid), and A6's two outputs --
+  `output/tables/budget_impact.csv` (23,520 rows) and
+  `output/tables/budget_impact_reconciliation.csv` (192 rows). Strictly
+  additive: no R/ file outside the new module changed, SPEC.md is untouched
+  since W7 committed v1.1, and no figure in A1-A5 moved.
+- New tests/testthat/test-budget-impact.R with T13-T16, plus the module-boundary
+  assertions SPEC.md's A6 amendment places here rather than in T12:
+  `R/budget_impact.R` supplies no default for `price_usd_per_course`, and no
+  function in it can reach an export of the manufacturing-benchmark module.
+  T12's own scope and file set are unchanged, and the BIA files are deliberately
+  not added to it -- T12 greps for raw-data basenames as well as function names,
+  and `analysis/run_bia.R` legitimately reads one of them.
+- **T13, the gate, holds exactly rather than merely within its $1 tolerance:**
+  worst |BIA route - frontier route| = 7.0e-10 dollars across all 48 lifetime
+  legs (2 cap settings x 4 cure fractions x 3 hazards x 2 price axes). Its
+  falsification fixture is trap 6 in the shape it actually takes -- truncating
+  the lifetime leg at the cohort's own 65-year horizon, which looks obviously
+  right and silently drops the Treg arm's tail, where a patient handed to
+  standard care near the end carries a course whose cycles continue past it.
+- Two real defects found and fixed while building the grid. (i)
+  `offset_captured_share()` was written as an `ifelse()` over a scalar
+  denominator; `ifelse()` returns a value shaped like its TEST, so the whole
+  progression collapsed to its first year and that one number was recycled
+  across every horizon -- a flat progression that reads as a finding. Pinned by
+  a length assertion. (ii) `pi_at_or_above_required` compared bit for bit, and
+  on the frontier price axis the required fraction IS the row's own pi by
+  construction, so exact-equality cells reported FALSE at whichever grid points
+  landed a unit in the last place low. Now compared with a tolerance.
+- **Deviation from the plan, recorded because it contradicts a stated trap.**
+  The plan's W8 trap 5 says to truncate at cycle
+  `induction_cycles + round(H * cycles_per_year)`. That index is not the BIA's
+  boundary and using it would reintroduce the semantic mismatch SPEC.md section
+  2a exists to prevent: the reporting horizon is calendar-exact from t = 0,
+  whereas that index reproduces the `horizon_years` ARGUMENT's own clock, which
+  counts maintenance cycles only. T18's own wording in SPEC.md v1.1 already says
+  so in terms ("not the calendar-exact reporting boundary"). The streams are
+  indexed from t = 0 with induction first, so the calendar index is
+  `round(H * cycles_per_year)`; the Treg arm additionally has no induction
+  cycles at its head at all, so no single offset could serve both worlds.
+  Truncation goes through `cost_stream_usd_per_cycle_to_usd_per_year()` and
+  keeps the first H years.
+- Two further, smaller departures from the plan: the 40-year leg and the
+  lifetime leg carry horizon totals in `budget_impact_reconciliation.csv` rather
+  than year rows in `budget_impact.csv` (the lifetime leg is never reported as a
+  budget impact, and 40 years adds no finding); and the illustrative pool ladder
+  is 1e3/1e4/1e5 rather than 1e4/5e4/1e5, so that the PMPM column -- stated on a
+  1,000,000-member plan -- has a plan-scale entry to be read at as well as a
+  national-scale one.
+- New readout section, "Budget impact -- what a payer pays, and when", led by
+  the offset-capture progression rather than by any dollar figure.
+  `analysis/verify_readout.R` extended, and the new checks are SCOPED to the
+  substring between that section's own `<h2>` and the next `</section>` --
+  whole-document matching is a false pass waiting to happen for thirty two-digit
+  percentages, and "24.0" already occurs elsewhere in the file. Verified that
+  the scope is 11,127 of 104,189 characters and that a single altered digit is
+  caught.
+- Findings. The offset-capture progression is the headline and it does not
+  depend on the eligible population: at pi = 0.50 a three-year window captures
+  25.9% of the lifetime cost offset at h = 5% and 13.6% at h = 0%, reaching
+  94.3% and 79.7% only at thirty years. The 2-year maintenance cap moves the
+  progression by at most 1.3 percentage points anywhere in that table -- the
+  plan expected it to be first-order at the short end and it is not, because the
+  offset is dominated by what a cured patient stops costing over a lifetime.
+  Cumulative net budget impact is non-monotone in the horizon (at the central
+  cell, $1,586.6M at ten years falling to $1,286.3M at thirty), and discounting
+  has no fixed sign on the net series (the three-year discounted figure exceeds
+  the undiscounted one). No monotonicity is asserted anywhere, at any hazard.
+- Full suite green, 0 failures, 0 skips. verify_readout.R: all figures match.
+
 ## 2026-08-21 (W7: SPEC v1.1 amendment, per-cycle cost streams)
 
 - Adds a budget impact analysis (BIA) as aim A6, alongside -- not replacing --
