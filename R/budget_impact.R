@@ -173,6 +173,47 @@ current_care_expenditure_usd_per_year <- function(per_patient_cost_usd_per_year,
     newly_treated_patients, reporting_horizon_years)
 }
 
+#' The same two world expenditures on the undiscounted leg's convention (L11).
+#'
+#' These exist because the convention is a property of the WHOLE computation,
+#' not of the cost stream handed to it. `stacked_cohort_expenditure_usd_per_
+#' year()` discounts cohort `k`'s whole contribution by the factor at `k - 1`
+#' years, read from the rate in force, so a stream that is itself undiscounted
+#' still acquires a 3% cohort-placement factor unless the STACK runs at a zero
+#' rate too. A caller that re-runs the trace at a zero rate and then stacks at
+#' the ambient rate produces a leg that is undiscounted within each cohort and
+#' discounted across them -- an accounting that corresponds to no convention,
+#' and one that is invisible at a single cohort because the first cohort's
+#' factor is 1 at every rate.
+#'
+#' Naming them here rather than leaving the option juggling to each call site
+#' is the same choice `standard_care_undiscounted_cost_stream_grid()` makes for
+#' the same option: the contract stated in `stacked_cohort_expenditure_usd_per_
+#' year()`'s own docstring becomes a function that satisfies it, and the
+#' property that the result does not depend on the rate in force becomes
+#' testable. The mechanism is the `disc-0` idiom `analysis/run_scenarios.R`
+#' uses, set and restored the same way.
+treg_world_undiscounted_expenditure_usd_per_year <- function(price_usd_per_course,
+                                                              per_patient_cost_usd_per_year,
+                                                              newly_treated_patients,
+                                                              reporting_horizon_years) {
+  old <- getOption("treg_value.discount_rate")
+  options(treg_value.discount_rate = 0)
+  on.exit(options(treg_value.discount_rate = old), add = TRUE)
+  treg_world_expenditure_usd_per_year(price_usd_per_course, per_patient_cost_usd_per_year,
+    newly_treated_patients, reporting_horizon_years)
+}
+
+current_care_undiscounted_expenditure_usd_per_year <- function(per_patient_cost_usd_per_year,
+                                                                newly_treated_patients,
+                                                                reporting_horizon_years) {
+  old <- getOption("treg_value.discount_rate")
+  options(treg_value.discount_rate = 0)
+  on.exit(options(treg_value.discount_rate = old), add = TRUE)
+  current_care_expenditure_usd_per_year(per_patient_cost_usd_per_year,
+    newly_treated_patients, reporting_horizon_years)
+}
+
 #' Net budget impact by year. Positive when the Treg world costs the payer more
 #' (SPEC.md section 2a, sign convention).
 #'

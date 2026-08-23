@@ -683,3 +683,73 @@ amendment branch, not a defect — but the exemption never expires, so **G6 will
 never again assert that `budget_impact.csv` exists.** The gate for the session
 that builds A6 is T13 passing and `budget_impact_reconciliation.csv` existing,
 not a green G6.
+
+## 2026-08-23 — A6's undiscounted leg was discounted across adoption cohorts
+
+**Signed off:** Stone (defect found while building an unrelated aim, verified
+against `main` and corrected on its own branch)
+**Supersedes:** every `discounted = FALSE` row of
+`output/tables/budget_impact.csv` at a reporting horizon of three years or
+more, as first written; the budget-impact section's 3-year base-case table in
+the results readout; the readout's horizon-path sentence; and the readout's
+stated conclusion about the direction in which discounting moves the net.
+
+**Change:** `stacked_cohort_expenditure_usd_per_year()` brings adoption cohort
+`k` to t = 0 with `discount_factor_years_to_discount_factor(k - 1)`, which
+reads the rate in force rather than taking it as an argument. Its own docstring
+states the contract that follows: the undiscounted leg is produced by running
+the whole computation at a zero rate. `analysis/run_bia.R` honoured that
+contract for the per-patient TRACES — `treg_undiscounted` is built inside
+`with_zero_discounting()`, and the comparator's undiscounted stream comes from
+its own zero-rate leg — but not for the STACK, which it called at the ambient
+3%. The undiscounted leg was therefore undiscounted within each cohort and
+discounted between them, an accounting that corresponds to no convention this
+study states. The two world stackers now have named undiscounted counterparts,
+`treg_world_undiscounted_expenditure_usd_per_year()` and
+`current_care_undiscounted_expenditure_usd_per_year()`, on the precedent of
+`standard_care_undiscounted_cost_stream_grid()`, and `analysis/run_bia.R`
+carries the matching pair alongside each leg's streams.
+
+**Effect:** confined entirely to undiscounted rows at horizons that reach a
+second adoption cohort. No discounted row moves — all 11,760 are bit-identical
+after regeneration — and no 1-year row moves in either leg, because the first
+cohort sits at `k - 1 = 0` and takes a factor of 1 at every rate. At the
+readout's central cell (cap on, h = 5%, π = 0.50, frontier price, u = 0.25,
+100,000 eligible) the cumulative net budget impact rises from $1,125,628,703 to
+$1,159,769,592 at three years (+$34.1M, +3.0%) and from $1,769,715,050 to
+$1,879,092,360 at five (+$109.4M, +6.2%); the 1-year figure is unchanged at
+$399,147,209. Every cell of the 3-year base-case table moves by between +2.98%
+and +3.03%; across every undiscounted final-year row at three years or more the
+movement spans +2.98% to +6.28%. The offset-capture progression does not move
+at all, being defined at 3% on both legs. The defect was anti-conservative for an
+affordability question: it understated what a payer would nominally pay.
+
+**Consequence for the reported conclusion, recorded because it is not merely a
+cell change.** The readout said that over three years the discounted figure was
+the larger of the two, "because the offsets that discounting shrinks arrive
+later than the price it does not." Corrected, the three-year ordering is the
+other way round — $1,128.0M discounted against $1,159.8M undiscounted — because
+the term that dominates over that stretch is the discounting of each later
+cohort's whole contribution back to t = 0, which the nominal leg does not apply
+at all. The broader claim the sentence was making survives and is in fact
+sharpened: discounting still has no fixed sign here, and now changes sign
+inside a single row, the discounted figure being larger at one year and at
+thirty and smaller at three, five and ten. That sentence is rewritten along
+with the figures.
+
+**`budget_impact_reconciliation.csv` is unaffected, and the reason is the
+defect's own shape.** The reconciliation legs are one cohort of one patient
+adopting at t = 0, so `k - 1 = 0` and the cohort factor is 1 whatever the rate;
+the file regenerates byte-identical and T13 still closes to 7.0e-10 dollars
+over all 48 lifetime legs. This is why the study's own gate could not see the
+defect: T13 is stated on the single-patient fixture, which is precisely the
+fixture in which a cohort-placement error is invisible.
+
+**Reason:** a contract stated in a docstring and honoured at two call sites out
+of three. Recorded here rather than silently fixed because it invalidates
+already-reported figures and an already-stated conclusion. Covered by a
+property test in `tests/testthat/test-budget-impact.R` asserting that the
+undiscounted world expenditures do not depend on the rate in force, that they
+differ from the discounted convention once a second cohort adopts, and that the
+two coincide at the single-cohort fixture; the test fails against the previous
+implementation.

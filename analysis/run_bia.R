@@ -172,11 +172,24 @@ for (cap_on in CAPS) {
       lifetime_offset <- price_star_usd_per_course(pi_cure_value, h, 0, comparator, grid,
         INDUCTION_WINDOW_WEEKS, cap_on)
 
+      # Each leg carries the two world stackers that match its own convention
+      # alongside its streams, because the convention is a property of the
+      # whole computation and not only of the stream. The cohort stacker
+      # discounts cohort k's contribution by the factor at k - 1 years, read
+      # from the rate in force, so an undiscounted stream stacked at the
+      # ambient rate would still be discounted ACROSS cohorts -- undiscounted
+      # within each cohort and discounted between them, which is no convention
+      # at all. Naming the pair here keeps the leg's stream and the rate its
+      # stack runs at in one place, where they cannot drift apart.
       streams <- list(
         list(discounted = TRUE, treg = treg$discounted_cost_stream_usd,
-          comparator = comparator$discounted_cost_stream_usd),
+          comparator = comparator$discounted_cost_stream_usd,
+          treg_world = treg_world_expenditure_usd_per_year,
+          current_care = current_care_expenditure_usd_per_year),
         list(discounted = FALSE, treg = treg_undiscounted$discounted_cost_stream_usd,
-          comparator = comparator_undiscounted_stream)
+          comparator = comparator_undiscounted_stream,
+          treg_world = treg_world_undiscounted_expenditure_usd_per_year,
+          current_care = current_care_undiscounted_expenditure_usd_per_year)
       )
 
       prices <- list(
@@ -229,8 +242,8 @@ for (cap_on in CAPS) {
               newly <- uptake_newly_treated_patients(sched$n, sched$u)
               newly_in_window <- c(newly, numeric(max(hz$years - length(newly), 0L)))[seq_len(hz$years)]
 
-              treg_world <- treg_world_expenditure_usd_per_year(pr$price, treg_annual, newly, hz$years)
-              current_care <- current_care_expenditure_usd_per_year(comp_annual, newly, hz$years)
+              treg_world <- st$treg_world(pr$price, treg_annual, newly, hz$years)
+              current_care <- st$current_care(comp_annual, newly, hz$years)
               net <- net_budget_impact_usd_per_year(treg_world, current_care)
 
               rows[[length(rows) + 1]] <- data.frame(

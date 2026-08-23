@@ -318,6 +318,65 @@ test_that("trap 2: earlier cohorts keep spending in later years, so the stack ov
   expect_gt(stacked[10], 0)
 })
 
+test_that("the undiscounted leg is undiscounted ACROSS cohorts too: its world expenditures do not depend on the rate in force", {
+  # The defect this asserts against: the cohort stacker discounts cohort k's
+  # whole contribution by the factor at k - 1 years, read from the rate in
+  # force, so a leg whose per-patient stream was re-run at a zero rate is
+  # still discounted BETWEEN cohorts unless the stack runs at a zero rate as
+  # well. That leg is undiscounted within each cohort and discounted across
+  # them, which corresponds to no convention. The property is invariance: an
+  # undiscounted figure cannot depend on a rate it does not use.
+  at_rate <- function(rate, expr) {
+    old <- getOption("treg_value.discount_rate")
+    options(treg_value.discount_rate = rate)
+    on.exit(options(treg_value.discount_rate = old), add = TRUE)
+    force(expr)
+  }
+  price <- 5e4
+  per_patient <- rep(1e3, 10)
+  horizon <- BIA_UPTAKE_RAMP_PERIOD_YEARS + 2
+  newly <- uptake_newly_treated_patients(1e4, 1) # a full ramp: several cohorts
+  expect_gt(length(newly), 1) # the property is empty at one cohort
+
+  reference_treg <- treg_world_undiscounted_expenditure_usd_per_year(price, per_patient, newly, horizon)
+  reference_cc <- current_care_undiscounted_expenditure_usd_per_year(per_patient, newly, horizon)
+  for (rate in list(NULL, 0, DISCOUNT_RATE_PER_YEAR, 0.07, 0.15)) {
+    lab <- sprintf("rate in force = %s", if (is.null(rate)) "unset" else rate)
+    expect_equal(at_rate(rate,
+      treg_world_undiscounted_expenditure_usd_per_year(price, per_patient, newly, horizon)),
+      reference_treg, tolerance = 1e-9, label = lab)
+    expect_equal(at_rate(rate,
+      current_care_undiscounted_expenditure_usd_per_year(per_patient, newly, horizon)),
+      reference_cc, tolerance = 1e-9, label = lab)
+  }
+
+  # Non-vacuity, in both directions. A wrapper that did nothing at all would
+  # satisfy the invariance above only if the ambient rate were zero, so the
+  # discounted convention must genuinely differ here -- and it differs BECAUSE
+  # of the cohort placement, with an identical per-patient stream on both sides.
+  discounted_treg <- at_rate(DISCOUNT_RATE_PER_YEAR,
+    treg_world_expenditure_usd_per_year(price, per_patient, newly, horizon))
+  discounted_cc <- at_rate(DISCOUNT_RATE_PER_YEAR,
+    current_care_expenditure_usd_per_year(per_patient, newly, horizon))
+  expect_true(sum(discounted_treg) < sum(reference_treg) - 1)
+  expect_true(sum(discounted_cc) < sum(reference_cc) - 1)
+  # Cohort 1 lands at k - 1 = 0, whose factor is 1 at every rate, so the two
+  # conventions agree in the first year and separate only once a second cohort
+  # adopts. This is exactly why a single-patient, single-cohort reconciliation
+  # leg cannot see the defect.
+  expect_equal(discounted_cc[1], reference_cc[1], tolerance = 1e-9)
+  expect_true(discounted_cc[2] < reference_cc[2] - 1e-9)
+
+  # The same statement at the fixture the reconciliation legs use: one cohort
+  # of one patient, where the two conventions must coincide identically.
+  for (rate in list(0, DISCOUNT_RATE_PER_YEAR, 0.15)) {
+    expect_equal(
+      at_rate(rate, current_care_expenditure_usd_per_year(per_patient, ONE_PATIENT, horizon)),
+      at_rate(rate, current_care_undiscounted_expenditure_usd_per_year(per_patient, ONE_PATIENT, horizon)),
+      tolerance = 1e-9)
+  }
+})
+
 test_that("the reporting horizon is calendar-exact from t = 0 and truncates a prefix of a lifetime stream", {
   # SPEC.md section 2a: the BIA's boundary is calendar time, NOT the
   # `horizon_years` argument's clock, which counts maintenance cycles only.
