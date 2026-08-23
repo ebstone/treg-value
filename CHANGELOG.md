@@ -2,6 +2,49 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-08-23 (A6 defect: the undiscounted leg was discounted across cohorts)
+
+- `analysis/run_bia.R` re-ran each per-patient TRACE at a zero rate for the
+  undiscounted leg but then STACKED the adoption cohorts at the ambient 3%.
+  `stacked_cohort_expenditure_usd_per_year()` brings cohort `k` to t = 0 with
+  `discount_factor_years_to_discount_factor(k - 1)`, read from the rate in
+  force, and its docstring states the contract that the undiscounted leg runs
+  the whole computation at a zero rate. Two of the three call sites honoured it.
+  The leg was undiscounted within each cohort and discounted between them.
+- Fixed with named undiscounted counterparts in `R/budget_impact.R` --
+  `treg_world_undiscounted_expenditure_usd_per_year()` and
+  `current_care_undiscounted_expenditure_usd_per_year()` -- on the precedent of
+  `standard_care_undiscounted_cost_stream_grid()`, which does the same thing
+  with the same option for the same reason. `analysis/run_bia.R`'s `streams`
+  list now carries each leg's stacker pair beside its streams, so a leg's
+  convention and the rate its stack runs at cannot drift apart.
+- **Effect on reported figures.** Confined to undiscounted rows at horizons
+  reaching a second cohort. All 11,760 discounted rows are bit-identical after
+  regeneration, and no 1-year row moves in either leg (cohort 1 sits at
+  `k - 1 = 0`, factor 1 at every rate). At the readout's central cell the
+  3-year cumulative net impact rises $1,125.6M -> $1,159.8M (+3.0%) and the
+  5-year $1,769.7M -> $1,879.1M (+6.2%); 1-year unchanged at $399.1M. The
+  3-year base-case table moves +2.98% to +3.03% per cell. `offset_captured_
+  share` does not move, being defined at 3% on both legs.
+  `budget_impact_reconciliation.csv` regenerates BYTE-IDENTICAL and T13 still
+  closes to 7.0e-10 over 48 lifetime legs -- its legs are one cohort of one
+  patient, the fixture in which a cohort-placement error cannot appear, which
+  is why the study's own gate could not catch this.
+- The readout's stated conclusion on the direction of discounting flipped at
+  three years and is rewritten: discounting still has no fixed sign, but the
+  discounted figure is now the larger at one year and at thirty and the smaller
+  at three, five and ten. `docs/results_readout.html`'s 3-year base-case table,
+  plan-scale note and horizon-path sentence updated; `analysis/verify_readout.R`
+  passes against the corrected text. Recorded in `SPEC_AMENDMENTS.md` because it
+  invalidates reported figures and a stated conclusion.
+- Covered by a new property test in `tests/testthat/test-budget-impact.R`:
+  the undiscounted world expenditures do not depend on the rate in force, they
+  differ from the discounted convention once a second cohort adopts, the two
+  agree in year 1 and separate in year 2, and they coincide identically at the
+  single-cohort reconciliation fixture. Verified it fails against the previous
+  implementation (9 failures) and passes after. SPEC.md is untouched, so its
+  hash is unchanged and re-stamping only advances the commit line.
+
 ## 2026-08-21 (W8: the budget impact analysis, aim A6)
 
 - A6 built on W7's cost streams: `R/budget_impact.R` (uptake path, eligible-pool
