@@ -1,5 +1,5 @@
-# commit: 071ee670109eecee3fde0862813132b404b6426a
-# spec_sha256: 72c494e5c8fb78b58130275e379db2640b88dace9f0ae67dd922f8e14fca2026
+# commit: 5f2c9eaae1613ce6716eb0f8780ee028e0cae07e
+# spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
 "therapy","induction_window_weeks","maintenance_cap","horizon","horizon_years","discounted_cost_usd","discounted_qaly","undiscounted_life_years","dose_cycles_charged"
 "IFX",4,"on","lifetime",65,138194.281617571,17.510086584584,45.1962591542042,13
 "IFX",4,"off","lifetime",65,139988.92896085,17.5494074189785,45.1962591542043,422

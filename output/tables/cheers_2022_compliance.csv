@@ -1,5 +1,5 @@
-# commit: 071ee670109eecee3fde0862813132b404b6426a
-# spec_sha256: 72c494e5c8fb78b58130275e379db2640b88dace9f0ae67dd922f8e14fca2026
+# commit: 5f2c9eaae1613ce6716eb0f8780ee028e0cae07e
+# spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
 "item","section","topic","recommendation","status","evidence","substantive_limitation"
 1,"Title","Title","Identify the study as an economic evaluation and specify the interventions being compared.","manuscript","Manuscript title.",FALSE
 2,"Abstract","Abstract","Provide a structured summary that highlights context, key methods, results, and alternative analyses.","manuscript","Manuscript abstract.",FALSE

@@ -1,5 +1,5 @@
-# commit: 071ee670109eecee3fde0862813132b404b6426a
-# spec_sha256: 72c494e5c8fb78b58130275e379db2640b88dace9f0ae67dd922f8e14fca2026
+# commit: 5f2c9eaae1613ce6716eb0f8780ee028e0cae07e
+# spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
 "analog","readout_weeks_from_treatment","years_from_landmark","comparable","drug_free_remission_share","h_per_year","pi_cure_assessed_at_landmark"
 "PolTREG PTG-007",104,1.76923076923077,TRUE,0.5,0,0.5
 "Ovasave/CATS1",8,-0.0769230769230769,FALSE,NA,0,0.5

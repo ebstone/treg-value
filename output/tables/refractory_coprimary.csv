@@ -1,5 +1,5 @@
-# commit: 071ee670109eecee3fde0862813132b404b6426a
-# spec_sha256: 72c494e5c8fb78b58130275e379db2640b88dace9f0ae67dd922f8e14fca2026
+# commit: 5f2c9eaae1613ce6716eb0f8780ee028e0cae07e
+# spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
 "population","induction_window_weeks","maintenance_cap","lambda_usd_per_qaly","h_per_year","comparator_discounted_qaly","comparator_discounted_cost_usd","intercept_a_usd_per_course","value_of_one_cure_b_usd"
 "naive",4,"on",50000,0,17.510086584584,138194.281617571,-1728.78024494543,239293.094281709
 "naive",4,"on",50000,0.05,17.510086584584,138194.281617571,-1728.78024494543,117152.212567037

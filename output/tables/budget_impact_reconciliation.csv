@@ -1,5 +1,5 @@
-# commit: 76971d0c3520ae11e68c371392440aafcb7a37b2
-# spec_sha256: 72c494e5c8fb78b58130275e379db2640b88dace9f0ae67dd922f8e14fca2026
+# commit: 5f2c9eaae1613ce6716eb0f8780ee028e0cae07e
+# spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
 "maintenance_cap","induction_window_weeks","pi_cure","h_per_year","price_source","price_usd_per_course","reporting_horizon","reporting_horizon_years","bia_route_usd","frontier_route_usd","agreement_usd"
 "on",8,0.25,0,"frontier_P_star",85198.3470637985,"3yr",3,81187.6827880909,NA,NA
 "on",8,0.25,0,"frontier_P_star",85198.3470637985,"30yr",30,59936.1361526801,NA,NA

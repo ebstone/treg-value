@@ -21,6 +21,17 @@ One line per session: what changed, and which tests now cover it.
   `run_psa.R` produces and which is not committed to the tree. No code changed
   in this commit and no figure moves.
 
+## 2026-08-23 (W9, commit B: regeneration under the v1.2 spec hash)
+
+- Full pipeline re-run in order -- `run_psa.R` (1,000 draws, ~24 min),
+  `run_aims.R`, `run_price_frontier.R`, `run_manufacturing_benchmark.R`,
+  `run_scenarios.R`, `run_infliximab_trace.R`, `run_refractory_coprimary.R`,
+  `run_bia.R`, `run_cheers_assessment.R` -- so all 18 committed output CSVs
+  carry the v1.2 spec hash. **Every CSV BODY is byte-identical to commit A's;
+  only the two stamp lines changed**, and both of them do, since
+  `stamp_output()` writes the commit hash as well as the spec hash. No reported
+  figure moved. G5 green again; full suite green.
+
 ## 2026-08-23 (A6 defect: the undiscounted leg was discounted across cohorts)
 
 - `analysis/run_bia.R` re-ran each per-patient TRACE at a zero rate for the
