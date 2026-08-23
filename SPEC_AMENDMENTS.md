@@ -753,3 +753,265 @@ undiscounted world expenditures do not depend on the rate in force, that they
 differ from the discounted convention once a second cohort adopts, and that the
 two coincide at the single-cohort fixture; the test fails against the previous
 implementation.
+
+---
+
+## 2026-08-23 — Alternative payment arrangements added as aim A7 (SPEC.md v1.2)
+
+**Signed off:** Stone
+**Supersedes:** SPEC.md v1.1 §2a (heading, opening sentence and four added
+rows); §5's scenario table; §6's six-aim list; §8's parameter register; §9's
+open items; §10's eighteen acceptance criteria. SPEC.md is bumped to **v1.2**.
+v1.1 was the first additive scope expansion; this is the second, and nothing in
+§1 or §2 is superseded: the frontier `P*(π, h, λ) = A(λ) + π·B(h, λ)` remains
+the study's primary, prior-free result and is unchanged, as is §2a's budget
+impact frame, which A7's budget leg inherits whole.
+
+**Change:** alternative payment arrangements are added as aim A7, alongside —
+not in place of — the budget impact analysis. New locked decisions L17–L21. New
+scenarios S10 and S11. One new open item, O16. New acceptance criteria T19–T21.
+No new analytic frame section: A7's budget leg is governed by §2a and its
+per-cure frontier by §2, and §2a's heading and opening sentence are widened to
+say so rather than a §2b being written.
+
+**A7 is not a second budget impact analysis and must not be read as one.** Its
+budget leg is A6's budget impact analysis under different payment terms, and it
+inherits in full every A6 limitation: the unsourced eligible population (O11),
+the unsourced uptake trajectory (O12), the single adoption wave (L15), the
+fixed pool over the extended projection (L16), the ASP-versus-net-commercial-price
+gap (O14), and the mixed-population limitation the A6 amendment restated for
+A6's own reasons. **A7 resolves none of them.** The readout states this in the
+section itself rather than leaving it to be inherited.
+
+**What A7 changes, and what it does not, stated in that order because the
+second is larger.** No model quantity changes. `A`, `B`, `P*` and every A1–A5
+figure are untouched; the two-fate split, the relapse mechanic and the
+per-cycle cost streams are untouched. **A6's headline,
+`offset_captured(H) = D(H)/D(lifetime)`, does not move by one basis point** —
+§2a defines `D(H)` as excluding the course price, and a payment arrangement
+changes only the price leg. What changes is the timing and the conditioning of
+that leg, and therefore what share of the price falls inside a reporting
+window.
+
+**The installment leg is a re-timing, not an analysis, and it is reported as
+such (L17).** Payments are placed by the cohort stacker on each cohort's own
+clock: cohort `k`'s payment `j` lands in calendar year `k + j − 1`, so the
+schedule seen inside a window of length `H` is truncated at `H − k + 1`
+payments and differs cohort by cohort. The lump-minus-installment difference is
+
+    Δ(H) = price · Σ_{k ≤ min(K,H)} treated_k · v_a^{k−1} · [1 − (1/a_c) · Σ_{j ≤ min(N, H−k+1)} v_a^{j−1}]
+
+with `a_c` built from the CONTRACT's financing rate and `v_a` from the analysis
+rate in force. **The bracketed factor — equivalently the difference expressed
+as a SHARE OF THE PRICE — contains no term from the disease model**: not the
+cure fraction, not the relapse hazard, not the maintenance cap, not the
+willingness-to-pay threshold, not a cost stream. It is a function of the
+schedule, the two rates, the uptake vector and the horizon alone, and every
+input to it is already published in `budget_impact.csv`. **The difference in
+dollars is not invariant, because it is proportional to the price and A7's
+first price axis is `P*(π, h, λ)`, which varies across the reported cells by a
+factor of fourteen; the dollar figure is constant only on the observed-analog
+axis, where the price is a single number.** T19(c) asserts the invariance as a
+share of the price on both axes, and the dollar identity on the analog axis
+only. **The difference is printed because a reader should not have to do the
+arithmetic, not because it is a finding.**
+
+**On the uptake ramp an installment reduces the reported impact at every
+horizon the budget impact analysis proper reports, on both discounting
+columns.** Because the last cohort adopts in year 5 and its schedule runs to
+year `5 + N − 1`, the whole schedule is inside the window for every cohort only
+from `H = ramp + N − 1` — nine years at the five-year base case, where the
+discounted column returns to exactly the lump-sum figure and the undiscounted
+column reaches its ceiling of `N/a_c`. At one, three and five years the
+installment therefore always lowers the reported figure. **The undiscounted leg
+first exceeds the lump sum between the seventh and eighth year — the crossing
+and the full-inclusion horizon are two different dates and are not to be
+conflated** — so the first reported horizon at which the crossing is visible is
+ten years, and there only in the undiscounted column, which L11 makes a
+labelled sensitivity rather than the base case at those horizons. **The
+opposite reading — that the five-year figure rises — is a property of the
+single-cohort reconciliation fixture and of nothing on the reported grid**, and
+both are printed side by side for exactly that reason.
+
+**L11's two columns are what separate a re-timing from a price cut, and this is
+the clearest demonstration of it in the study.** Once the whole schedule is
+inside the window, a present-value-neutral installment leaves the discounted
+column unchanged to the cent and raises the undiscounted column by the
+financing charge, while an interest-free schedule leaves the undiscounted
+column unchanged and lowers the discounted column by an equivalent per-course
+discount. Each arrangement is invisible in one column and unmistakable in the
+other. An interest-free installment is not a payment arrangement but a
+manufacturer forgoing the time value of money, and is reported as its
+equivalent per-course discount.
+
+**The one genuinely new result on the installment side is an inversion of A6's
+own headline.** Under a schedule paying, in the patient's own year `m`,
+`price · (D(m) − D(m−1)) / D(lifetime)`, the cumulative net budget impact at
+every reported horizon is `(price / P*(π, h, λ = 0) − 1)` times the cumulative
+offset, and at `price = P*(π, h, λ = 0)` it is exactly zero at every horizon
+simultaneously — **and, because the schedule is proportional to the offset
+cohort by cohort, this holds over the whole cohort stack for any uptake
+vector**, which the equal-payment installment does not. **A6's offset-capture
+progression, read as a distribution over payment timing, is the schedule that
+makes a justified cure budget-neutral in every window.** That is T20 and it is
+A7's gate. **It is a reference schedule and not a contract proposal**: it
+depends on π and h, which nobody knows at contract time, and it presumes both
+parties accept this model. Four qualifications travel with it wherever it
+appears: it is defined on the discounted leg only, because
+`D(lifetime) = P*(π, h, λ = 0)` is a present value at t = 0; it requires
+`D(lifetime) > 0`, which fails at low cure fractions where the intercept
+dominates; the offset-capture progression is **not** asserted to be a
+cumulative distribution function — §2a and `offset_captured_share()` both
+decline to assert monotonicity, and the schedule's non-negativity is checked on
+the reported grid rather than assumed; and the schedule is multi-decade, with
+**between one and twenty-one per cent of the price still outstanding after
+thirty years — a median of about six per cent across the two hundred and forty
+discounted thirty-year scenario groups**, not the one per cent of the most
+favourable cell.
+
+**Outcomes-based payment is evaluated in expected-value cohort terms, and that
+is exact rather than an approximation (L18).** Payment enters the budget
+linearly in the individual outcome indicator, so no distribution over
+per-patient outcomes is required. **None is constructed, and no variance,
+budget-predictability or risk-reduction claim is made.** A binomial band around
+a cohort share would be roughly three orders of magnitude smaller than the
+epistemic uncertainty this study actually carries — π is swept across 101
+points, not sampled — and would report precision the study does not have. It
+would also require reading π as a per-patient probability rather than as a
+share of all treated patients, which is the move L2, guard 3 and T4 exist to
+prevent. **The risk-transfer question is answered by the sweep instead:** on the
+discounted lifetime leg the spread of net budget impact across `π ∈ [0,1]` per
+treated patient is `B(h, 0)` under a lump sum and exactly zero under a
+full-rebate contract priced at the rate T21 identifies. At the one-, three- and
+five-year horizons the spread is the corresponding range of `D(H)` and is
+smaller; the lifetime-leg qualifier is stated wherever the result is.
+
+**One time convention governs every conditional payment (L21).** A rebate
+triggered at observation point `T`, measured from the landmark, is settled at
+patient-time `T + 12/52` years from adoption, carries that date's discount
+factor, and lands in that calendar year — so cohort `k`'s rebate falls outside
+a reporting window whenever `k + T` exceeds it, and a one-year budget impact of
+a two-year-observation contract shows the entire price and none of the rebate.
+That is the mirror image of the offset-capture problem and is a finding rather
+than a defect. The convention is not a tidying choice: the twelve-week gap
+between adoption and the landmark is worth 0.68% at 3%, and this study has
+already been bitten by it once — `value_of_one_cure_usd()` records that a `B`
+discounted to the landmark rather than to t = 0 broke T2 by about $1,100 while
+leaving T1 and T3 untouched. The justified per-cure price follows from the
+convention and from L20's present-value test:
+
+    P*_cure(π, h, λ, T, ρ)  =  (A(λ) + π·B(h, λ)) / (1 − ρ·(1 − π·e^{−hT})·v^τ),   τ = T + 12/52
+
+which returns `P*` exactly at ρ = 0, is a ratio of two affine functions of π
+rather than a hyperbola, and is finite across the whole cure-fraction sweep
+including π = 0 — where a convention treating the rebate as coincident with the
+invoice would be singular. **Finite is not the same as well behaved, and this
+amendment does not claim it is:** the denominator lies in `[1 − ρv^τ, 1]` and is
+strictly positive, so the per-cure price carries the sign of `A(λ) + π·B(h, λ)`
+at every cure fraction and is negative below `π = −A(λ)/B(h, λ)`, exactly as
+`P*` itself is. **No positive price per cure is justified there**, and the
+readout reports that sign condition rather than the value at π = 0, which with
+a negative intercept is a large negative number. **Nor is the per-cure price
+monotone in the observation point or rising in the relapse hazard.** It falls in
+the hazard, because `B(h, λ)` falls with `h` far faster than the rebate
+denominator does, and at low hazards it falls in the observation point as well;
+it rises in the observation point only where `π·h·e^{−hT}` exceeds
+`ln(1.03)·(1 − π·e^{−hT})`. The readout prints the surface and asserts no
+direction on it. The separate and correct directional claim in this amendment
+is L19's, about the trigger's exclusion of background mortality raising the
+**expected payment**, which is a statement about expenditure at a given price
+and not about the justified price.
+
+**The unit, and its two denominators.** `_usd_per_cure` is added to
+`ALLOWED_UNIT_SUFFIXES`, which SPEC.md §1's own table has declared for `B`
+since v1.0 and which no identifier in the repository has ever carried. It
+applies to the full-rebate leg only: at a partial rebate the contract's
+headline figure is an invoice per treated patient and carries
+`_usd_per_course`, because a partial-rebate payment is neither per course nor
+per cure and naming it either would be the conflation guard 2 exists to catch.
+**At the landmark a success is a cure in L2's sense; at a later observation
+point a success is a patient still in drug-free remission then, a strictly
+smaller population.** Two denominators are therefore declared —
+`cured_patients_at_landmark` and `sustained_remitters_at_observation` — because
+this project's recorded failure mode is a share of a subset reported as though
+it were a share of the whole, and one suffix over two populations is that shape
+exactly. `_usd_per_cure` is **not** added to `DIMENSIONLESS_RATIO_SUFFIXES`;
+that is the reclassification defect `R/units.R` documents at length for
+`_usd_per_year`. **No existing identifier is renamed:** `value_of_one_cure_usd()`
+and `required_cure_fraction()`'s `slope_b_usd_per_course` keep their historical
+names, which are inconsistent with §1's unit table and are left that way
+deliberately — renaming the latter would combine a per-course and a per-cure
+argument in a function that is neither a named converter nor unit-suffixed,
+turning guard 2 red on correct code, and renaming the former would change a
+committed output column appearing in four committed CSVs and ten scripts and
+tests.
+
+**What the units guard does and does not cover here.** `unnamed_converters()`
+flags a function combining a per-course and a per-cure price only when that
+function is neither a named converter **nor itself named with a permitted unit
+suffix** — the third exit `R/units.R` documents on the reasoning that an
+undeclared return unit is what hides a conflation. A7's per-cure functions are
+unit-suffixed by house style and are therefore outside the guard's reach; the
+named converter `usd_per_course_to_usd_per_cure()` and the guard-3
+declarations, not guard 2, are what carry the denominator discipline on this
+leg. This is recorded because the alternative — asserting the guard catches
+what it does not — is how a guard stops being read.
+
+**Why A7 is an aim rather than columns on A6.** The installment figures are
+recoverable from `budget_impact.csv` by arithmetic, and on that leg alone this
+would be scenario S10 and nothing more. The outcomes-based leg is **not** so
+recoverable: the rebate settles in each cohort's own calendar year, so a
+reporting window can contain some cohorts' rebates and not others, and the
+aggregate is not any single effective price applied to the standard cohort
+stack. What does not fit inside A6 at all is the per-cure justified price: it
+has no time axis, no population, no uptake path and no reporting horizon; it is
+a ratio of two affine functions of the cure fraction where every published
+frontier figure is affine; and its unit is `usd_per_cure`, which §1's own table
+declares for `B` and which did not exist in `R/units.R` until this amendment.
+**The precedent is A2 and A3.** They are two solve-directions of one affine
+relation — A2 for the price, A3 for the cure fraction — and each holds its own
+aim, output file and acceptance criterion, because a decision-maker arrives
+with a different quantity in hand. A7 is a third solve-direction: price per
+durable cure, conditional on a contract structure. The budget-side arrangements
+are written into A7's own output file rather than added as columns to
+`budget_impact.csv`, whose schema is pinned by an existing test and whose
+published readout section would otherwise change meaning.
+
+**What A7 does not resolve.** No real-world payment arrangement for a one-time
+therapy is sourced (register item S-9). Two distinctions are recorded as the
+specific things that must be verified: whether an arrangement was *announced*
+or *executed*, which the secondary literature routinely blurs; and whether it
+was a rebate against an invoice, a deferred milestone payment, or a true
+annuity, which are three instruments with three different justified prices and
+one shared name. US regulatory constraints on these arrangements are unassessed
+(register item S-10); a study that models an arrangement US law obstructs is
+modelling a counterfactual, and the readout says which it is. **Both are
+blocking for the manuscript and neither is blocking for the code.** The
+financing rate appropriate to an installment is unsourced (O16); the base case
+is present-value-neutral at the study's own 3%, which is an analytic discount
+rate and not a cost of capital, and any other rate is reported as a labelled
+illustration whose size is a transfer between the two parties. **Whether a
+two-year drug-free-remission outcome is adjudicable from routine claims data is
+not assessed anywhere in this study**, and is recorded as a limitation rather
+than absorbed.
+
+**Effect on reported results: none.** No figure in A1–A6 changes. Nothing in
+`R/` outside `R/payment_arrangements.R` and `R/units.R` is touched, no engine
+work is authorised, and the Treg arm never learns that a contract exists —
+putting the rebate inside the arm would make `B` contract-dependent and would
+break T13, T14 and T17 at once. Existing outputs are regenerated so their spec
+hashes match v1.2; **that regeneration requires re-running the 1,000-draw
+probabilistic analysis first**, for the same reason the v1.1 amendment
+recorded, and until it is done every committed output is red on G5's
+stale-spec check. The specification commit and the regeneration commit are
+separate, and the first is red by construction.
+
+**G6's exemption for A7, recorded so it is not mistaken for coverage.** §6 now
+names A7 with an output file that does not exist, and `uncovered_aims()` clears
+it because this entry contains the string "A7". That is the sanctioned
+amendment branch, not a defect — but the exemption never expires, so **G6 will
+never again assert that `payment_arrangements.csv` exists.** The gate for the
+session that builds A7 is T19, T20 and T21 passing and
+`payment_arrangements_reconciliation.csv` existing, not a green G6. This is the
+identical trap A6's own amendment recorded, and it is recorded again because it
+is now structural rather than incidental.

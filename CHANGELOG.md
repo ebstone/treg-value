@@ -2,6 +2,25 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-08-23 (W9, commit A: SPEC.md v1.2 -- alternative payment arrangements as aim A7)
+
+- SPEC.md bumped to v1.2: section 2a's heading and opening sentence widened to
+  cover A7's budget leg, with four added rows (payment arrangement, outcome
+  observation, settlement timing, justification test); locked decisions L17-L21;
+  scenarios S10 and S11; aim A7 with `output/tables/payment_arrangements.csv`;
+  five section 8 register rows; open item O16; acceptance criteria T19-T21.
+  `SPEC_AMENDMENTS.md` entry and the `OPEN_QUESTIONS.md` O16 row are in this
+  same commit (G6, G7). Sourcing register items S-9 and S-10 added.
+- **This commit is red on purpose, on G5's stale-spec check
+  (`test-stamping.R`), for all 18 committed output CSVs.** That test recomputes
+  the SHA-256 of SPEC.md at test time and requires every CSV under `output/` to
+  carry it on header line 2; bumping SPEC.md changes the hash before any output
+  has been re-stamped against it. Clearing it is commit B -- a full pipeline
+  regeneration, which needs `analysis/run_psa.R` (1,000 draws) first, since
+  `analysis/run_aims.R` reads `output/tables/psa_summary_w6.csv`, which
+  `run_psa.R` produces and which is not committed to the tree. No code changed
+  in this commit and no figure moves.
+
 ## 2026-08-23 (A6 defect: the undiscounted leg was discounted across cohorts)
 
 - `analysis/run_bia.R` re-ran each per-patient TRACE at a zero rate for the

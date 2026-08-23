@@ -137,6 +137,31 @@ cycling in and out. That was a category error and is not carried forward.
 
 ---
 
+## S-9. Real-world instalment/annuity and outcomes-based payment arrangements for one-time cell and gene therapies
+
+**Status:** not sourced. **Blocking for the manuscript**, not for the code. Opened with A7 (SPEC.md v1.2, L17/L19).
+
+**How to close:** retrieve and verify the arrangements the secondary literature attributes to Zolgensma (instalment/pay-over-time option at 2019 US launch), Kymriah (outcomes-based arrangement with CMS, response at approximately one month), Luxturna (outcomes-based rebates; an instalment model discussed with CMS), Strimvelis (money-back guarantee on treatment failure), Zynteglo/beti-cel (proposed instalments over roughly five years with outcomes-based rebates), the CMS Cell and Gene Therapy Access Model, and the MIT NEWDIGS FoCUS precision-financing taxonomy. **Every one of those is offered here from memory and none is a verified citation.**
+
+**Record two distinctions per row, not one.**
+
+- **Proposed versus executed.** A great deal of writing on gene-therapy payment innovation describes arrangements that were *announced* and never operated. If A7's rationale says "these arrangements exist," and what exists is a set of press releases, the rationale is wrong in exactly the way S-8 warns about.
+- **Rebate (form R) versus deferred milestone (form M) versus true annuity.** These are three instruments with three different justified prices (L19, L21), and the secondary literature calls all three "outcomes-based" or "pay-over-time". A precedent retrieved without its structure cannot support L19's base case.
+
+**If the retrieved evidence is weaker than the paraphrase, L17's and L19's rationales are rewritten, not defended.**
+
+---
+
+## S-10. US regulatory and legal constraints on instalment and outcomes-based contracts
+
+**Status:** not sourced. Not blocking for the code; **blocking for any claim that these arrangements are available**, as distinct from conceivable. Opened with A7 (SPEC.md v1.2).
+
+**How to close:** retrieve and record the Medicaid best-price interaction; the federal anti-kickback statute as it bears on value-based arrangements; and the CMS value-based purchasing rule understood to permit multiple best prices. Confidence that each is a real and relevant constraint is moderate; confidence on status and detail is low, which is why the A7 amendment refers to "the constraints named in S-10" rather than naming the three.
+
+**Why this one matters.** A study that models an arrangement US law obstructs is modelling a counterfactual, and the readout should say which it is.
+
+---
+
 ## Rule
 
 A sidecar with `status: transcribed` and a recorded unresolved item is
