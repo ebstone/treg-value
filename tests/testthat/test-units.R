@@ -96,6 +96,61 @@ test_that("G2: the W7 suffixes added for the budget impact frame collide with no
   expect_length(unnamed_converters(counts), 0)
 })
 
+test_that("G2 fires: a per-course price combined with a per-cure price is flagged as an unnamed converter (W9 positive control)", {
+  # `_usd_per_cure` shares the numerator "usd" with `_usd_per_course`, so the
+  # pair is the same-numerator, different-denominator conflation this guard
+  # exists to police -- and the one SPEC.md L21 says has two populations under
+  # one suffix.
+  #
+  # THE FIXTURE'S NAME IS LOAD-BEARING. `unnamed_converters()` has a third exit:
+  # a function whose own name ends in a permitted unit suffix has declared what
+  # it returns and is never flagged. A fixture named `..._usd_per_cure()` would
+  # pass through that exit and prove nothing, so this one is named like
+  # `bad_combo` and `spend` above -- no return-unit suffix -- which is the only
+  # shape in which the check has content.
+  env <- new.env()
+  eval(quote(bad_cure_combo <- function(price_usd_per_course, per_cure_usd_per_cure) {
+    price_usd_per_course + per_cure_usd_per_cure
+  }), envir = env)
+  expect_length(unnamed_converters(env), 1)
+
+  # Named as a converter, the same combination is not flagged -- the guard asks
+  # for the conversion to be named, not for it never to happen.
+  named <- new.env()
+  eval(quote(usd_per_course_to_usd_per_cure <- function(price_usd_per_course, per_cure_usd_per_cure) {
+    price_usd_per_course + per_cure_usd_per_cure
+  }), envir = named)
+  expect_length(unnamed_converters(named), 0)
+
+  # And the reach of the guard, stated rather than assumed: a function that
+  # declares its own return unit escapes even without the converter naming.
+  # A7's per-cure functions are named this way by house style, which is why
+  # SPEC_AMENDMENTS.md records that guard 3's declarations and
+  # test-payment-arrangements.R -- not guard 2 -- carry the discipline there.
+  self_declared <- new.env()
+  eval(quote(some_price_usd_per_cure <- function(price_usd_per_course, other_usd_per_cure) {
+    price_usd_per_course + other_usd_per_cure
+  }), envir = self_declared)
+  expect_length(unnamed_converters(self_declared), 0)
+})
+
+test_that("G2: _usd_per_cure is a money suffix, is not a dimensionless ratio, and steals no existing match (W9)", {
+  expect_true("_usd_per_cure" %in% ALLOWED_UNIT_SUFFIXES)
+  # The reclassification temptation, refused: a price per cure is a quantity of
+  # money in exactly the sense a price per course is.
+  expect_false("_usd_per_cure" %in% DIMENSIONLESS_RATIO_SUFFIXES)
+  expect_equal(suffix_numerator("_usd_per_cure"), "usd")
+  # No ordering constraint, unlike `_usd_per_year` above: nothing else in the
+  # list end-matches a name ending `_usd_per_cure`, and `_usd_per_cure`
+  # end-matches no name that already ends in another suffix. Placement beside
+  # `_usd_per_course` is legibility, and this is the assertion that says so.
+  ends_with_cure <- vapply(ALLOWED_UNIT_SUFFIXES,
+    function(s) endsWith("x_usd_per_cure", s), logical(1))
+  expect_equal(sum(ends_with_cure), 1)
+  expect_false(endsWith("x_usd_per_course", "_usd_per_cure"))
+  expect_false(endsWith("x_usd_per_cure", "_usd_per_course"))
+})
+
 test_that("suffix_numerator() strips the denominator", {
   expect_equal(suffix_numerator(c("_usd_per_dose", "_usd_per_course", "_usd")), c("usd", "usd", "usd"))
   expect_equal(suffix_numerator(c("_weeks", "_age_years")), c("weeks", "age_years"))

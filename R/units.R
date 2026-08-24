@@ -5,6 +5,22 @@
 
 ALLOWED_UNIT_SUFFIXES <- c(
   "_usd_per_course",
+  # Added in W9 (aim A7). SPEC.md section 1's own table has declared
+  # `usd_per_cure` as `B`'s unit since v1.0, and no identifier in this
+  # repository had ever carried it as a suffix; A7's full-rebate leg is the
+  # first thing that needs it, because at a full rebate the payer's nominal
+  # outlay is one invoice per SUCCESS rather than one per treated course.
+  #
+  # THE ADJACENCY TO `_usd_per_course` IS LEGIBILITY, NOT AN ORDERING
+  # CONSTRAINT, and the distinction is worth stating because the block below
+  # documents a place where ordering IS load-bearing and a later reader would
+  # otherwise infer a constraint here and defend it. Every entry in this list
+  # was checked against a name ending `_usd_per_cure`: none end-matches,
+  # `_usd_per_course` and `_usd` included ("course" is not "cure"), so
+  # `unnamed_converters()`'s hit[1] cannot be stolen either way. Conversely
+  # `_usd_per_cure` steals no existing name's match, because no existing
+  # identifier ends in it.
+  "_usd_per_cure", # dollars per durable cure -- L21, and at a FULL rebate only
   "_usd_per_dose",
   "_usd_per_cycle",
   "_usd_per_qaly",
@@ -164,4 +180,49 @@ unnamed_converters <- function(env, suffixes = ALLOWED_UNIT_SUFFIXES, ratio_suff
     # numerator, which is precisely what an undeclared return unit hides.
     !has_permitted_unit_suffix(n, suffixes)
   }, fn_names)
+}
+
+# --- The per-cure conversion (W9, A7) -------------------------------------
+# `_usd_per_cure` shares the numerator "usd" with `_usd_per_course` and with a
+# bare `_usd`, so a function combining a per-course and a per-cure price is
+# exactly the same-numerator, different-denominator pair this guard exists to
+# police. What follows is the named converter that makes such a combination
+# legitimate -- and one honest statement about the guard's reach, because
+# asserting that a guard catches what it does not is how a guard stops being
+# read: `unnamed_converters()` has a THIRD exit (a function whose own name ends
+# in a permitted unit suffix has declared what it returns), so A7's own
+# `..._usd_per_cure()` functions escape the check by house style. The
+# denominator discipline on that leg is carried by guard 3's declarations and by
+# tests/testthat/test-payment-arrangements.R, not by guard 2.
+#
+# `_usd_per_cure` is deliberately NOT a member of DIMENSIONLESS_RATIO_SUFFIXES.
+# It is a quantity of money, in exactly the sense `_usd_per_course` is, and the
+# block above records at length what happened the last time a quantity of money
+# was reclassified as a ratio to quiet this guard.
+
+#' Which population a per-cure figure is a share of, at a stated observation
+#' point (L21, guard 3). At the landmark a success is a cure in L2's sense; at
+#' a later observation point a success is a patient still in drug-free
+#' remission then, a strictly smaller group of size `pi * exp(-h*T)` of all
+#' treated. One suffix over two populations is the shape of the failure
+#' CLAUDE.md records has happened twice here, so the declaration tracks `T`
+#' rather than being written once and left.
+per_cure_denominator <- function(outcome_observation_years) {
+  stopifnot(outcome_observation_years >= 0)
+  if (outcome_observation_years == 0) "cured_patients_at_landmark" else "sustained_remitters_at_observation"
+}
+
+#' A price paid for every treated course, restated as what it costs per durable
+#' cure: divided by the share of treated patients who are successes at the
+#' observation point. The result carries its denominator (guard 3).
+#'
+#' This is the conversion for a price the payer pays WHATEVER the outcome. A
+#' full-rebate contract's invoice is already one payment per success and must
+#' not be routed through here, or the conditioning is charged for twice; see
+#' `justified_price_usd_per_cure()` in R/payment_arrangements.R.
+usd_per_course_to_usd_per_cure <- function(price_usd_per_course, drug_free_remission_share,
+                                            outcome_observation_years) {
+  stopifnot(all(drug_free_remission_share > 0, na.rm = TRUE))
+  with_denominator(price_usd_per_course / drug_free_remission_share,
+    per_cure_denominator(outcome_observation_years))
 }

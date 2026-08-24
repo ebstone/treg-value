@@ -16,6 +16,7 @@ A function that needs one of these refuses to run rather than assume a value.
 | O13 | US market shares across advanced therapies in moderate-to-severe CD | `current_treatment_mix_shares` | Unsourced | S9 only | 2026-08-21 |
 | O14 | Net-of-rebate commercial price relative to the ASP payment limit | `net_price_ratio` | Unsourced | A6 level; direction stated (L14) | 2026-08-21 |
 | O15 | Eligible-population incidence and turnover over a 10–30 year window | `eligible_population_incidence` | Unsourced | Extended projection only; also blocks the "flow" uptake reading L15 rejects | 2026-08-21 |
+| O16 | Financing rate appropriate to an installment payment arrangement for a one-time therapy — a real cost of capital, not the analysis's own discount rate | `installment_financing_rate_per_year` | Unsourced | A7's non-present-value-neutral installment legs. The base case is present-value-neutral at the study's 3% and any other rate is reported as a labelled illustration meanwhile (L17). A defaulted value here would silently produce a different contract on the undiscounted leg than on the discounted one | 2026-08-23 |
 
 `Arg name` is the canonical R argument name guard G7 checks: no function in
 `R/` may supply a default for a parameter with one of these names.

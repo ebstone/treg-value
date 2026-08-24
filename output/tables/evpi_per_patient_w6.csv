@@ -1,5 +1,5 @@
-# commit: 071ee670109eecee3fde0862813132b404b6426a
-# spec_sha256: 72c494e5c8fb78b58130275e379db2640b88dace9f0ae67dd922f8e14fca2026
+# commit: 5f2c9eaae1613ce6716eb0f8780ee028e0cae07e
+# spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
 "lambda_usd_per_qaly","h_per_year","pi_cure","price_usd_per_course","expected_net_benefit_usd","prob_treg_favoured","evpi_per_patient_usd"
 50000,0,0.25,20000,37417.3476045186,1,0
 50000,0.05,0.25,20000,7090.98557938039,0.833,606.408975864731

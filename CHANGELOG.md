@@ -2,6 +2,89 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-08-23 (W9, commit A: SPEC.md v1.2 -- alternative payment arrangements as aim A7)
+
+- SPEC.md bumped to v1.2: section 2a's heading and opening sentence widened to
+  cover A7's budget leg, with four added rows (payment arrangement, outcome
+  observation, settlement timing, justification test); locked decisions L17-L21;
+  scenarios S10 and S11; aim A7 with `output/tables/payment_arrangements.csv`;
+  five section 8 register rows; open item O16; acceptance criteria T19-T21.
+  `SPEC_AMENDMENTS.md` entry and the `OPEN_QUESTIONS.md` O16 row are in this
+  same commit (G6, G7). Sourcing register items S-9 and S-10 added.
+- **This commit is red on purpose, on G5's stale-spec check
+  (`test-stamping.R`), for all 18 committed output CSVs.** That test recomputes
+  the SHA-256 of SPEC.md at test time and requires every CSV under `output/` to
+  carry it on header line 2; bumping SPEC.md changes the hash before any output
+  has been re-stamped against it. Clearing it is commit B -- a full pipeline
+  regeneration, which needs `analysis/run_psa.R` (1,000 draws) first, since
+  `analysis/run_aims.R` reads `output/tables/psa_summary_w6.csv`, which
+  `run_psa.R` produces and which is not committed to the tree. No code changed
+  in this commit and no figure moves.
+
+## 2026-08-23 (W9, commit C: alternative payment arrangements, aim A7)
+
+- A7 built as a payer-side overlay on W7's cost streams and W8's cohort stacker:
+  `R/payment_arrangements.R` (installment schedule construction, the rebate
+  applied through `still_in_drug_free_remission()`, the per-cure frontier, the
+  offset-matched reference schedule), `analysis/run_payment_arrangements.R`
+  (the A7 grid), and A7's two outputs -- `output/tables/payment_arrangements.csv`
+  (40,362 rows: 16,362 per-cure frontier, 24,000 budget arrangement) and
+  `output/tables/payment_arrangements_reconciliation.csv` (4,242 rows).
+  Strictly additive: no `R/` file outside the new module and `R/units.R`
+  changed, `R/treg_arm.R`, `R/frontier.R`, `R/markov_engine.R` and
+  `R/budget_impact.R` are untouched, and no figure in A1-A6 moved.
+- `R/units.R`: `_usd_per_cure` added beside `_usd_per_course` (adjacency is
+  legibility, not an ordering constraint, and the test says so), with
+  `usd_per_course_to_usd_per_cure()` and `per_cure_denominator()` carrying
+  L21's two declarations. NOT added to `DIMENSIONLESS_RATIO_SUFFIXES`, and no
+  existing identifier renamed -- `required_cure_fraction()`'s
+  `slope_b_usd_per_course` keeps its name, since renaming it would turn guard 2
+  red on correct, shipped code.
+- New tests/testthat/test-payment-arrangements.R with T19-T21 and their
+  falsification fixtures, plus the module-boundary assertions SPEC.md's A7
+  amendment places here rather than in T12. Two new `test-units.R` cases: the
+  per-course-against-per-cure positive control, named so it has no return-unit
+  suffix, and the suffix's non-membership of the ratio list.
+- **T20, the gate, holds to 1.1e-05 dollars** across 180 legs -- the identity
+  that a schedule derived from `D(.)` and a price derived from `P*(.)` cancel
+  at every reported horizon simultaneously, over the whole cohort stack, for
+  any uptake vector. T19(b) 3.8e-06, T21(a) 2.9e-11, T21(c) 4.9e-10.
+  T19(d)'s four cells at full inclusion: present-value-neutral
+  (0.000%, +5.997%), interest-free (-5.658%, 0.000%).
+- **A7 and A6 now reconcile on both discounting columns, under one convention.**
+  The A6 defect this branch found while it was being built -- an undiscounted
+  leg whose traces ran at a zero rate while its cohort stacking ran at 3% -- was
+  fixed on its own branch and is on `main` (4398b09, PR #14). A7 always ran its
+  undiscounted rows nominally throughout, stacking included, because an
+  installment's payments sit inside the patient's own stream and one row cannot
+  describe two contracts; that is now A6's convention as well. The
+  reconciliation leg that measured the divergence,
+  `A6_undiscounted_convention_gap`, is therefore gone: its rows are folded into
+  `A6_lump_sum_agreement`, which now checks A7's lump sum against A6's own
+  published figure on **both** columns over 2,400 legs, worst $0.005 on each,
+  which is A6's rounding to the cent. Verified independently of both aims: a
+  hand-rolled nominal cohort stack reproduces the fixed `budget_impact.csv`'s
+  undiscounted 1-, 3- and 5-year central cells exactly. `A7`'s own figures did
+  not move -- `payment_arrangements.csv` regenerates byte-identical -- because
+  A7 never consumed A6's output for anything but this check.
+- `tests/testthat/test-payment-arrangements.R` now asserts the agreement on each
+  column separately and that undiscounted multi-cohort horizons are among the
+  rows checked, so A7's output stands as a live check on A6's convention: the
+  undiscounted column cannot close unless A6's cohort placement is still
+  nominal.
+- Full suite green: 0 failures, 2,152 passes.
+
+## 2026-08-23 (W9, commit B: regeneration under the v1.2 spec hash)
+
+- Full pipeline re-run in order -- `run_psa.R` (1,000 draws, ~24 min),
+  `run_aims.R`, `run_price_frontier.R`, `run_manufacturing_benchmark.R`,
+  `run_scenarios.R`, `run_infliximab_trace.R`, `run_refractory_coprimary.R`,
+  `run_bia.R`, `run_cheers_assessment.R` -- so all 18 committed output CSVs
+  carry the v1.2 spec hash. **Every CSV BODY is byte-identical to commit A's;
+  only the two stamp lines changed**, and both of them do, since
+  `stamp_output()` writes the commit hash as well as the spec hash. No reported
+  figure moved. G5 green again; full suite green.
+
 ## 2026-08-23 (A6 defect: the undiscounted leg was discounted across cohorts)
 
 - `analysis/run_bia.R` re-ran each per-patient TRACE at a zero rate for the
