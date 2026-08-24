@@ -1,4 +1,4 @@
-# commit: bd352f7adede2317b3467b268031d2be8691f525
+# commit: a97e75530ae93c0683ff5c53496ee5df0a088578
 # spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
 "leg","maintenance_cap","induction_window_weeks","h_per_year","pi_cure","lambda_usd_per_qaly","price_source","price_usd_per_course","arrangement","installment_length_years","installment_financing_rate_per_year","rebate_share","outcome_observation_years","reporting_horizon","reporting_horizon_years","discounted","route_model_usd","route_independent_usd","agreement_usd","route_model_share","route_independent_share","agreement_share","timing_gap_closed_share"
 "T19b_installment_delta","on",8,0,0.25,1e+05,"frontier_P_star",85198.3470637985,"installment_pv_neutral_5yr",5,0.03,NA,NA,"1yr",1,TRUE,335683732.614365,335683732.614365,0,NA,NA,NA,NA

@@ -2,6 +2,76 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-08-23 (W10: the A7 readout, and the deferred CHEERS refresh)
+
+- New `docs/results_readout.html` section, "Alternative payment
+  arrangements -- installments, rebates, and the price per cure," placed
+  immediately after "Budget impact -- what a payer pays, and when." Leads
+  with what does not change (offset_captured_share is invariant to every
+  arrangement, by construction), then the offset-matched reference schedule
+  as the lead finding (exact-zero property, its four qualifications, and the
+  year-30 range across the 240 discounted 30-year scenario groups: 79.44% to
+  98.96% paid, median 94.38% -- between roughly 1% and 21% still owed after
+  thirty years, median about 6%), the installment table (corrected direction:
+  reduces net impact at 1/3/5 years on both columns; the undiscounted
+  crossing sits between H=7 and H=8 at N=5, not at the ramp+N-1=9
+  full-inclusion bound, so the first reported horizon showing it is 10 years;
+  the single-cohort fixture crosses at year 5, printed alongside with the
+  one-sentence reason they differ; interest-free labelled as an equivalent
+  -5.658% price discount), the outcomes-based table (12-week row labelled a
+  response-based contract, not outcomes-based, with the rebate's settlement
+  date and discount factor stated in the table's own note), and P*_cure
+  (unit, two denominators named, finite and negative-below-threshold for the
+  same structural reason as P*, falls in h, and is not monotone in T --
+  falls at h=0, rises only at high pi and high h -- with both directions
+  shown rather than asserted). Limitations bullets reference A6's own list
+  rather than re-deriving it, and add the arrangement-specific gaps (S-9,
+  S-10, L18's no-variance-claim, claims-data adjudicability).
+- `analysis/verify_readout.R` extended with a `pa_html` scope on the new
+  section's own `<h2>..</section>` substring (the same `section_html()`
+  pattern the budget-impact section already uses), checking every hand-typed
+  figure in it against `output/tables/payment_arrangements.csv` and
+  `payment_arrangements_reconciliation.csv`: the offset-matched year-30
+  distribution and its non-decreasing property, the installment ratio table
+  at both schedule lengths and both discounting columns, the single-cohort
+  fixture (recomputed from the schedule's own committed rate and length,
+  not transcribed), the outcomes-based table at full inclusion, the
+  settlement discount factors, and the full P*_cure surface including the
+  sign threshold and the pi=0 excursion. One reconciliation did not close on
+  the first pass: an eyeballed console value of $348,759.5 for P*_cure at
+  pi=1.00/h=0/T=2 years turned out to be R's default 7-significant-figure
+  print of the true stored value $348,759.47, which rounds to $348,759 and
+  not $348,760 as first drafted -- caught by the mechanical check, not by
+  re-reading the prose, which is the reason the check exists. Fixed in the
+  readout; every other figure in the section matched on the first
+  computation. `Rscript analysis/verify_readout.R` reports "ALL READOUT
+  FIGURES MATCH THE STAMPED OUTPUTS".
+- `analysis/run_cheers_assessment.R` refreshed for items 5, 6, 8, 9, 10, 17,
+  18, 20 and 24. Confirmed stale against current `SPEC.md` and
+  `output/tables/scenarios.csv` before touching: item 5 and 18 still named
+  the retired refractory co-primary population; item 17 still cited T1-T12
+  against a spec that now runs to T21; item 24 claimed a horizon scenario in
+  `scenarios.csv` that does not exist there (only `disc-0`/`disc-5` do; L10
+  states the reporting horizon rather than sweeping it). Items 6, 8, 9 and 10
+  were accurate but silent on A7 and are widened to name the BIA's second
+  perspective (L14), its reporting-horizon and outcome-observation ladders
+  (L10, L19), and its horizon-class-dependent discounting convention (L11).
+  `output/tables/cheers_2022_compliance.csv` regenerated; only the nine
+  targeted evidence strings changed, `substantive_limitation` still exactly
+  {19, 21, 26} and `test-cheers.R` still green.
+- `output/tables/payment_arrangements.csv` and
+  `..._reconciliation.csv` re-stamped against the current commit (body
+  byte-identical; only the `# commit:` line moved, confirmed by diffing the
+  bodies) as a side effect of regenerating the CHEERS output through the
+  shared pipeline entry point -- no A7 figure changed.
+- **O13 (US market shares across advanced therapies) is still open.**
+  S8 (uptake shape) and S9 (current-treatment-mix comparator, blocked on
+  O13) are therefore both out of scope this session, per the W10 plan's own
+  conditional -- recorded here rather than silently dropped.
+- Full suite green. `verify_readout.R`, `test-cheers.R` and the full
+  `testthat` run all pass; no `R/` file touched, so none of A1-A7's figures
+  moved.
+
 ## 2026-08-23 (W9, commit A: SPEC.md v1.2 -- alternative payment arrangements as aim A7)
 
 - SPEC.md bumped to v1.2: section 2a's heading and opening sentence widened to
