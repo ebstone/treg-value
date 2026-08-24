@@ -175,5 +175,125 @@ check_in("plan-scale pmpm", usd_cents(small$net_budget_impact_usd_pmpm))
 # refractory_coprimary.csv still regenerates correctly; it is simply no
 # longer reported.
 
+# --- A7, the alternative payment arrangements section (W10) --------------
+#
+# Scoped exactly as the BIA section is above, against its own <h2>..</section>
+# substring, for the same reason: this section carries dozens of small
+# percentages and dollar figures, and a whole-document grepl would pass on a
+# coincidental match elsewhere rather than on the right cell.
+pa_html <- section_html("<h2>Alternative payment arrangements")
+check_pa <- function(label, present_as) {
+  if (!grepl(present_as, pa_html, fixed = TRUE)) {
+    fails <<- c(fails, sprintf("A7 %s: expected '%s' NOT FOUND in the payment arrangements section", label, present_as))
+  }
+}
+
+pa <- read.csv("output/tables/payment_arrangements.csv", comment.char = "#", stringsAsFactors = FALSE)
+recon <- read.csv("output/tables/payment_arrangements_reconciliation.csv", comment.char = "#", stringsAsFactors = FALSE)
+
+# The offset-matched schedule's year-30 distribution, across all 240
+# discounted 30-year scenario groups (R8's corrected range, not the best cell).
+om30 <- pa[pa$arrangement == "offset_matched" & pa$discounted & pa$reporting_horizon == "30yr" &
+  !is.na(pa$offset_captured_share), ]
+stopifnot(length(unique(om30$scenario_id)) == 240)
+om_min <- min(om30$offset_captured_share)
+om_med <- median(om30$offset_captured_share)
+om_max <- max(om30$offset_captured_share)
+pct2 <- function(x) sprintf("%.2f", 100 * x)
+check_pa("offset-matched min share", paste0(pct2(om_min), "%"))
+check_pa("offset-matched median share", paste0(pct2(om_med), "%"))
+check_pa("offset-matched max share", paste0(pct2(om_max), "%"))
+check_pa("offset-matched min outstanding", paste0(pct2(1 - om_min), "%"))
+check_pa("offset-matched median outstanding", paste0(pct2(1 - om_med), "%"))
+check_pa("offset-matched max outstanding", paste0(pct2(1 - om_max), "%"))
+# Non-decreasing on the reported grid, checked rather than assumed (T20's own
+# qualification): every reporting-horizon-to-reporting-horizon increment of
+# offset_captured_share, within a scenario group on the discounted leg, is
+# non-negative.
+om_all <- pa[pa$arrangement == "offset_matched" & pa$discounted & !is.na(pa$offset_captured_share), ]
+horizon_order <- c("1yr", "3yr", "5yr", "10yr", "30yr")
+om_all$reporting_horizon <- factor(om_all$reporting_horizon, levels = horizon_order, ordered = TRUE)
+any_decrease <- FALSE
+for (grp in split(om_all$offset_captured_share, om_all$scenario_id)) {
+  if (length(grp) > 1 && any(diff(grp) < -1e-9)) any_decrease <- TRUE
+}
+if (any_decrease) fails <- c(fails, "A7 offset-matched schedule: a decrease was found across the reported horizon grid")
+
+# The installment table -- price leg as a share of the lump sum, population
+# level, at the base-case cell.
+inst_cell <- function(arr, hz, disc) {
+  x <- pa[pa$arrangement == arr & pa$maintenance_cap == "on" & pa$induction_window_weeks == 8 &
+    pa$lambda_usd_per_qaly == 1e5 & pa$h_per_year == 0.05 & pa$pi_cure == 0.5 &
+    pa$price_source == "frontier_P_star" & pa$terminal_uptake_share == 0.25 &
+    pa$assumed_eligible_population_patients == 1e5 & pa$reporting_horizon == hz & pa$discounted == disc, ]
+  x$price_leg_share_of_lump_sum
+}
+pct1 <- function(x) sprintf("%.1f", 100 * x)
+for (hz in c("1yr", "3yr", "5yr", "10yr", "30yr")) {
+  check_pa(sprintf("N=5 undiscounted %s", hz), paste0(pct1(inst_cell("installment_pv_neutral_5yr", hz, FALSE)), "%"))
+  check_pa(sprintf("N=5 discounted %s", hz), paste0(pct1(inst_cell("installment_pv_neutral_5yr", hz, TRUE)), "%"))
+  check_pa(sprintf("N=3 undiscounted %s", hz), paste0(pct1(inst_cell("installment_pv_neutral_3yr", hz, FALSE)), "%"))
+  check_pa(sprintf("N=3 discounted %s", hz), paste0(pct1(inst_cell("installment_pv_neutral_3yr", hz, TRUE)), "%"))
+}
+# The interest-free schedule's equivalent per-course present-value discount,
+# once every cohort's schedule is inside the window (10/30-year rows).
+free_disc <- inst_cell("installment_interest_free_5yr", "10yr", TRUE)
+free_disc_pct <- 100 * (free_disc - 1)
+check_pa("interest-free equivalent discount", paste0("−", sprintf("%.3f", abs(free_disc_pct)), "%"))
+
+# The single-cohort fixture (N=5, undiscounted): ratio = min(N, H) / a_c,
+# recomputed from the schedule's own committed rate and length -- not
+# transcribed -- exactly as T19(b)'s own formula does.
+one_row <- pa[pa$arrangement == "installment_pv_neutral_5yr" & pa$maintenance_cap == "on" &
+  pa$induction_window_weeks == 8 & pa$lambda_usd_per_qaly == 1e5 & pa$h_per_year == 0.05 &
+  pa$pi_cure == 0.5 & pa$price_source == "frontier_P_star", ][1, ]
+r_c <- one_row$installment_financing_rate_per_year
+N <- one_row$installment_length_years
+a_c <- sum((1 + r_c)^(-(0:(N - 1))))
+single_cohort_ratio <- function(h) min(N, h) / a_c
+for (hz in c(1, 3, 5)) check_pa(sprintf("single-cohort N=5 undiscounted H=%d", hz), paste0(pct1(single_cohort_ratio(hz)), "%"))
+
+# The outcomes-based table -- effective price as a share of the lump sum,
+# once every cohort's rebate has settled (10/30-year full-inclusion rows).
+outc_cell <- function(arr, disc) {
+  x <- pa[pa$arrangement == arr & pa$maintenance_cap == "on" & pa$induction_window_weeks == 8 &
+    pa$lambda_usd_per_qaly == 1e5 & pa$h_per_year == 0.05 & pa$pi_cure == 0.5 &
+    pa$price_source == "frontier_P_star" & pa$terminal_uptake_share == 0.25 &
+    pa$assumed_eligible_population_patients == 1e5 & pa$reporting_horizon == "10yr" & pa$discounted == disc, ]
+  x$price_leg_share_of_lump_sum
+}
+for (arr in c("outcomes_based_rho100_T0yr", "outcomes_based_rho100_T2yr", "outcomes_based_rho100_T5yr", "outcomes_based_rho050_T2yr")) {
+  check_pa(paste(arr, "undiscounted"), paste0(pct1(outc_cell(arr, FALSE)), "%"))
+  check_pa(paste(arr, "discounted"), paste0(pct1(outc_cell(arr, TRUE)), "%"))
+}
+# The settlement convention: tau = T + 12/52, discount factor v^tau at 3%.
+disc_rate <- unique(pa$analysis_discount_rate_per_year[!is.na(pa$analysis_discount_rate_per_year)])[1]
+v_tau <- function(T) (1 + disc_rate)^(-(T + 12 / 52))
+for (T in c(0, 2, 5)) check_pa(sprintf("v^tau T=%s", T), sprintf("%.4f", v_tau(T)))
+
+# P*_cure -- the per-cure frontier surface, at ppo = 1 (ratio's own rho = 1
+# leg), against the committed per_cure_frontier rows.
+pcf <- pa[pa$result_family == "per_cure_frontier" & pa$rebate_share == 1 & pa$maintenance_cap == "on" &
+  pa$induction_window_weeks == 8 & pa$price_source == "frontier_P_star", ]
+pcf_at <- function(pi_val, h, T, lam = 1e5) {
+  x <- pcf[abs(pcf$pi_cure - pi_val) < 1e-9 & pcf$h_per_year == h & pcf$outcome_observation_years == T & pcf$lambda_usd_per_qaly == lam, ]
+  x$justified_price_usd_per_cure
+}
+for (pi_val in c(0.25, 0.5, 1.00)) for (h in c(0, 0.05, 0.10)) {
+  check_pa(sprintf("P*_cure pi=%s h=%s T=2", pi_val, h), usd(pcf_at(pi_val, h, 2)))
+}
+check_pa("P*_cure pi=0.25 h=0 T=0", usd(pcf_at(0.25, 0, 0)))
+check_pa("P*_cure pi=0.25 h=0 T=5", usd(pcf_at(0.25, 0, 5)))
+check_pa("P*_cure pi=1 h=0.10 T=0", usd(pcf_at(1, 0.10, 0)))
+check_pa("P*_cure pi=1 h=0.10 T=5", usd(pcf_at(1, 0.10, 5)))
+# The sign threshold pi = -A/B, and the pi = 0 excursion, at lambda = $100k.
+for (h in c(0, 0.05, 0.10)) {
+  thr <- unique(pcf$positive_price_threshold_pi_cure[pcf$h_per_year == h & pcf$lambda_usd_per_qaly == 1e5])
+  check_pa(sprintf("threshold h=%s", h), sprintf("%.2f%%", 100 * thr))
+}
+check_pa("P*_cure pi=0 excursion", neg(abs(pcf_at(0, 0, 0))))
+check_pa("P*_cure pi=0.01 excursion", usd(pcf_at(0.01, 0, 0)))
+check_pa("P*_cure pi=0.02 excursion", usd(pcf_at(0.02, 0, 0)))
+
 cat(if (length(fails) == 0) "ALL READOUT FIGURES MATCH THE STAMPED OUTPUTS\n" else
     paste0(length(fails), " MISMATCH(ES):\n", paste(fails, collapse = "\n"), "\n"))

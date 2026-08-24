@@ -125,7 +125,7 @@
   <div class="byline">
     <span>Jadambaa · Stone · Abraham</span>
     <span>Johns Hopkins Bloomberg School of Public Health</span>
-    <span>21 August 2026</span>
+    <span>23 August 2026</span>
     <span>All figures 2025 USD</span>
   </div>
 </header>
@@ -374,6 +374,99 @@
     <li><strong>The therapy is assumed to displace infliximab biosimilar alone, not the current treatment mix.</strong> Q5104 is the cheapest agent in the model, so the offset is the smallest available and the net budget impact the largest — the conservative direction for an affordability question.</li>
     <li><strong>The population this section counts and the population the model's transitions describe are not the same population.</strong> The budget impact inherits the comparator's transition probabilities unchanged, and with them the mixed biologic experience of the source trials. The gap bites harder here than on the frontier: a payer's eligible population is defined by treatment line — who has failed what — and that is precisely the distinction UNITI-1 and UNITI-2 are pooled across. The denominator of every figure in this section is therefore defined on a stratum whose cost dynamics the numerator does not separately describe.</li>
     <li><strong>Unit costs are ASP-based payment limits, not net-of-rebate commercial prices.</strong> A commercial payer's realised cost of the displaced comparator is lower than modelled, which makes the offset smaller and the net impact larger than shown.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Alternative payment arrangements — installments, rebates, and the price per cure</h2>
+  <p class="note">Everything below is a re-timing or a re-conditioning of the price leg the section above already measures. Nothing here reaches the Treg arm, the comparator, or the frontier's inputs — A, B and P*(π, h, λ) are exactly as printed above, at every cell.</p>
+
+  <p class="note"><strong>Start with what does not move.</strong> The offset-capture progression in the table above — share of the lifetime cost offset captured by horizon — is defined over D(H), the cumulative current-care-minus-Treg cost per treated patient <em>excluding the course price</em>. Every arrangement in this section changes only the price leg, never D(H). A reader who expects an installment plan or a rebate to improve that progression has misread what it measures: it is a statement about what a cured patient stops costing, and no re-timing of the invoice touches it. Every percentage in that table is exactly as reported whichever arrangement below is priced against it.</p>
+
+  <p class="note"><strong>The strongest result in this section is a reference schedule, not a proposal.</strong> Ask the inverse of the question above: not what a five-year installment does to the budget, but what payment schedule would make a justified cure budget-neutral in every reporting window at once. Let D(m) be the year-m cumulative <em>discounted</em> offset per treated patient — the same D behind the progression above. A schedule paying, in the patient's own year m, <strong>price · (D(m) − D(m−1)) / D(lifetime)</strong> — supplied to the cohort stack with <em>no further discount factor</em>, because D(m) is already discounted to the patient's own start — tracks the offset exactly, cohort by cohort. At price = P*(π, h, λ = 0) the cumulative net budget impact is exactly $0 at every reported horizon simultaneously, for any uptake vector.</p>
+
+  <div class="scroller">
+    <table>
+      <caption>Offset-matched schedule · year-30 cumulative share still to be paid · discounted leg · 240 scenario groups</caption>
+      <thead><tr><th scope="col" style="text-align:left">&nbsp;</th><th scope="col">Share of price paid by year 30</th><th scope="col">Share still owed</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Minimum outstanding (worst case)</th><td class="num">98.96%</td><td class="num">1.04%</td></tr>
+        <tr><th scope="row">Median</th><td class="num">94.38%</td><td class="num">5.62%</td></tr>
+        <tr><th scope="row">Maximum outstanding (best case for the payer)</th><td class="num">79.44%</td><td class="num">20.56%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Four qualifications belong in the same breath as the result. <strong>(a) Discounted leg only</strong> — the schedule needs D(lifetime) = P*(π, h, λ = 0), itself a discounted quantity, so it is undefined on the undiscounted column, the same column the 1/3/5-year base case leads with. <strong>(b) It requires D(lifetime) &gt; 0</strong>, which can fail at a low enough cure fraction since A(λ = 0) is negative; on this study's committed grid (π ∈ {0.25, 0.5, 0.75, 1}) the restriction does not bite. <strong>(c) It is non-decreasing on the reported grid, checked — not asserted as a cumulative distribution function.</strong> Nothing here reads it as bounded above by 1 in general; every reported-horizon increment in the committed discounted data is non-negative, checked across every scenario group, which is a property of this grid and not a guarantee elsewhere. <strong>(d) It is a multi-decade instrument.</strong> Across the 240 discounted 30-year scenario groups the year-30 cumulative share paid runs from 79.44% to 98.96% (median 94.38%) — <strong>between roughly 1% and 21% of the price is still owed after thirty years, median about 6%</strong> — and the worst case sits at the low-cure, zero-hazard corner of the grid, not at random.</p>
+  <p class="note">This is not a contract anyone could sign. It is the schedule that would make budget-neutrality hold in every window simultaneously, and it depends on knowing π and h — which nobody does at contract time — and on both parties accepting this study's own frontier as the reference price. It answers "what timing would budget-neutrality require?", not "here is a proposal."</p>
+
+  <p class="note"><strong>An installment reduces the reported net budget impact at every horizon a budget cycle actually uses.</strong> At 1, 3 and 5 years — the budget-impact analysis proper — a present-value-neutral schedule lowers the price leg on both discounting columns; there is no crossing anywhere in that range, at either schedule length. The crossing is real but sits between the seventh and eighth year of a five-year schedule, not at the ramp-plus-length bound of nine years that marks full inclusion (the horizon at which every cohort's whole schedule sits inside the window, where the undiscounted ratio reaches its ceiling). Those are different horizons: the lump-sum denominator saturates once the five-year adoption ramp is fully enrolled, while the installment numerator keeps growing for four more years. Since 8 is not among the reported horizons, the first row that shows the effect is ten years, and only on the undiscounted column.</p>
+
+  <div class="scroller">
+    <table>
+      <caption>Installment price leg as a share of the lump sum · population level · π = 0.50, h = 5%, λ = $100,000, cap on</caption>
+      <thead><tr><th scope="col" style="text-align:left">Horizon</th><th scope="col">N=5, undiscounted</th><th scope="col">N=5, discounted</th><th scope="col">N=3, undiscounted</th><th scope="col">N=3, discounted</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">1 year</th><td class="num">21.2%</td><td class="num">21.2%</td><td class="num">34.3%</td><td class="num">34.3%</td></tr>
+        <tr><th scope="row">3 years</th><td class="num">42.4%</td><td class="num">42.0%</td><td class="num">68.6%</td><td class="num">68.0%</td></tr>
+        <tr><th scope="row">5 years</th><td class="num">63.6%</td><td class="num">62.3%</td><td class="num">82.4%</td><td class="num">81.4%</td></tr>
+        <tr class="rule-above"><th scope="row">10 years — full inclusion</th><td class="num neg">106.0%</td><td class="num">100.0%</td><td class="num neg">103.0%</td><td class="num">100.0%</td></tr>
+        <tr><th scope="row">30 years</th><td class="num neg">106.0%</td><td class="num">100.0%</td><td class="num neg">103.0%</td><td class="num">100.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Printed beside it is the single-cohort reconciliation fixture the acceptance tests use — one cohort treated at t = 0, undiscounted, N = 5, where "per treated patient" is unambiguous: <strong>21.2% at 1 year, 63.6% at 3 years, 106.0% at 5 years and beyond</strong>. Here the crossing lands at year 5, not between years 7 and 8. The two do not disagree: a population-level ratio keeps rising until the last of five staggered cohorts finishes its own five-year schedule, four years after the last cohort adopts, while a single cohort has no ramp to wait on and reaches its own schedule's ceiling as soon as its own N years are up. This is the clearest demonstration available that a budget-impact figure is a statement about a cohort stack inside a calendar window, not about one patient.</p>
+  <p class="note">The interest-free variant is not a payment arrangement; it is a price cut labelled as financing. Once every cohort's whole schedule is inside the window (10 and 30 years), a zero-rate five-year schedule leaves the undiscounted column exactly unchanged and lowers the discounted column by <strong>−5.658%</strong> — its equivalent per-course present-value discount. The two schedules are each invisible in one column and unmistakable in the other: present-value-neutral shows 0.0% discounted against +6.0% undiscounted; interest-free shows −5.658% discounted against 0.0% undiscounted. Showing a payer only one column would make either schedule look like it costs nothing.</p>
+
+  <p class="note"><strong>The 12-week row is a response-based contract, not an outcomes-based one, and is labelled as such.</strong> A rebate triggered at the landmark pays out on π itself — a 12-week response — and this study's entire sweep over the relapse hazard h is the admission that a 12-week response is not a durability signal: a patient who relapses in month four still counts as a success under a landmark-triggered rebate. The base case observes at two years post-landmark; the landmark itself (T = 0) and five years are reported alongside so a reader can see what a response-based contract would pay, not because it is the recommended design.</p>
+
+  <div class="scroller">
+    <table>
+      <caption>Effective price under a rebate, once every cohort's rebate has settled (10/30-year rows) · price = P*(π = 0.50, h = 5%, λ = $100,000) · population level</caption>
+      <thead><tr><th scope="col" style="text-align:left">Contract</th><th scope="col">Undiscounted</th><th scope="col">Discounted</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Response-based — ρ = 100%, T = 12 weeks</th><td class="num">50.0%</td><td class="num">50.3%</td></tr>
+        <tr class="rule-above"><th scope="row">Outcomes-based — ρ = 100%, T = 2 years (base case)</th><td class="num">45.2%</td><td class="num">48.7%</td></tr>
+        <tr><th scope="row">Outcomes-based — ρ = 100%, T = 5 years</th><td class="num">38.9%</td><td class="num">47.7%</td></tr>
+        <tr><th scope="row">Outcomes-based — ρ = 50%, T = 2 years</th><td class="num">72.6%</td><td class="num">74.4%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">The rebate settles at patient-time τ = T + 12/52 years from adoption and carries the discount factor v<sup>τ</sup> at 3% — 0.9932 at T = 12 weeks, 0.9362 at the two-year base case, 0.8567 at five years — never the coincident-settlement approximation v<sup>0</sup> = 1. This is why the discounted column sits above the undiscounted one in every row above: the later and larger the rebate, the more its present value shrinks relative to its face amount, so the payer's effective price is higher in present-value terms than in nominal terms.</p>
+
+  <p class="note"><strong>P*_cure restates the frontier per cure rather than per course</strong>, in the unit usd_per_cure, and only at ρ = 100% — at a partial rebate the contract's headline figure is an invoice per treated patient, usd_per_course, and is not a per-cure price at all. It carries two different denominators for two different populations, and both need naming: at the landmark (T = 0) a success is a cure in this study's own sense, denominator <strong>cured patients at the landmark</strong>; at T &gt; 0 a success is a patient <em>still</em> in drug-free remission at T, a strictly smaller population of size π·e<sup>−hT</sup> of all treated, denominator <strong>sustained remitters at the observation point</strong>. One _usd_per_cure suffix carrying two denominators is exactly the failure shape this project's own guards exist to catch.</p>
+
+  <p class="note"><strong>It is finite at π = 0</strong> — unlike a coincident-settlement version of the same contract, which is singular there. The reason is structural, not a regularisation choice: because the rebate settles at τ = T + 12/52 years rather than at t = 0, its denominator is bounded in [1 − v<sup>τ</sup>, 1] and strictly positive everywhere, so P*_cure has the same sign as P* at every π rather than blowing up at the origin. <strong>It is negative below π = −A/B, for the same reason P* is</strong> — 0.76% at h = 0%, 1.54% at h = 5%, 2.43% at h = 10% (λ = $100,000) — and below that threshold no positive per-cure price is justified; the contract does not create that region, it inherits it from the frontier. At ρ = 100%, T = 0, λ = $100,000, h = 0 the curve itself runs from −$390,606 at π = 0 through +$51,332 at π = 0.01 and $164,013 at π = 0.02 to $333,982 at π = 0.25 — most of its range is traversed inside the first two grid points, and the large negative value at π = 0 is this sign condition working, not a broken build.</p>
+
+  <div class="scroller">
+    <table>
+      <caption>P*_cure per cure, by cure fraction and relapse hazard · T = 2 years (base case) · λ = $100,000</caption>
+      <thead><tr><th scope="col" style="text-align:left">π</th><th scope="col">h = 0%</th><th scope="col">h = 5%</th><th scope="col">h = 10%</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">0.25</th><td class="num">$286,036</td><td class="num">$146,437</td><td class="num">$96,659</td></tr>
+        <tr><th scope="row">0.50</th><td class="num">$325,343</td><td class="num">$171,059</td><td class="num">$116,396</td></tr>
+        <tr><th scope="row">1.00</th><td class="num">$348,759</td><td class="num">$185,957</td><td class="num">$128,539</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note"><strong>P*_cure falls in h, not the other way around.</strong> Raising the relapse hazard shrinks the denominator (fewer patients still count as successes), but it shrinks the numerator faster, because B(h, λ) — what one durable cure is worth — falls steeply in h. At π = 0.50, T = 2: $325,343 → $171,059 → $116,396 across h = 0/5/10%. <strong>It is not monotone in T at all</strong> — the obvious-sounding claim that a later observation point means fewer counted successes and therefore a higher justified price per cure is false in this model:</p>
+  <div class="scroller">
+    <table>
+      <caption>P*_cure by observation point T · λ = $100,000 — falls in T at h = 0%, rises in T at high π and h</caption>
+      <thead><tr><th scope="col" style="text-align:left">&nbsp;</th><th scope="col">T = 12 weeks</th><th scope="col">T = 2 years</th><th scope="col">T = 5 years</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">π = 0.25, h = 0% — falls in T</th><td class="num">$333,982</td><td class="num">$286,036</td><td class="num">$238,356</td></tr>
+        <tr><th scope="row">π = 1.00, h = 10% — rises in T</th><td class="num">$106,726</td><td class="num">$128,539</td><td class="num">$160,999</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">No single directional claim about h or T holds across this study's whole grid. At h = 0 a later observation point gives a strictly lower justified per-cure price for every π &lt; 1, because the time value the payer gives up by waiting longer for a smaller rebate outweighs the shrinking rebate itself; only at large π and large h does the shrinking population of counted failures win out and the price rise in T instead. Both directions are shown rather than asserted.</p>
+
+  <ul class="plain">
+    <li><strong>This section inherits every limitation already stated for the budget impact section above and resolves none of them</strong> — the unsourced eligible population, the unsourced uptake trajectory, the single adoption wave, the infliximab-alone comparator, and the mismatch between the population this section counts and the population the model's transitions describe.</li>
+    <li><strong>The arrangements themselves are modelled, not verified against real-world precedent.</strong> Whether real installment or outcomes-based contracts for one-time cell and gene therapies are proposed-versus-executed, and whether they are structured as a rebate against an invoice (as built here) or as a deferred milestone payment, a true annuity, or something else, is unverified (sourcing register item S-9).</li>
+    <li><strong>The legal and regulatory constraints named in sourcing register item S-10 are unassessed.</strong> A study that models an arrangement US law obstructs would be modelling a counterfactual, and this repository does not yet know which it is.</li>
+    <li><strong>This model can say nothing about budget predictability or risk variance — only about the expected-value shift.</strong> Outcomes-based payment is evaluated in expected-value cohort terms and yields an effective price; no distribution over per-patient outcomes was built, and no variance, budget-predictability or risk-reduction claim is made. That is a deliberate scope decision, not an oversight, and the absence of a distributional claim is stated here rather than implied by silence.</li>
+    <li><strong>A real-world two-year drug-free-remission outcome may not be adjudicable from routine insurance claims data.</strong> The observation-point ladder is a modelling convenience layered on §7's own derived quantity; whether a payer could actually verify it at contract time is not assessed.</li>
   </ul>
 </section>
 
