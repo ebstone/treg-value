@@ -1015,3 +1015,105 @@ session that builds A7 is T19, T20 and T21 passing and
 `payment_arrangements_reconciliation.csv` existing, not a green G6. This is the
 identical trap A6's own amendment recorded, and it is recorded again because it
 is now structural rather than incidental.
+
+## 2026-08-28 — Scenario S9 (current-treatment-mix comparator) retired
+
+**Signed off:** Stone, 2026-08-28
+
+**Supersedes:** SPEC.md §5's S9 row; §2a's "Comparator displaced" row, which
+read "full treatment mix is S9"; L13's decision text, which read "The full
+current-treatment mix is S9, blocked on O13"; and OPEN_QUESTIONS.md O13,
+closed below as C12. SPEC.md §9's O13 row is removed with it, since §9 lists
+only items that are live required arguments under G7.
+
+**Change:** the current-treatment-mix comparator is no longer a scenario this
+study intends to build. The comparator displaced in A6 is the infliximab
+biosimilar base case (Q5104) alone, as it already is on the frontier, and the
+single-comparator assumption is carried as a **stated limitation** in SPEC.md
+L13 and in `docs/results_readout.html` rather than as a blocked scenario
+awaiting an input. No `current_treatment_mix_shares` argument is needed
+anywhere, so G7 no longer watches that name.
+
+**Reason:** US market shares across advanced therapies in moderate-to-severe
+Crohn's disease cannot be sourced from citable primary material of the kind
+this repository's guard 1 requires. What is reachable is paywalled commercial
+market research, which is not CHEERS-grade evidence and carries no
+reproducible sidecar; journal or cookie-walled material; or figures that
+predate meaningful uptake of the agents that now hold much of the market —
+risankizumab (CD indication 2022), upadacitinib (2023), guselkumab and
+mirikizumab (2024–25). A historical mix built from what is reachable would
+therefore understate the IL-23 and JAK share by construction, and a scenario
+whose input is known to be stale in a known direction is worse than no
+scenario: it would report a number rather than an absence of one.
+
+**The bias direction is known and is the conservative one, which is why the
+limitation is tolerable.** L13's own rationale already records it and is
+unchanged: Q5104 is the cheapest of the three biosimilars (C10), and S5 showed
+that ustekinumab and adalimumab comparators both raise `B`. Displacing the
+cheapest agent therefore yields the **smallest** offset and the **largest**
+net budget impact — the conservative direction for an affordability question.
+A true current-treatment mix, containing agents more expensive than Q5104,
+would only improve the picture this analysis reports. The limitation costs the
+study precision, not defensibility.
+
+**Effect on reported results: none.** No figure in A1–A7 changes. No code in
+`R/` is touched, no output body moves, and nothing was ever computed under an
+S9 heading. The committed outputs are re-stamped so their spec hashes match
+the amended SPEC.md, and that regeneration is a separate commit from this one,
+which is red on G5's stale-spec check by construction.
+
+**OPEN_QUESTIONS.md O13 closed as C12**, moot now that no current-treatment-mix
+comparator is built.
+
+## 2026-08-28 — Scenario S8 built: the uptake-shape bounding pair
+
+**Signed off:** Stone, 2026-08-28
+
+**Supersedes:** nothing. S8 has stood in SPEC.md §5 unbuilt since v1.1
+(2026-08-21). This entry records what building it commits to.
+
+**Change:** `R/budget_impact.R` gains two alternative uptake shapes alongside
+the linear ramp — `immediate_full_uptake` and `logistic` — under one shared
+contract: the same `ramp_period_years`-length cumulative vector, the same
+declared denominator (the eligible pool, guard 3), and the same terminal share
+at year `ramp_period_years` **exactly**, so the three shapes differ in path and
+in nothing else. S8's grid is emitted to `output/tables/budget_impact_s8.csv`,
+a horizon-level scenario table in the pattern of `output/tables/scenarios.csv`,
+rather than as extra rows in `output/tables/budget_impact.csv`: A6's own output
+stays byte-identical under the linear base case, and the S8 table can carry the
+steepness column the primary table has no row to hold.
+
+**The logistic steepness is an analyst's assumption, and it is named as one.**
+`logistic_steepness_per_year` is a required argument with no default anywhere
+in `R/`, enforced by a module-boundary assertion in
+`tests/testthat/test-uptake-shape.R` on the precedent L21 set for ρ and `T`.
+Its value is stated in `analysis/run_bia.R` and in the readout: **1.0 per
+year**, over a 5-year ramp, which places the underlying logistic's 10%-to-90%
+rise at 2·ln(9) ≈ 4.39 years — most of the ramp, so this is the gentle end of
+the S-curve family. It is a chosen level in exactly the sense L12's own 5-year
+ramp period is a chosen level, and it is defended no further than that. **The
+direction of the choice is stated rather than hidden:** a larger steepness
+back-loads adoption further, widening the shape spread in the dollar figures;
+a smaller one collapses the logistic onto the linear ramp.
+
+**S8 does NOT close O12.** O12 stays open. S8 exists *because* the true
+adoption trajectory is unknown; it is the sensitivity analysis that stands in
+for an answer, not the answer.
+
+**What S8 can and cannot move, stated in advance so the result is not read as
+more than it is.** `offset_captured(H) = D(H)/D(lifetime)` is a **per treated
+patient** quantity — SPEC.md §2a says so in terms, "it depends on π, h and the
+cap setting and not on the eligible population" — so it is invariant to the
+uptake shape **by construction, exactly, at every steepness**, and the
+bounding pair brackets the base case trivially because all three coincide.
+That invariance is the S8 headline and it is a structural fact, not an
+empirical robustness finding, and the readout says so. What the shape does
+move is the population-level dollar figures: annual and cumulative net budget
+impact, and PMPM, at horizons inside or near the ramp, where immediate uptake
+front-loads the whole adoption wave into year 1 and the logistic defers it
+past the midpoint. Those are the figures S8 reports.
+
+**Effect on A1–A7: none.** `R/budget_impact.R` gains functions and loses
+nothing; `analysis/run_bia.R` gains one output and its existing two regenerate
+byte-identical under the linear base case. No file in `R/` outside
+`R/budget_impact.R` is touched.
