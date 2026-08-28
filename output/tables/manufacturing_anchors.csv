@@ -1,5 +1,5 @@
-# commit: 5f2c9eaae1613ce6716eb0f8780ee028e0cae07e
-# spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
+# commit: 4a95e874c3b92973d5ed4577bb8cebe7d09f8123
+# spec_sha256: 7377ef3cb2949720c28e3ecdd800621e5460ca5e300d5f815f68374800f993b4
 "case_study","product_origin","allogeneic","treatments_per_batch","cost_per_treatment_usd"
 1,"Allogeneic peripheral blood",TRUE,1,49058.1783065177
 2,"Allogeneic peripheral blood",TRUE,1,32574.8679927935

@@ -1,5 +1,5 @@
-# commit: 5f2c9eaae1613ce6716eb0f8780ee028e0cae07e
-# spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
+# commit: 4a95e874c3b92973d5ed4577bb8cebe7d09f8123
+# spec_sha256: 7377ef3cb2949720c28e3ecdd800621e5460ca5e300d5f815f68374800f993b4
 "induction_window_weeks","maintenance_cap","horizon","max_state_sum_deviation","n_cycles_checked","cohort_exhausted"
 4,"on","lifetime",2.33146835171283e-15,1692,TRUE
 4,"off","lifetime",4.21884749357559e-15,1692,TRUE
