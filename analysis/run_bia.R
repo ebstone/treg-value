@@ -90,6 +90,38 @@ HORIZONS <- list(
   list(id = "30yr", years = 30, class = "extended_projection")
 )
 BASE_CASE_HORIZON <- "3yr" # L10
+
+# --- S8: the uptake-shape bounding pair ----------------------------------
+# SPEC.md section 5 (S8), L12, and the 2026-08-28 amendment that records what
+# building it commits to.
+#
+# S8 IS NOT AN ANSWER TO O12. O12 -- the adoption trajectory for a
+# first-in-class one-time cell therapy in a chronic non-oncology indication --
+# stays open. S8 is the sensitivity analysis that exists BECAUSE the true
+# trajectory is unknown, and it closes nothing.
+#
+# THE STEEPNESS IS AN ANALYST'S ASSUMPTION, NAMED HERE AND DEFENDED NO
+# FURTHER. `R/budget_impact.R` supplies no default for it, exactly as L12's
+# 5-year ramp period is a chosen level rather than a derivation. At 1.0 per
+# year over a 5-year ramp the underlying logistic's 10%-to-90% rise takes
+# 2*log(9) = 4.39 years, most of the window, which puts this at the gentle end
+# of the S-curve family: it defers 37% of the first year's linear intake and
+# recovers it by the ramp midpoint. The DIRECTION of the choice is stated so a
+# reader can price it: a larger steepness back-loads adoption further and
+# widens the shape spread in the dollar figures, and a smaller one collapses
+# the logistic onto the linear ramp. The offset-capture progression is
+# unaffected at every steepness, for the structural reason below.
+S8_LOGISTIC_STEEPNESS_PER_YEAR <- 1.0
+
+# The population schedule is the readout's own two cells rather than the full
+# ladder above. Net budget impact scales exactly linearly in the number
+# treated (T16), so a shape comparison run at a second pool size would be the
+# same three ratios printed twice.
+S8_UPTAKE_SCHEDULE <- list(
+  list(u = 0.25, n = 1e5),
+  list(u = 1.00, n = 1e5)
+)
+S8_SHAPE_TAGS <- c(linear_ramp = "lin", logistic = "log", immediate_full_uptake = "imm")
 RECONCILIATION_HORIZONS <- list(
   list(id = "3yr", years = 3),
   list(id = "30yr", years = 30),
@@ -134,6 +166,7 @@ ANALOG_LIST_PRICE_USD_PER_COURSE <- median(analogs$us_list_price_usd, na.rm = TR
 # --- Per-patient cost streams, computed once at the lifetime horizon ------
 rows <- list()
 recon_rows <- list()
+s8_rows <- list()
 
 for (cap_on in CAPS) {
   cap_label <- if (cap_on) "on" else "off"
@@ -290,6 +323,76 @@ for (cap_on in CAPS) {
                 pi_at_or_above_required = pi_cure_value >= required_pi - 1e-9,
                 stringsAsFactors = FALSE)
             }
+
+            # --- S8 -----------------------------------------------------
+            # One row per shape per horizon, not per year: S8 asks whether a
+            # conclusion survives the path, and the year detail that answers
+            # it for the base case is already in budget_impact.csv. Emitted
+            # to its own file so A6's primary output stays byte-identical
+            # under the linear base case and so the steepness has a column to
+            # live in.
+            #
+            # `offset_captured_share` is carried deliberately, and it is the
+            # one column here that CANNOT move between the three rows of a
+            # group: it is built from `offset_cumulative` and
+            # `lifetime_offset`, both computed per treated patient outside
+            # every uptake loop, so no shape reaches it. Printing it three
+            # times identically is the finding, not a redundancy.
+            for (s8_shape in BIA_UPTAKE_SHAPES) {
+              for (s8_sched in S8_UPTAKE_SCHEDULE) {
+                s8_newly <- uptake_newly_treated_patients_of_shape(s8_sched$n, s8_sched$u,
+                  s8_shape, S8_LOGISTIC_STEEPNESS_PER_YEAR)
+                s8_in_window <- c(s8_newly,
+                  numeric(max(hz$years - length(s8_newly), 0L)))[seq_len(hz$years)]
+                s8_treg_world <- st$treg_world(pr$price, treg_annual, s8_newly, hz$years)
+                s8_current_care <- st$current_care(comp_annual, s8_newly, hz$years)
+                s8_net <- net_budget_impact_usd_per_year(s8_treg_world, s8_current_care)
+                s8_captured <- if (st$discounted) {
+                  offset_captured_share(offset_cumulative, lifetime_offset)[hz$years]
+                } else {
+                  NA_real_
+                }
+                s8_group <- sprintf("cap%s-h%02.0f-pi%03.0f-%s-u%03.0f-n%.0f-%s-%s",
+                  cap_label, 100 * h, 100 * pi_cure_value,
+                  if (pr$source == "frontier_P_star") "pstar" else "analog",
+                  100 * s8_sched$u, s8_sched$n, hz$id,
+                  if (st$discounted) "disc" else "nom")
+                s8_rows[[length(s8_rows) + 1]] <- data.frame(
+                  scenario_id = paste0("s8-", S8_SHAPE_TAGS[[s8_shape]], "-", s8_group),
+                  scenario_group_id = s8_group,
+                  uptake_shape = s8_shape,
+                  uptake_ramp_period_years = BIA_UPTAKE_RAMP_PERIOD_YEARS,
+                  uptake_logistic_steepness_per_year = if (s8_shape == "logistic") {
+                    S8_LOGISTIC_STEEPNESS_PER_YEAR
+                  } else {
+                    NA_real_
+                  },
+                  maintenance_cap = cap_label,
+                  induction_window_weeks = INDUCTION_WINDOW_WEEKS,
+                  price_source = pr$source,
+                  price_usd_per_course = pr$price,
+                  pi_cure = pi_cure_value,
+                  h_per_year = h,
+                  lambda_usd_per_qaly = LAMBDA_USD_PER_QALY,
+                  terminal_uptake_share = s8_sched$u,
+                  assumed_eligible_population_patients = s8_sched$n,
+                  reporting_horizon = hz$id,
+                  reporting_horizon_years = hz$years,
+                  horizon_class = hz$class,
+                  is_base_case_horizon = hz$id == BASE_CASE_HORIZON,
+                  discounted = st$discounted,
+                  discounting_base_case = discounting_base_case_for(hz$class, st$discounted),
+                  patients_newly_treated_first_year_patients = s8_in_window[1],
+                  patients_ever_treated_patients = sum(s8_in_window),
+                  final_year_net_budget_impact_usd_per_year = s8_net[hz$years],
+                  final_year_net_budget_impact_usd_pmpm =
+                    usd_per_year_to_usd_pmpm(s8_net[hz$years]),
+                  cumulative_net_budget_impact_usd = sum(s8_net),
+                  offset_captured_share = s8_captured,
+                  required_cure_fraction_all_treated = required_pi,
+                  stringsAsFactors = FALSE)
+              }
+            }
           }
         }
       }
@@ -311,8 +414,24 @@ stamp_output(bia, "output/tables/budget_impact.csv")
 recon <- do.call(rbind, recon_rows)
 stamp_output(recon, "output/tables/budget_impact_reconciliation.csv")
 
+s8 <- do.call(rbind, s8_rows)
+for (col in grep("_usd$|_usd_per_year$|_usd_pmpm$|_usd_per_course$", names(s8), value = TRUE)) {
+  s8[[col]] <- round(s8[[col]], 2)
+}
+s8$offset_captured_share <- round(s8$offset_captured_share, 6)
+s8$required_cure_fraction_all_treated <- round(s8$required_cure_fraction_all_treated, 6)
+stamp_output(s8, "output/tables/budget_impact_s8.csv")
+
 lifetime_leg <- recon[recon$reporting_horizon == "lifetime", ]
 cat(sprintf("Wrote budget_impact.csv (%d rows) and budget_impact_reconciliation.csv (%d rows).\n",
   nrow(bia), nrow(recon)))
 cat(sprintf("T13 reconciliation, lifetime leg: worst |bia route - frontier route| = $%.6f over %d legs.\n",
   max(abs(lifetime_leg$agreement_usd)), nrow(lifetime_leg)))
+
+cat(sprintf("Wrote budget_impact_s8.csv (%d rows, %d scenario groups x %d shapes).\n",
+  nrow(s8), length(unique(s8$scenario_group_id)), length(BIA_UPTAKE_SHAPES)))
+s8_spread <- vapply(split(s8$offset_captured_share, s8$scenario_group_id), function(x) {
+  if (all(is.na(x))) 0 else max(x, na.rm = TRUE) - min(x, na.rm = TRUE)
+}, numeric(1))
+cat(sprintf("S8: worst offset-capture spread across the three shapes = %.10f pp over %d groups.\n",
+  100 * max(s8_spread), length(s8_spread)))

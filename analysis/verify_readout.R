@@ -169,6 +169,74 @@ small <- bia[!bia$discounted & bia$reporting_horizon == "3yr" & final_year &
 check_in("plan-scale cumulative", usd_millions(small$cumulative_net_budget_impact_usd))
 check_in("plan-scale pmpm", usd_cents(small$net_budget_impact_usd_pmpm))
 
+# --- S8, the uptake-shape bounding pair (inside the same BIA section) -----
+#
+# Scoped to `bia_html` like everything above it. Two kinds of check, and the
+# second is the one that matters: the fifteen dollar figures and the five
+# percentages are string spot checks in the usual way, but S8's HEADLINE is a
+# claim that three numbers are equal, and a string match cannot express that.
+# The invariance is therefore recomputed here from the committed table and
+# asserted directly, so a change that made the progression shape-dependent
+# would fail this script even if every printed figure were updated to match.
+s8 <- read.csv("output/tables/budget_impact_s8.csv", comment.char = "#", stringsAsFactors = FALSE)
+s8_base <- s8[s8$maintenance_cap == "on" & s8$h_per_year == 0.05 & s8$pi_cure == 0.5 &
+  s8$price_source == "frontier_P_star" & s8$terminal_uptake_share == 0.25 &
+  s8$assumed_eligible_population_patients == 1e5, ]
+s8_cell <- function(shape, hz, column) {
+  r <- s8_base[s8_base$uptake_shape == shape & s8_base$reporting_horizon == hz &
+    s8_base$discounting_base_case, ]
+  r[[column]]
+}
+S8_SHAPES <- c("logistic", "linear_ramp", "immediate_full_uptake")
+for (hz in c("1yr", "3yr", "5yr", "10yr", "30yr")) {
+  for (shape in S8_SHAPES) {
+    check_in(sprintf("S8 %s %s", shape, hz),
+      usd_millions(s8_cell(shape, hz, "cumulative_net_budget_impact_usd")))
+  }
+  # The offset-capture column, printed once per row because all three shapes
+  # carry the same value. Read off the discounted leg, where the share is
+  # defined; the undiscounted rows carry NA by the same convention
+  # budget_impact.csv uses.
+  share <- unique(s8_base$offset_captured_share[s8_base$reporting_horizon == hz &
+    s8_base$discounted])
+  check_in(sprintf("S8 offset captured %s", hz), paste0(pct(share), "%"))
+}
+# The two ratios and the two patient counts the S8 prose names.
+s8_ratio <- function(shape, hz) {
+  100 * (s8_cell(shape, hz, "cumulative_net_budget_impact_usd") /
+    s8_cell("linear_ramp", hz, "cumulative_net_budget_impact_usd") - 1)
+}
+for (shape in c("logistic", "immediate_full_uptake")) {
+  check_in(sprintf("S8 3yr ratio %s", shape), paste0(sprintf("%.1f", s8_ratio(shape, "3yr")), "%"))
+}
+for (shape in c("logistic", "immediate_full_uptake")) {
+  check_in(sprintf("S8 year-1 treated %s", shape),
+    formatC(round(s8_cell(shape, "1yr", "patients_newly_treated_first_year_patients")),
+      big.mark = ",", format = "d"))
+}
+# The steepness, and the 10%-to-90% rise it implies -- recomputed from the
+# committed column rather than transcribed, so the readout's "1.0 per year"
+# and "4.4 years" cannot drift apart from the value the run actually used.
+s8_k <- unique(s8$uptake_logistic_steepness_per_year[s8$uptake_shape == "logistic"])
+if (length(s8_k) != 1) {
+  fails <- c(fails, "S8: more than one logistic steepness in budget_impact_s8.csv")
+} else {
+  check_in("S8 steepness", sprintf("%.1f per year", s8_k))
+  check_in("S8 10-90 rise", sprintf("%.1f years", 2 * log(9) / s8_k))
+}
+# S8's headline, asserted rather than matched: the offset-capture progression
+# is identical across the three shapes in every scenario group, and the count
+# of groups where it is defined is the number the readout prints.
+s8_spread <- vapply(split(s8$offset_captured_share, s8$scenario_group_id), function(x) {
+  if (all(is.na(x))) NA_real_ else max(x, na.rm = TRUE) - min(x, na.rm = TRUE)
+}, numeric(1))
+s8_defined <- sum(!is.na(s8_spread))
+if (!identical(max(s8_spread, na.rm = TRUE), 0)) {
+  fails <- c(fails, sprintf("S8 headline: offset-capture spread across shapes is %g, not 0",
+    max(s8_spread, na.rm = TRUE)))
+}
+check_in("S8 defined scenario cells", formatC(s8_defined, big.mark = ",", format = "d"))
+
 # The refractory co-primary population is retired (SPEC_AMENDMENTS.md,
 # 2026-08-21) and its section removed from the readout, so its output table
 # is no longer checked against readout text here. output/tables/
