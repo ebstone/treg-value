@@ -79,6 +79,137 @@ uptake_cumulative_share <- function(terminal_uptake_share,
     "eligible_population_patients")
 }
 
+# --- S8: the uptake-shape bounding pair ------------------------------------
+#
+# L12 locks the SHAPE and sweeps the LEVEL, and names S-curve and
+# immediate-full-uptake as the bounding scenario pair around the linear base
+# case. The two functions below are that pair. They exist because the true
+# adoption trajectory is unknown (O12), which S8 does not close: S8 is the
+# sensitivity analysis that stands in place of an answer.
+#
+# ONE CONTRACT, THREE PATHS. Every shape returns a `ramp_period_years`-length
+# cumulative vector, declares the same denominator (the eligible pool, guard
+# 3), and reaches EXACTLY `terminal_uptake_share` at year `ramp_period_years`.
+# The single adoption wave (L15) is therefore a property of the contract and
+# not of one implementation: the same u*N patients are treated under every
+# shape, at different times, and nobody is treated after the ramp. A shape
+# that reached a different endpoint would be varying the level under cover of
+# varying the path, and would make S8 uninterpretable as a shape scenario.
+#
+# WHAT S8 CAN AND CANNOT MOVE. `offset_captured(H) = D(H)/D(lifetime)` is a
+# PER TREATED PATIENT quantity -- SPEC.md section 2a says so in terms -- so it
+# is invariant to the uptake shape by construction, exactly, at every
+# steepness. That invariance is S8's headline and it is structural, not an
+# empirical robustness finding. What the shape moves is the population-level
+# dollar figures at horizons inside or near the ramp, where immediate uptake
+# puts the whole adoption wave in year 1 and the logistic defers most of it
+# past the ramp midpoint.
+
+BIA_UPTAKE_SHAPES <- c("linear_ramp", "logistic", "immediate_full_uptake")
+
+#' Immediate full uptake: the entire terminal share is treated in the first
+#' adoption year, so the cumulative vector is flat at `terminal_uptake_share`
+#' from year 1 (S8's fast bound).
+#'
+#' The vector keeps its `ramp_period_years` length rather than collapsing to
+#' one element. Length is the only place L15's single adoption wave is visible
+#' -- `tests/testthat/test-budget-impact.R` reads it there -- and a shape whose
+#' length depended on the shape would make the three paths incomparable at the
+#' one year where they must agree.
+uptake_cumulative_share_immediate <- function(terminal_uptake_share,
+                                               ramp_period_years = BIA_UPTAKE_RAMP_PERIOD_YEARS) {
+  stopifnot(terminal_uptake_share >= 0, terminal_uptake_share <= 1,
+    ramp_period_years >= 1, ramp_period_years == round(ramp_period_years))
+  with_denominator(rep(terminal_uptake_share, ramp_period_years),
+    "eligible_population_patients")
+}
+
+#' Logistic (S-curve) uptake: a symmetric logistic over the ramp window,
+#' pinned to 0 at the start and to `terminal_uptake_share` at year
+#' `ramp_period_years`, with its inflection at the ramp midpoint (S8's slow
+#' bound).
+#'
+#' On continuous ramp time t in [0, R] with midpoint m = R/2 and steepness k,
+#' the underlying curve is `g(t) = 1 / (1 + exp(-k * (t - m)))` and the shape
+#' actually used is the pinned rescaling
+#'
+#'     F(t) = (g(t) - g(0)) / (g(R) - g(0)),
+#'
+#' evaluated at t = 1, ..., R and multiplied by the terminal share. F(R) is
+#' the ratio of a floating-point number to itself and is therefore 1 to the
+#' bit, which is what makes the shared endpoint an identity rather than a
+#' tolerance.
+#'
+#' THE ORDERING AGAINST THE LINEAR RAMP IS NOT A SINGLE CHAIN, and stating it
+#' wrongly is the easy mistake here. g is symmetric about m, so F(R - t) =
+#' 1 - F(t); the linear path t/R is antisymmetric about the same centre. g is
+#' convex on [0, m] and concave on [m, R], and F is a positive affine image of
+#' g, so F inherits both. A convex F on [0, m] running from F(0) = 0 to
+#' F(m) = 1/2 lies on or below the chord between those two points, and that
+#' chord IS the linear path. Hence the logistic runs at or below the linear
+#' ramp on the first half of the window and at or above it on the second,
+#' crossing at the midpoint and meeting it again at the endpoint. Immediate
+#' uptake is at or above both, everywhere. "Immediate >= linear >= logistic at
+#' every year" is false past the midpoint.
+#'
+#' `logistic_steepness_per_year` carries NO DEFAULT. It is unsourceable in
+#' exactly the way L12's own 5-year ramp period is unsourceable, and it is
+#' handled the same way: a value the caller must name, recorded as an
+#' analyst's assumption under O12 rather than defended as a derivation. A
+#' default here would let a shape scenario acquire a steepness nobody chose,
+#' which is the failure guard 7 exists to prevent, in a parameter guard 7 does
+#' not itself watch. As k falls the shape collapses onto the linear ramp; as k
+#' rises it approaches a step at the midpoint.
+uptake_cumulative_share_logistic <- function(terminal_uptake_share, logistic_steepness_per_year,
+                                              ramp_period_years = BIA_UPTAKE_RAMP_PERIOD_YEARS) {
+  stopifnot(terminal_uptake_share >= 0, terminal_uptake_share <= 1,
+    ramp_period_years >= 1, ramp_period_years == round(ramp_period_years),
+    is.numeric(logistic_steepness_per_year), length(logistic_steepness_per_year) == 1,
+    logistic_steepness_per_year > 0)
+  midpoint_years <- ramp_period_years / 2
+  g <- function(t) 1 / (1 + exp(-logistic_steepness_per_year * (t - midpoint_years)))
+  at_start <- g(0)
+  at_end <- g(ramp_period_years)
+  pinned <- (g(seq_len(ramp_period_years)) - at_start) / (at_end - at_start)
+  with_denominator(terminal_uptake_share * pinned, "eligible_population_patients")
+}
+
+#' The cumulative share under a named shape. One dispatch point, so a caller
+#' cannot reach the logistic branch without having named a steepness: the
+#' argument is required and is forced on every path, including the two shapes
+#' that do not read it.
+uptake_cumulative_share_of_shape <- function(uptake_shape, terminal_uptake_share,
+                                              logistic_steepness_per_year,
+                                              ramp_period_years = BIA_UPTAKE_RAMP_PERIOD_YEARS) {
+  force(logistic_steepness_per_year)
+  stopifnot(is.character(uptake_shape), length(uptake_shape) == 1,
+    uptake_shape %in% BIA_UPTAKE_SHAPES)
+  switch(uptake_shape,
+    linear_ramp = uptake_cumulative_share(terminal_uptake_share, ramp_period_years),
+    logistic = uptake_cumulative_share_logistic(terminal_uptake_share,
+      logistic_steepness_per_year, ramp_period_years),
+    immediate_full_uptake = uptake_cumulative_share_immediate(terminal_uptake_share,
+      ramp_period_years))
+}
+
+#' Patients newly treated in each adoption year under a named uptake shape --
+#' the shape-aware counterpart of `uptake_newly_treated_patients()`, which
+#' remains the linear base case L12 locks.
+#'
+#' `eligible_population_patients` is O11 and carries no default (guard 7);
+#' `logistic_steepness_per_year` carries none either, for the reason
+#' `uptake_cumulative_share_logistic()` records.
+uptake_newly_treated_patients_of_shape <- function(eligible_population_patients,
+                                                    terminal_uptake_share, uptake_shape,
+                                                    logistic_steepness_per_year,
+                                                    ramp_period_years = BIA_UPTAKE_RAMP_PERIOD_YEARS) {
+  stopifnot(eligible_population_patients >= 0)
+  cumulative <- uptake_cumulative_share_of_shape(uptake_shape, terminal_uptake_share,
+    logistic_steepness_per_year, ramp_period_years)
+  stopifnot(identical(denominator_of(cumulative), "eligible_population_patients"))
+  eligible_population_patients * diff(c(0, as.numeric(cumulative)))
+}
+
 #' Patients newly treated in each adoption year -- the first difference of the
 #' cumulative share, times the eligible pool.
 #'

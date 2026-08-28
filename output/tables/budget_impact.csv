@@ -1,5 +1,5 @@
-# commit: 5f2c9eaae1613ce6716eb0f8780ee028e0cae07e
-# spec_sha256: a85c11b0f32710be93f7ffc049a0cf15d689ac7bef6e9d8aaeaebf2be8c981b7
+# commit: 4a95e874c3b92973d5ed4577bb8cebe7d09f8123
+# spec_sha256: 7377ef3cb2949720c28e3ecdd800621e5460ca5e300d5f815f68374800f993b4
 "scenario_id","uptake_shape","uptake_ramp_period_years","maintenance_cap","induction_window_weeks","price_source","price_usd_per_course","pi_cure","h_per_year","lambda_usd_per_qaly","terminal_uptake_share","assumed_eligible_population_patients","reporting_horizon","reporting_horizon_years","horizon_class","is_base_case_horizon","discounted","discounting_base_case","year","patients_newly_treated_patients","patients_ever_treated_patients","treg_world_expenditure_usd_per_year","current_care_expenditure_usd_per_year","net_budget_impact_usd_per_year","net_budget_impact_usd_pmpm","cumulative_net_budget_impact_usd","offset_captured_share","required_cure_fraction_all_treated","pi_at_or_above_required"
 "capon-h00-pi025-pstar-u000-n100000","linear_ramp",5,"on",8,"frontier_P_star",85198.35,0.25,0,1e+05,0,1e+05,"1yr",1,"bia",FALSE,TRUE,FALSE,1,0,0,0,0,0,0,0,0.047128,0.25,TRUE
 "capon-h00-pi025-pstar-u025-n1000","linear_ramp",5,"on",8,"frontier_P_star",85198.35,0.25,0,1e+05,0.25,1000,"1yr",1,"bia",FALSE,TRUE,FALSE,1,50,50,4689541.38,504562.26,4184979.12,0.35,4184979.12,0.047128,0.25,TRUE

@@ -2,6 +2,34 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-08-28 (S8 built; S9 retired)
+
+- Scenario S9 (current-treatment-mix comparator) retired and the
+  single-comparator assumption restated as a standing limitation in SPEC.md
+  L13, section 2a and `docs/results_readout.html`; O13 closed as C12; scenario
+  S8 (uptake shape) built as the bounding pair {logistic, immediate} around
+  the linear ramp, in `R/budget_impact.R` +
+  `analysis/run_bia.R` -> `output/tables/budget_impact_s8.csv` (2,880 rows,
+  960 scenario groups x 3 shapes), with the logistic steepness a required
+  argument carrying no default (1.0 per year, an analyst's assumption under
+  O12, which S8 does not close). **S8's headline: the offset-capture
+  progression is invariant to the uptake shape exactly -- a 0.0 percentage
+  point spread in each of the 480 cells where it is defined -- because it is a
+  per-treated-patient quantity no uptake vector reaches; what the shape moves
+  is the dollar figure, by a factor of eight at one year, +8.2%/+61.7% at
+  three, and under 6% from five years on.** Covered by the new
+  `tests/testthat/test-uptake-shape.R` (the shared shape contract; exact
+  terminal-share endpoint; the derived ordering, in which the logistic crosses
+  the linear ramp at the ramp midpoint rather than sitting below it
+  throughout; L15's single wave under every shape; T13 restated over each
+  shape's cohort stack, closing to under $0.01; the structural and empirical
+  forms of the invariance; three falsification fixtures -- an unpinned
+  logistic that misses the terminal share, a shape that drops its denominator
+  declaration, and an unnamed shape; and the no-default module boundary), by
+  `analysis/verify_readout.R`'s extended budget-impact scope, and by
+  `test-stamping.R` for the new output. Full suite green: 0 failures, 3,957
+  passes. A1-A7 byte-identical bar the stamp lines.
+
 ## 2026-08-23 (W10: the A7 readout, and the deferred CHEERS refresh)
 
 - New `docs/results_readout.html` section, "Alternative payment
