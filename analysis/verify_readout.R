@@ -53,6 +53,21 @@ for (i in seq_len(nrow(r))) {
   }
 }
 
+# The section's closing note also quotes the three allogeneic anchors at
+# lambda $50k, h = 5% -- the one lambda the loop above skips. Check that
+# exact triple against the CSV, keyed off the sentence's own tail phrase so
+# the three figures are pinned in order.
+allo <- c("Allogeneic, batch-amortised (low)", "Allogeneic median",
+          "Allogeneic, single-treatment batch (high)")
+r50 <- r[r$lambda_usd_per_qaly == 5e4 & r$h_per_year == 0.05, ]
+r50 <- r50[match(allo, r50$benchmark_anchor), ]
+prose50 <- paste0(
+  paste(sprintf("%.1f%%", 100 * r50$required_cure_fraction_all_treated), collapse = " / "),
+  " for the three allogeneic anchors")
+if (!grepl(prose50, html, fixed = TRUE)) {
+  fails <- c(fails, sprintf("required cure fraction lambda $50k h=5%% note: '%s' NOT FOUND in readout", prose50))
+}
+
 p <- read.csv("output/tables/psa_summary.csv", comment.char = "#")
 for (i in seq_len(nrow(p))) {
   check(paste("PSA B mean", p$lambda_usd_per_qaly[i], p$h_per_year[i]), p$b_mean[i], usd(p$b_mean[i]))

@@ -17,6 +17,9 @@ citation:
   pages: 388-397
   doi: 10.1016/j.jcyt.2020.03.432
   open_access_copy: https://dspace.library.uu.nl/bitstream/handle/1874/442540/1_s2.0_S1465324920304965_main.pdf
+  version_of_record: >
+    Cytotherapy 22(7):388-397, ScienceDirect (10 pp., Acrobat Distiller).
+    The article is open access under CC BY 4.0.
 table_or_page: "Table I (p.391, case study characteristics) and Table II (p.394, cost per batch and treatment)"
 retrieved: 2026-08-12
 retrieved_via: >
@@ -26,6 +29,17 @@ retrieved_via: >
   pages 391 and 394, cross-checked against the rendered page images and
   against row-sum arithmetic (Materials + Equipment + Personnel + Facility =
   Total/batch, to within the source's own rounding).
+verified_against_version_of_record: >
+  2026-09-03: a co-author supplied the publisher version of record. Every
+  transcribed cell of Table I (case study characteristics, p.391) and
+  Table II (total cost per batch and per treatment, p.394) was re-checked
+  against it field by field -- the pre- and post-failure-rate rows, the
+  fixed/variable split, the treatment-yield row and every parenthetical
+  percentage. No discrepancy: the CSV reproduces the version of record
+  exactly, so its SHA-256 below is unchanged. The article-text claims cited
+  in unit_note and notes were also confirmed against the version of record.
+  This closes the concern that the original transcription rested on a
+  repository copy rather than the published article.
 sha256: 41d7e18a9c0f4858ad2fa030cbe25f89eaf80df04602ec52f2bf9289f65411cb
 unit_note: >
   ten Ham reports cost per *treatment*, not per dose. Case study 8 (D-8) is
@@ -58,16 +72,20 @@ unresolved:
   - id: U2
     issue: >
       Case study 5 (B-5)'s product is manufactured according to a
-      proprietary protocol per the paper's Declaration of Competing
-      Interest -- its cost breakdown may not be independently reproducible
-      or auditable in the way the other seven are.
+      proprietary protocol -- Declaration of Competing Interest, verbatim:
+      "The non-killer cell product of case B-5 is manufactured according to
+      a proprietary protocol." Its cost breakdown may not be independently
+      reproducible or auditable in the way the other seven are.
     blocks: none currently; noted for any sensitivity analysis restricted to
       auditable case studies
 notes: >
-  Currency is 2018 EUR throughout (stated in Methods: "Costs are reported in
-  2018 euros because that was the most recent full financial year of data
-  collection"). Failure rate of 5% is an assumption the authors made based on
-  developer interviews (Methods), not a measured figure. Re-basing to 2025
-  USD, and any choice of which case studies (if any) inform the Treg
+  Currency is 2018 EUR throughout (Methods, verbatim: "Costs are reported in
+  2018 euros (EUR) because this was the most recent full financial year at
+  time of data collection"). The 5% failure rate is an assumption, not a
+  per-case measurement (Results, "Total batch cost, failure rate and post
+  hoc adjustments", verbatim: "Based on developer interviews, we assumed a
+  5% failure rate (% failed batches) across case studies. This assumption is
+  based on the average failure rate observed across facilities"). Re-basing
+  to 2025 USD, and any choice of which case studies (if any) inform the Treg
   manufacturing benchmark, is a derive/ (W5) decision, not a transcription
   one.

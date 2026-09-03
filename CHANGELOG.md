@@ -2,7 +2,28 @@
 
 One line per session: what changed, and which tests now cover it.
 
-## 2026-08-28 (S8 built; S9 retired)
+## 2026-09-03 (ten Ham verified against the version of record; one readout figure corrected)
+
+- A co-author supplied the publisher version of record for ten Ham et al.
+  2020 (Cytotherapy 22(7):388-397), which the original W2 transcription had
+  taken from the Utrecht repository author copy. Every cell of Table I and
+  Table II -- pre- and post-failure-rate rows, fixed/variable splits,
+  treatment-yield row, parenthetical percentages -- re-checked field by field
+  against it: no discrepancy, so `data/raw/tenham2020_case_studies.csv` and
+  its SHA-256 are unchanged. The sidecar records the verification
+  (`verified_against_version_of_record`), tightens the two article-text
+  quotes in `notes` to their exact wording, and adds the Declaration of
+  Competing Interest quote to U2. This closes the provenance concern that the
+  transcription rested on a repository copy.
+- Corrected one derived figure in `docs/results_readout.html`: the
+  required-cure-fraction section's closing note gave the lambda $50k, h = 5%
+  batch-amortised anchor as 18.4% where `output/tables/required_cure_fraction.csv`
+  gives 11.9% ((12266 - (-1717)) / 117851); the other two anchors in the
+  sentence (34.2%, 60.0%) were already right, and "roughly a third higher"
+  is now "roughly 40% higher" to match the corrected triple. `verify_readout.R`
+  now pins that sentence's three anchors against the CSV (previously its
+  required-cure-fraction loop skipped lambda $50k, which is why the slip
+  survived). No code or output CSV changed; `verify_readout.R` passes.
 
 - Scenario S9 (current-treatment-mix comparator) retired and the
   single-comparator assumption restated as a standing limitation in SPEC.md
