@@ -2,6 +2,29 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-09-10 (US CD advanced-therapy share candidates sourced for O1/O11 -- disagreement recorded, not resolved)
+
+- A DelveInsight market-research page Eric supplied for CD severity share
+  was checked and rejected: its free severity split (461,000 mild /
+  755,000 moderate-to-severe) doesn't reconcile against its own stated
+  total prevalence, cites no primary source, and is the same vendor class
+  this repository already declined to use for O13.
+- Added `data/raw/us_cd_biologic_treated_share.csv` + sidecar instead: two
+  real, peer-reviewed, claims/EMR-based US estimates of the
+  advanced-therapy-treated share of diagnosed CD patients -- Yu et al.
+  2018 (MarketScan) 21.8%->43.8% (2007->2015); Xu et al. 2022 (IQVIA AEMR)
+  13.3%->32.1% (2011->2020). These **materially disagree** (Xu's later
+  endpoint is lower than Yu's earlier one) for reasons not resolved here;
+  both are also stale against 2026's advanced-therapy landscape. Recorded
+  as a genuine unresolved disagreement, structurally like C8's Aliyev
+  PMPM gap, not silently picked between.
+- `docs/W2_sourcing_register.md` S-6 updated: records both candidates and
+  the DelveInsight rejection; still asks for a value/bounding-pair
+  decision and its sign-off before O1/O11's severity link can close.
+- No `R/`, `SPEC.md`, or `OPEN_QUESTIONS.md` status change. G1 checked
+  standalone against the new sidecar (list-valued multi-source citation
+  field) -- zero problems.
+
 ## 2026-09-10 (US Crohn's prevalence/incidence sourced for O11/O15 -- sourcing only, no wiring)
 
 - Eric supplied US Crohn's population figures attributed to a "Nationwide

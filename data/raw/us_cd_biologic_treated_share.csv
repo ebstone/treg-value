@@ -1,0 +1,3 @@
+source_key,cohort_start_year,cohort_end_year,share_start_pct,share_end_pct,data_source,denominator_definition,n_cd_patients
+yu2018_marketscan,2007,2015,21.8,43.8,truven_marketscan_commercial_claims,"CD patients with >=1 pharmaceutical claim or biologic infusion in that calendar year",188842
+xu2022_iqvia_aemr,2011,2020,13.3,32.1,iqvia_ambulatory_emr,"CD patients identified by ICD-9/10-CM + SNOMED code at an outpatient encounter that year",52892
