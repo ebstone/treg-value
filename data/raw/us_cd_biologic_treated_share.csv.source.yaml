@@ -77,11 +77,14 @@ notes: >
   the abstract and may include populations with more access friction.
 
   Both figures are also now stale for a 2026 base case regardless of which
-  is preferred: Xu's data ends 2020, before risankizumab (2022) and
-  upadacitinib (2023) were approved for CD, and before mirikizumab (2024)
-  and guselkumab (2025) -- four more advanced-therapy options than either
-  cohort's treatment era included. If anything, both figures are floors on
-  a current share, not current estimates.
+  is preferred: Xu's data ends 2020, before risankizumab (CD indication
+  approved 2022) and upadacitinib (2023) were approved for CD, and before
+  mirikizumab (CD indication approved January 2025 -- corrected 2026-09-10;
+  originally miswritten here as 2024, which is mirikizumab's earlier
+  ulcerative-colitis approval, not its Crohn's one) and guselkumab (CD
+  indication approved March 2025) -- four more advanced-therapy options
+  than either cohort's treatment era included. If anything, both figures
+  are floors on a current share, not current estimates.
 unresolved:
   - id: U1
     issue: >
