@@ -111,9 +111,11 @@ cycling in and out. That was a category error and is not carried forward.
 
 ## S-6. US eligible population — CDC/NHIS prevalence + published CD severity distribution
 
-**Status:** not sourced. Opened with A6 (SPEC.md v1.1, O11).
+**Status:** first link (prevalence) sourced 2026-09-10; second link (severity/treatment-line share) still not sourced. Opened with A6 (SPEC.md v1.1, O11).
 
-**How to close:** NHIS adult IBD prevalence for the most recent published year, then a published moderate-to-severe or advanced-therapy share with its cohort definition recorded. Decide and record which prevalence source is used and whether severity is a point or a bounding pair — candidates disagree materially, so this is real work, not a lookup, and the direction of the choice is recorded as C10 recorded its own.
+**First link closed:** `data/raw/lewis2023_ibd_prevalence_incidence.csv` (+ sidecar) — Lewis et al. 2023, *Gastroenterology* 165(5):1197-1205.e2, PMCID PMC10592313. Claims-based (Medicare/Medicaid/commercial, pooled 1999-2017, point prevalence 2017-12-31), **Crohn's-disease-specific**, not IBD-combined — stronger than the NHIS route this entry originally anticipated, since NHIS survey data (the CDC facts-and-stats page's own second source) only reports combined IBD, never CD alone. US Crohn's prevalence: 305 per 100,000 (95% CI 302–308), extrapolated to 1.011 million against the 2020 Census. Superseded the Loftus/Olmsted-County-extrapolation figures (780,000 / ~33,000-per-year) that an earlier, older CCFA Factbook PDF had been mistakenly read from — see the sidecar's own notes for that correction.
+
+**Still open:** the moderate-to-severe or advanced-therapy share — Lewis 2023 carries no severity or treatment-line breakdown. **How to close:** a published moderate-to-severe or advanced-therapy share with its cohort definition recorded; decide and record whether severity is a point or a bounding pair — candidates disagree materially, so this remains real work, not a lookup, and the direction of the choice should be recorded the way C10 recorded its own.
 
 **Record each link with its own sidecar. Do not multiply through to a single "eligible patients" figure and record only that** — the third link (the share of moderate-to-severe patients who would be offered and accept a one-time allogeneic cell therapy) is not sourceable for a product with no label and no efficacy data, and a single product figure would hide that. That link is swept, not sourced, exactly as π is.
 
@@ -159,6 +161,18 @@ cycling in and out. That was a category error and is not carried forward.
 **How to close:** retrieve and record the Medicaid best-price interaction; the federal anti-kickback statute as it bears on value-based arrangements; and the CMS value-based purchasing rule understood to permit multiple best prices. Confidence that each is a real and relevant constraint is moderate; confidence on status and detail is low, which is why the A7 amendment refers to "the constraints named in S-10" rather than naming the three.
 
 **Why this one matters.** A study that models an arrangement US law obstructs is modelling a counterfactual, and the readout should say which it is.
+
+---
+
+## S-11. Eligible-population incidence (new-diagnosis inflow) for the 10–30 year BIA horizon
+
+**Status:** inflow half sourced 2026-09-10; outflow (turnover) half not sourced. Opened with A6 (SPEC.md v1.1, O15).
+
+**Inflow sourced:** `data/raw/lewis2023_ibd_prevalence_incidence.csv` (same file as S-6's first link) — US Crohn's disease incidence 4.1 per 100,000 person-years (95% CI 3.9–4.3), roughly 13,500–14,200 new diagnoses per year against the 2020 Census, same claims-based pooled 1999–2017 source as the prevalence figure.
+
+**Still open:** O15 asks about incidence *and turnover* — this source gives only the rate new patients enter the diagnosed population, not the rate existing patients leave it (background mortality is separately sourced via `nchs_life_table_2023.csv`, but disease-specific attrition — remission out of the eligible definition, if the eligible definition is diagnosis-based rather than active-disease-based — is not addressed by either file). **How to close the remainder:** decide what "leaving the eligible pool" means under this study's own eligible-population definition once S-6's severity/treatment-line link is sourced (a diagnosis-based pool has no disease-driven outflow; a moderate-to-severe/advanced-therapy-based pool plausibly does, e.g. patients moving into sustained remission), then source that specific attrition rate if the chosen definition needs one.
+
+**Why this matters beyond A6's 10/30yr figures.** L15 currently rejects the "flow" uptake reading (the terminal annual rate persisting for the full horizon) as "not well-defined until O15 closes" specifically because a flow reading against a fixed, non-replenishing pool is incoherent. A sourced inflow rate is necessary but not sufficient to revisit that rejection — it does not by itself resolve whether the pool should be modelled as replenishing, since that also depends on the still-unsourced severity/treatment-line share (S-6) defining what the pool actually is.
 
 ---
 
