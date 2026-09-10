@@ -1,0 +1,6 @@
+instrument,rate_pct_per_year,spread_over_benchmark_pct,benchmark,benchmark_year
+senior_bond_coupon,3.61,0.50,us_treasury_bill_yield,2018
+junior_bond_coupon,4.01,0.90,us_treasury_bill_yield,2018
+equity_tranche_annualized_return,7.00,,,
+prior_literature_equity_return_montazerhodjat,12.50,,,
+securitization_transaction_cost,2.85,,,
