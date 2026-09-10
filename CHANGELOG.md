@@ -2,6 +2,24 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-09-10 (candidate installment financing rates sourced for O16 -- sourcing only, no value chosen, no wiring)
+
+- Added `data/raw/lu2026_cgt_securitization_financing_rates.csv` + sidecar:
+  Lu, Cherla, Carter & Mossialos, *Gene Therapy* 2026;33(2):138-143 (PMCID
+  PMC13056534, CC BY 4.0), a securitization simulation study sized against
+  a Zolgensma-scale case. Reports a bond-tranche structure (senior 3.61% /
+  junior 4.01%, spreads over 2018 Treasury yields) and a higher
+  equity-tranche return (7.00%, or 12.50% per a prior proposal it cites),
+  plus a 2.85% transaction-cost wedge.
+- This is a spread of *candidate* rates, not a chosen value -- `O16` stays
+  open in `OPEN_QUESTIONS.md`. `docs/W2_sourcing_register.md` gets a new
+  S-12 entry recording the candidates and the still-open decision of which
+  (if any) matches this study's own installment-contract credit profile,
+  plus a cross-reference added to S-9 (this paper is a verified, if
+  proposed-not-executed, citation touching S-9's Zolgensma row).
+- No `R/`, `SPEC.md`, or `OPEN_QUESTIONS.md` status change. G1 (provenance)
+  checked standalone against the new sidecar -- zero problems.
+
 ## 2026-09-03 (ten Ham verified against the version of record; one readout figure corrected)
 
 - A co-author supplied the publisher version of record for ten Ham et al.

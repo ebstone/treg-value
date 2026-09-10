@@ -150,6 +150,8 @@ cycling in and out. That was a category error and is not carried forward.
 
 **If the retrieved evidence is weaker than the paraphrase, L17's and L19's rationales are rewritten, not defended.**
 
+**Partial progress 2026-09-10:** Lu, Cherla, Carter & Mossialos, *Gene Therapy* 2026;33(2):138-143 (open access, PMCID PMC13056534) is a verified citation touching the Zolgensma row above — a simulation study of a securitization structure sized against a Zolgensma-scale case. It is explicitly a **proposed/modeled** arrangement, not a report of an executed deal, so it satisfies this entry's own "proposed versus executed" distinction only on the "proposed" side; it does not corroborate that Zolgensma's real-world instalment option operated as described. See `data/raw/lu2026_cgt_securitization_financing_rates.csv.source.yaml` (sourced primarily for S-12/O16, cross-referenced here). The rest of this entry's rows (Kymriah, Luxturna, Strimvelis, Zynteglo/beti-cel, the CMS model, NEWDIGS FoCUS) remain unverified.
+
 ---
 
 ## S-10. US regulatory and legal constraints on instalment and outcomes-based contracts
@@ -159,6 +161,16 @@ cycling in and out. That was a category error and is not carried forward.
 **How to close:** retrieve and record the Medicaid best-price interaction; the federal anti-kickback statute as it bears on value-based arrangements; and the CMS value-based purchasing rule understood to permit multiple best prices. Confidence that each is a real and relevant constraint is moderate; confidence on status and detail is low, which is why the A7 amendment refers to "the constraints named in S-10" rather than naming the three.
 
 **Why this one matters.** A study that models an arrangement US law obstructs is modelling a counterfactual, and the readout should say which it is.
+
+---
+
+## S-12. Financing rate for an installment payment arrangement — O16
+
+**Status:** candidate rates sourced 2026-09-10; no single value or bounding pair chosen yet. Opened with A7 (SPEC.md v1.2, O16).
+
+**Sourced:** `data/raw/lu2026_cgt_securitization_financing_rates.csv` (+ sidecar) — Lu et al. 2026 (*Gene Therapy* 33(2):138-143, PMCID PMC13056534, CC BY 4.0), a securitization simulation sized against a Zolgensma-scale case. Reports a bond-tranche structure (senior 3.61% / junior 4.01%, each a small spread over 2018 US Treasury Bill yields) alongside a much higher equity-tranche return (7.00% this paper's own figure, or 12.50% per a prior proposal it cites), plus a 2.85% transaction-cost wedge.
+
+**Still open — this is a real modeling decision, not a lookup.** The paper offers a spread of candidate rates (3.6%–12.5%) for what is arguably the same underlying risk, viewed through different tranches of one particular securitization structure. **How to close:** decide which of these — if any — matches this study's own installment contract (a payer's direct liability, arguably closer in credit profile to the bond tranches than to venture-style equity), or retrieve a more directly comparable market rate (e.g. a current investment-grade corporate bond index, given the paper's own benchmark is 2018 Treasury yields, ~8 years stale). Record the choice and its justification the way C10 recorded its own, not as a default.
 
 ---
 

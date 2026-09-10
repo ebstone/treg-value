@@ -1,0 +1,82 @@
+file: lu2026_cgt_securitization_financing_rates.csv
+status: transcribed
+citation:
+  authors: Lu JM, Cherla AJ, Carter AW, Mossialos EA.
+  title: >
+    Securitization as a means to pay for cell and gene therapies for orphan
+    diseases: a simulation study.
+  journal: Gene Therapy
+  year: 2026
+  volume_pages: "33(2):138-143"
+  doi: 10.1038/s41434-026-00604-6
+  pmid: 41813830
+  pmcid: PMC13056534
+  license: CC BY 4.0
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC13056534/
+table_or_page: >
+  Results text describing the simulated bond/equity tranche structure for a
+  Zolgensma-scale securitization (no separate numbered table carries these
+  five figures independent of the prose they are quoted from).
+retrieved: 2026-09-10
+retrieved_via: >
+  Free full text via PMC (open access, CC BY 4.0). Located via a web search
+  for cell/gene-therapy installment financing literature after
+  W2_sourcing_register.md S-9 flagged that every real-world arrangement it
+  names (Zolgensma, Kymriah, Luxturna, Strimvelis, Zynteglo/beti-cel) was
+  offered "from memory" with no verified citation.
+sha256: 3ae94d2108220c349ce0efa6b44f40af46caeb22136d76b3ad5550d0cdfb233d
+notes: >
+  This is a simulation study of a proposed securitization structure for
+  financing cell/gene therapy, not a report of an executed real-world deal
+  -- S-9's own "proposed versus executed" distinction applies here too, and
+  this paper is squarely on the "proposed"/modeled side, sized against a
+  Zolgensma-scale case. The five rates recorded:
+
+  - senior_bond_coupon (3.61%) and junior_bond_coupon (4.01%): set as a
+    0.50pp and 0.90pp spread over "the average yields of US Treasury Bills
+    in 2018" -- the benchmark year is 2018, not current, and is transcribed
+    as the paper states it, not updated.
+  - equity_tranche_annualized_return (7.00%): the return achieved if the
+    equity securities are sold at a stated discount to par -- this paper's
+    own headline financing-cost figure for the riskiest tranche.
+  - prior_literature_equity_return_montazerhodjat (12.50%): NOT this
+    paper's own figure -- it is what this paper cites as a prior proposal
+    (Montazerhodjat et al.) for comparison, included here because O16 asks
+    for a real cost of capital and a single paper naming two competing
+    figures for the same quantity is itself useful signal about how
+    unsettled this rate is.
+  - securitization_transaction_cost (2.85%): the paper's own stated fee
+    "from paying the bondholders interest rates above the discount rate" --
+    a transaction-cost figure, not itself a financing rate; kept in this
+    file because O16's own SPEC.md note warns that a financing rate that
+    differs between the discounted and undiscounted legs would "silently
+    produce a different contract," and this transaction-cost figure is
+    exactly the kind of wedge that warning is about.
+
+  Also relevant to S-9: this paper's case is explicitly built around
+  Novartis/Zolgensma, so it is a real, citable data point for S-9's
+  Zolgensma instalment-arrangement row (still needs S-9's own
+  proposed-vs-executed check applied directly, not assumed from this note).
+unresolved:
+  - id: U1
+    issue: >
+      This is a single simulation paper, not a market rate survey. O16 asks
+      for "a real cost of capital," and this paper offers a bond-tranche
+      structure (3.6-4.0%, Treasury-linked) alongside a much higher equity
+      figure (7.0%, or 12.5% per the prior literature it cites) for what is
+      arguably the same underlying risk -- which of these, if any, is the
+      right single number for this study's own installment contract (a
+      payer's liability, closer to the bond tranches' credit profile than
+      to venture-style equity) is a modeling decision this file does not
+      make.
+    blocks: O16 itself -- a single rate (or bounding pair) still needs to be
+      chosen and justified against this study's own contract structure, not
+      copied wholesale from a differently-structured securitization vehicle
+  - id: U2
+    issue: >
+      The Treasury-yield benchmark is dated 2018, roughly eight years stale
+      as of this retrieval (2026-09-10). A current benchmark (e.g. a recent
+      investment-grade corporate bond index) may be more defensible for a
+      2026 base-case rate; not retrieved here.
+    blocks: none currently -- flagged for whoever picks the actual O16
+      value
