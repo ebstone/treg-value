@@ -1,0 +1,114 @@
+file: us_cd_biologic_treated_share.csv
+status: transcribed
+citation:
+  - key: yu2018_marketscan
+    authors: Yu H, MacIsaac D, Wong JJ, Sellers ZM, Wren AA, Bensen R, Kin C, Park KT.
+    title: Market share and costs of biologic therapies for inflammatory bowel disease in the USA.
+    journal: Alimentary Pharmacology & Therapeutics
+    year: 2018
+    volume_pages: "47(3):364-370"
+    doi: 10.1111/apt.14430
+    pmid: 29164650
+    pmcid: PMC5760274
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC5760274/
+  - key: xu2022_iqvia_aemr
+    authors: Xu F, Liu Y, Greenlund K, Carlson S.
+    title: >
+      Trends and demographic patterns in biologic and corticosteroid
+      prescriptions for inflammatory bowel disease: findings from
+      electronic medical records, 2011-2020.
+    journal: Journal of Investigative Medicine
+    year: 2022
+    volume_pages: "70(8):1771-1776"
+    doi: 10.1136/jim-2022-002486
+    pmid: 36455956
+    pmcid: PMC10468819
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC10468819/
+table_or_page: >
+  Yu 2018: Results text ("Among patients who had at least one pharmaceutical
+  claim or a biologic infusion in any given year (n=311,368)... 21.8% to
+  43.8%" for CD). Xu 2022: Results text ("the percentage of patients with
+  IBD prescribed biologics increased from 13.3% to 32.1% for CD (APC: 11%)").
+  Neither paper's headline CD biologic-share figures live in a separately
+  numbered table independent of the prose quoted here.
+retrieved: 2026-09-10
+retrieved_via: >
+  Both free full text via PMC (NIH-funded/HHS author manuscripts). Located
+  via web search after the DelveInsight commercial market-research page
+  Eric supplied was checked and found unsuitable (internal arithmetic
+  didn't reconcile, no primary citation behind its free severity-split
+  figures, and DelveInsight is the same vendor class this project already
+  declined to use for O13 -- see docs/W2_sourcing_register.md's prior O13
+  entry).
+sha256: d555740bc442e26c3a39a28e52bc10ae2e958cbe08003617ac805a2658b0feb0
+notes: >
+  **These are a treatment-line proxy for severity (share of diagnosed CD
+  patients on biologic/advanced therapy), not a clinical severity
+  classification (e.g. Montreal behavior, or a formal mild/moderate/severe
+  read).** SPEC.md's own O11 note and S-6 say "a published moderate-to-
+  severe or advanced-therapy share" -- this file sources the
+  advanced-therapy-share half of that phrase, not a severity read
+  independent of treatment.
+
+  **The two sources materially disagree, and neither supersedes the
+  other cleanly:**
+  - Yu 2018 (MarketScan, privately-insured commercial claims, all ages):
+    21.8% (2007) -> 43.8% (2015).
+  - Xu 2022 (IQVIA AEMR, prescriptions written at outpatient encounters,
+    all ages): 13.3% (2011) -> 32.1% (2020).
+  Xu's 2020 endpoint (32.1%) is LOWER than Yu's 2015 endpoint (43.8%),
+  five years earlier -- the opposite of the monotonic-increase direction
+  both papers' own trend lines otherwise show. This is not an error in
+  transcription (both numbers are quoted directly from each paper's own
+  results text); it is a genuine disagreement between two legitimate,
+  peer-reviewed, differently-sourced estimates, structurally similar to
+  the Aliyev Suppl. Table 2 vs Suppl. Table 5 gap this repository resolved
+  as C8 -- recorded here rather than silently resolved by picking one.
+
+  Candidate explanations for the gap, none confirmed: (a) different cohort
+  definitions -- Yu's denominator is patients already claims-active that
+  year (arguably a narrower, more treatment-engaged population), Xu's is
+  any coded outpatient encounter; (b) different data types -- Yu counts
+  paid claims/infusions (drug actually administered/reimbursed), Xu counts
+  written prescriptions at ambulatory encounters, which may miss
+  infusion-center-administered infliximab if not captured as an
+  "outpatient EMR prescription" in that system; (c) different payer mix --
+  MarketScan is privately-insured only, AEMR's payer mix is not stated in
+  the abstract and may include populations with more access friction.
+
+  Both figures are also now stale for a 2026 base case regardless of which
+  is preferred: Xu's data ends 2020, before risankizumab (CD indication
+  approved 2022) and upadacitinib (2023) were approved for CD, and before
+  mirikizumab (CD indication approved January 2025 -- corrected 2026-09-10;
+  originally miswritten here as 2024, which is mirikizumab's earlier
+  ulcerative-colitis approval, not its Crohn's one) and guselkumab (CD
+  indication approved March 2025) -- four more advanced-therapy options
+  than either cohort's treatment era included. If anything, both figures
+  are floors on a current share, not current estimates.
+unresolved:
+  - id: U1
+    issue: >
+      No single value or bounding pair is chosen here -- transcription
+      only. Picking one (or a range, e.g. ~32-44%, or defending one source
+      over the other) is a real modeling decision structurally like C8's
+      and C10's, and per docs/W2_sourcing_register.md S-6's own instruction
+      ("decide and record... this is real work, not a lookup, and the
+      direction of the choice is recorded") should be made and signed off
+      explicitly, not defaulted.
+    blocks: O1 and O11's severity-share link
+  - id: U2
+    issue: >
+      Neither source is a clinical severity classification (e.g. Montreal
+      B1/B2/B3 behavior, or a physician-assessed mild/moderate/severe
+      read) -- both are treatment-line proxies. If SPEC.md's "moderate-to-
+      severe" is meant more clinically than "receiving advanced therapy,"
+      a genuine severity-classification study would be a better fit and
+      was not located in this search.
+    blocks: none currently -- flagged as a scope caveat on this file's use
+  - id: U3
+    issue: >
+      Both cohorts are all-ages (pediatric + adult combined); this
+      study's comparator/Treg-arm population starts at age 35 (SONIC
+      trial median, per W3). Neither source reports an adults-only or
+      age-35+ biologic-use share separately.
+    blocks: none currently -- flagged as a scope caveat
