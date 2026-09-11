@@ -2,6 +2,40 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-09-11 (O15 incidence range corrected; one readout enrichment)
+
+- `docs/W2_sourcing_register.md` S-11 and `data/raw/lewis2023_ibd_prevalence_incidence.csv.source.yaml`:
+  corrected the CD-specific new-diagnosis range from ~13,500-14,200/yr
+  (this project's own construction, checked directly against Lewis 2023's
+  text and found not to be a figure the paper states) to ~13,600/yr (95%
+  CI ~12,900-14,300) -- round-to-nearest-hundred of the point estimate and
+  both CI bounds, rather than floor-to-hundred of [point, CI-high], which
+  had silently dropped the CI's lower bound. S-11 also now records why
+  O15's outflow half cannot be backed out arithmetically from this file's
+  incidence and prevalence rates (implied 74.4-year mean disease duration
+  is not credible), and one dated fact about a pending external
+  claims-data request for that half.
+- `docs/results_readout.html`: the budget-impact Population row now states
+  the incidence/prevalence ratio these two G1-pinned rates imply (~1.34%
+  new diagnoses per year, ~40% gross over 30 years), strengthening the
+  existing "no incidence or turnover modelled" limitation. No dollar
+  figure, schedule, or swept parameter changed; `analysis/verify_readout.R`
+  reports all figures still match (it is unchanged -- these two numbers
+  depend on no output table, so nothing in the verifier's contract covers
+  them, and they need no new check since a change to either source rate
+  would fail `check_raw_provenance()` first).
+- No `R/`, `analysis/`, `SPEC.md`, or `OPEN_QUESTIONS.md` change; no
+  `output/` file changed. Full `testthat` suite green throughout (first
+  genuine green baseline observed in this chain across three prior
+  planning documents). `check_raw_provenance()` re-run after the sidecar
+  edit: zero problems.
+- This is the third and final revision of a chain that also produced two
+  independent adversarial reviews; see `docs/W2_sourcing_register.md` S-6
+  and S-11 for what remains open (the severity/treatment-line share and
+  O15's outflow half), and the PR description for three smaller repository
+  defects this chain surfaced but did not fix (out of scope for this
+  commit).
+
 ## 2026-09-10 (US CD advanced-therapy share candidates sourced for O1/O11 -- disagreement recorded, not resolved)
 
 - A DelveInsight market-research page Eric supplied for CD severity share
