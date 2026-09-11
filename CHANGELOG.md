@@ -2,6 +2,32 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-09-10 (US Crohn's prevalence/incidence sourced for O11/O15 -- sourcing only, no wiring)
+
+- Eric supplied US Crohn's population figures attributed to a "Nationwide
+  Insurance Claims Data (INPUT Study)" and a 2019 CCFA Factbook PDF; the PDF,
+  checked directly, does not contain those figures (it has 780,000
+  prevalence / ~33,000-per-year incidence, sourced to Loftus/Olmsted County
+  2014, now the superseded figure). The specific numbers (1.011 million
+  prevalence, 305/100,000) matched Lewis et al. 2023 (*Gastroenterology*
+  165(5):1197-1205.e2, PMCID PMC10592313) exactly once located; "INPUT Study"
+  does not appear in that paper and is not carried forward as a citation.
+- Added `data/raw/lewis2023_ibd_prevalence_incidence.csv` + sidecar:
+  Crohn's-specific US prevalence (305/100k, 1.011M) and incidence (4.1/100k
+  person-years, ~13,500-14,200/yr), plus the ulcerative colitis and combined
+  IBD rows the same paper reports, for context. Covered by G1's existing
+  provenance tests (sidecar has citation/sha256/status/retrieved).
+- This sources the **first** link of O11's three-link eligible-population
+  chain (prevalence) and the **inflow** half of O15 (new-diagnosis rate) --
+  `docs/W2_sourcing_register.md` S-6 and new S-11 updated accordingly. Not
+  closed: O11's severity/treatment-line share (S-6's second link, still
+  needs its own source) and O15's turnover/outflow half (S-11). Neither
+  `R/`, `OPEN_QUESTIONS.md` status, nor `SPEC.md` changed in this commit --
+  wiring this into A6's budget-impact analysis (replacing the illustrative
+  `n = 100,000`) is separate, scoped work.
+- Full suite unaffected (no `R/` change); ran `testthat::test_dir()` to
+  confirm the new sidecar doesn't trip G1.
+
 ## 2026-09-03 (ten Ham verified against the version of record; one readout figure corrected)
 
 - A co-author supplied the publisher version of record for ten Ham et al.

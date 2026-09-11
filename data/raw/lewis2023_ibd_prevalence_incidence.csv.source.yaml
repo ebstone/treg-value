@@ -1,0 +1,93 @@
+file: lewis2023_ibd_prevalence_incidence.csv
+status: transcribed
+citation:
+  authors: >
+    Lewis JD, Parlett LE, Jonsson Funk ML, Brensinger C, Pate V, Wu Q,
+    Dawwas GK, Weiss A, Constant BD, McCauley M, Haynes K, Yang JY,
+    Schaubel DE, Hurtado-Lorenzo A, Kappelman MD.
+  title: >
+    Incidence, prevalence, and racial and ethnic distribution of
+    inflammatory bowel disease in the United States.
+  journal: Gastroenterology
+  year: 2023
+  volume_pages: "165(5):1197-1205.e2"
+  doi: 10.1053/j.gastro.2023.07.003
+  pmcid: PMC10592313
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC10592313/
+table_or_page: >
+  Abstract and Results text (this is an NIH Author Manuscript PMC copy, not
+  paginated as the journal PDF; no separate numbered summary table carries
+  these headline figures independent of the prose they are quoted from).
+retrieved: 2026-09-10
+retrieved_via: >
+  Free full text via PMC (PMCID PMC10592313, open access -- this is
+  reference [1] on the CDC's own "IBD Facts and Stats" page,
+  https://www.cdc.gov/inflammatory-bowel-disease/php/facts-stats/index.html,
+  which itself reports only combined-IBD figures and does not break out
+  Crohn's disease separately). Verbatim sentences pulled and cross-checked
+  across two independent fetches before transcribing.
+sha256: e910555bdf49759abf411e89f09b50355ceccc4dd6892c177ca59e0ca5b5225d
+notes: >
+  Methodology: point prevalence as of 2017-12-31, requiring 4+ years of
+  continuous insurance enrollment beforehand; pooled across four US
+  insurance claims datasets spanning 1999-2017 (Medicare fee-for-service
+  2007-2017, five-state Medicaid 1999-2012, HealthCore/Anthem commercial
+  2006-2018, Optum Clinformatics Data Mart 2000-2017). Rates are
+  extrapolated to the 2020 US Census population (331,449,281) to produce
+  the *_patients columns; every *_patients figure here is the paper's own
+  stated extrapolation, not back-computed from the rate by this transcriber.
+  The ibd_combined row's prevalence_per_100k is left blank rather than
+  back-computed from 2.390 million patients / the census population,
+  because the paper states the combined incidence rate (10.9 per 100k
+  person-years) directly but does not state a combined prevalence *rate* in
+  the same sentence as the two disease-specific rates -- this file states
+  what the source states, nothing derived.
+
+  Origin of this file: Eric supplied US Crohn's population figures
+  (~1.01 million prevalence, 305 per 100,000, attributed to a "Nationwide
+  Insurance Claims Data (INPUT Study)" and a 2019 Crohn's & Colitis
+  Foundation Factbook PDF). That PDF, checked directly, does not contain
+  those figures -- it reports 780,000 CD prevalence and ~33,000/yr
+  incidence, sourced to Loftus et al., Olmsted County MN, ACG 2014 (a
+  single-county study extrapolated nationally, now superseded). The
+  1.01 million / 305-per-100k prevalence figures matched this paper
+  exactly once located; "INPUT Study" does not appear anywhere in this
+  paper's text and could not be corroborated as this source's name -- flagged
+  below as U3 rather than carried forward uncritically. Eric's incidence
+  figure (~33,000/yr) is the *old* Loftus figure and is superseded by this
+  paper's own, much lower, Crohn's-specific incidence (4.1 per 100,000
+  person-years, ~13,500-14,200/yr) -- the two should not be mixed.
+unresolved:
+  - id: U1
+    issue: >
+      This paper gives national CD prevalence and incidence but no
+      breakdown by disease severity or treatment line (biologic-naive vs.
+      experienced, advanced-therapy use). SPEC.md's own O11 note describes
+      the eligible-population count as prevalence x severity share x a
+      swept eligibility fraction -- this file closes only the first link.
+      O1 (population fractions by treatment line) and the severity-share
+      link of O11 remain unsourced; docs/W2_sourcing_register.md S-6 is
+      updated to record this file as a candidate for its prevalence half,
+      not as closing S-6 outright.
+    blocks: O11's second link; O1 entirely
+  - id: U2
+    issue: >
+      The prevalence estimate is a single point-in-time snapshot
+      (2017-12-31) built on claims data through 2017 -- almost 9 years old
+      as of this retrieval (2026-09-10). It is nonetheless the most recent
+      Crohn's-disease-specific national estimate identified (the CDC's own
+      2024-updated facts-and-stats page cites this same paper and reports
+      only combined-IBD prevalence, not a CD-specific split). No newer
+      CD-specific national estimate was found; worth a fresh check before
+      this is relied on in a manuscript, not before code uses it.
+    blocks: none currently
+  - id: U3
+    issue: >
+      "INPUT Study" / "Nationwide Insurance Claims Data (INPUT Study)", as
+      named in Eric's original request, does not appear in this paper and
+      was not otherwise corroborated as a real, distinct source. This file
+      is transcribed from Lewis et al. 2023 on the strength of its numbers
+      matching exactly (305/100k, 1.011 million), not on the strength of
+      the "INPUT Study" name matching anything -- that name should not be
+      used in any downstream citation of this file.
+    blocks: none currently -- naming/provenance caution only
