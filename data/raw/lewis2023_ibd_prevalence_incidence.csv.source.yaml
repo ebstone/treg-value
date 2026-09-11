@@ -56,7 +56,10 @@ notes: >
   below as U3 rather than carried forward uncritically. Eric's incidence
   figure (~33,000/yr) is the *old* Loftus figure and is superseded by this
   paper's own, much lower, Crohn's-specific incidence (4.1 per 100,000
-  person-years, ~13,500-14,200/yr) -- the two should not be mixed.
+  person-years, ~13,600/yr, 95% CI ~12,900-14,300 by this file's own
+  extrapolation to the 2020 Census -- the paper itself states only a
+  combined-IBD range, ~39,000-56,000/yr for Crohn's and ulcerative colitis
+  together, not a Crohn's-specific count) -- the two should not be mixed.
 unresolved:
   - id: U1
     issue: >
