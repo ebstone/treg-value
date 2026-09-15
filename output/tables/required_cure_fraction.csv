@@ -1,4 +1,4 @@
-# commit: 4a95e874c3b92973d5ed4577bb8cebe7d09f8123
+# commit: 5e91321da33d5e2aafc094d81614897f396e01bf
 # spec_sha256: 7377ef3cb2949720c28e3ecdd800621e5460ca5e300d5f815f68374800f993b4
 "benchmark_anchor","benchmark_cost_usd_per_course","lambda_usd_per_qaly","h_per_year","intercept_a_usd_per_course","value_of_one_cure_b_usd","required_cure_fraction_all_treated","achievable"
 "Allogeneic, batch-amortised (low)",12265.9588460686,50000,0,-1717.21647668665,240869.923788702,0.0580528075187241,TRUE

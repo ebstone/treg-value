@@ -17,10 +17,19 @@ still_in_drug_free_remission <- function(pi_cure, h_per_year, t_years_from_landm
   pi_cure * exp(-h_per_year * t_years_from_landmark)
 }
 
-# Published analogs and their own readout timepoints, measured from
-# treatment. This study's landmark is 12 weeks (LANDMARK_CYCLES), so the
-# time entering the decay is `readout - 12 weeks`.
-ANALOG_READOUTS_WEEKS <- c(`PolTREG PTG-007` = 24 * (52 / 12), `Ovasave/CATS1` = 8)
+#' Published analogs and their own readout timepoints, measured from treatment,
+#' read from data/raw/treg_analog_readouts.csv. This study's landmark is 12 weeks
+#' (LANDMARK_CYCLES), so the time entering the decay is `readout - 12 weeks`.
+#'
+#' The file carries `indication`, `product_class` and `reported_endpoint`
+#' alongside each timepoint. Nothing computes from those three; they travel with
+#' the row so that a reader of an output table can see what the analog actually
+#' measured. Neither analog's endpoint is sustained drug-free remission, and one
+#' of the two is a type 1 diabetes trial -- see the sidecar's U1 and
+#' SPEC_AMENDMENTS.md "Analog readouts sourced".
+analog_readouts <- function(raw_dir = "data/raw") {
+  read_csv_cached(file.path(raw_dir, "treg_analog_readouts.csv"))
+}
 
 #' The comparison table SPEC.md section 7 requires: each analog's own
 #' timepoint, and this model's predicted drug-free-remission share at that
@@ -35,17 +44,22 @@ ANALOG_READOUTS_WEEKS <- c(`PolTREG PTG-007` = 24 * (52 / 12), `Ovasave/CATS1` =
 #' returned with `comparable = FALSE` and a NA share rather than an
 #' extrapolated number. See SPEC_AMENDMENTS.md "Analog comparison before the
 #' landmark".
-analog_comparison_table <- function(pi_cure, h_per_year, landmark_weeks = LANDMARK_CYCLES * 2) {
-  weeks <- ANALOG_READOUTS_WEEKS
+analog_comparison_table <- function(pi_cure, h_per_year, landmark_weeks = LANDMARK_CYCLES * 2,
+                                    raw_dir = "data/raw") {
+  readouts <- analog_readouts(raw_dir)
+  weeks <- readouts$readout_weeks_from_treatment
   t_years <- (weeks - landmark_weeks) / 52
   comparable <- t_years >= 0
   share <- ifelse(comparable, still_in_drug_free_remission(pi_cure, h_per_year, t_years), NA_real_)
   data.frame(
-    analog = names(weeks),
+    analog = readouts$analog,
     readout_weeks_from_treatment = as.numeric(weeks),
     years_from_landmark = as.numeric(t_years),
     comparable = comparable,
     drug_free_remission_share = as.numeric(share),
+    indication = readouts$indication,
+    product_class = readouts$product_class,
+    reported_endpoint = readouts$reported_endpoint,
     stringsAsFactors = FALSE
   )
 }
