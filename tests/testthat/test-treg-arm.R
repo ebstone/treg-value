@@ -153,26 +153,63 @@ test_that("T11: the analog comparison decays pi_cure to each analog's own timepo
   pi_cure_value <- 0.4
   h <- 0.10
 
-  # PolTREG reads out at 24 months, well after the 12-week landmark, so its
-  # comparable share must be strictly below pi_cure -- never pi_cure itself.
-  tbl <- analog_comparison_table(pi_cure_value, h)
-  poltreg <- tbl[tbl$analog == "PolTREG PTG-007", ]
-  expect_true(poltreg$comparable)
-  expect_lt(poltreg$drug_free_remission_share, pi_cure_value)
+  # Asserted over whichever analogs read out after the landmark, rather than
+  # against one named analog: the readout list is sourced data now, and a test
+  # that names a row fails for the wrong reason when that row's status changes.
+  tbl <- analog_comparison_table(pi_cure_value, h, raw_dir = RAW_DIR)
+  post <- tbl[tbl$comparable, ]
+  expect_gt(nrow(post), 0)
 
-  expected <- pi_cure_value * exp(-h * poltreg$years_from_landmark)
-  expect_equal(poltreg$drug_free_remission_share, expected, tolerance = 1e-12)
+  expect_true(all(post$drug_free_remission_share < pi_cure_value))
+  expect_equal(post$drug_free_remission_share,
+    pi_cure_value * exp(-h * post$years_from_landmark),
+    tolerance = 1e-12
+  )
 
   # At zero hazard the share is flat, and only then equals pi_cure.
-  flat <- analog_comparison_table(pi_cure_value, 0)
-  expect_equal(flat$drug_free_remission_share[flat$analog == "PolTREG PTG-007"], pi_cure_value, tolerance = 1e-12)
+  flat <- analog_comparison_table(pi_cure_value, 0, raw_dir = RAW_DIR)
+  flat_post <- flat[flat$comparable, ]
+  expect_equal(flat_post$drug_free_remission_share,
+    rep(pi_cure_value, nrow(flat_post)),
+    tolerance = 1e-12
+  )
 })
 
 test_that("T11: an analog reading out before the landmark is marked incomparable rather than back-extrapolated", {
-  tbl <- analog_comparison_table(0.4, 0.10)
-  ovasave <- tbl[tbl$analog == "Ovasave/CATS1", ]
-  expect_false(ovasave$comparable)
-  expect_true(is.na(ovasave$drug_free_remission_share))
+  tbl <- analog_comparison_table(0.4, 0.10, raw_dir = RAW_DIR)
+  pre <- tbl[tbl$years_from_landmark < 0, ]
+  expect_gt(nrow(pre), 0)
+  expect_false(any(pre$comparable))
+  expect_true(all(is.na(pre$drug_free_remission_share)))
+})
+
+test_that("the analog readouts are sourced data and still state SPEC.md section 7's timepoints", {
+  readouts <- analog_readouts(RAW_DIR)
+  # Provenance re-derivation, which guard 4 permits value checks for: SPEC.md
+  # section 7 states PolTREG PTG-007 at 24 months and Ovasave/CATS1 at week 8.
+  # Moving these out of a hardcoded vector must not have moved the numbers.
+  expect_setequal(readouts$analog, c("PolTREG PTG-007", "Ovasave/CATS1"))
+  expect_equal(
+    readouts$readout_weeks_from_treatment[readouts$analog == "PolTREG PTG-007"],
+    24 * (52 / 12)
+  )
+  expect_equal(
+    readouts$readout_weeks_from_treatment[readouts$analog == "Ovasave/CATS1"], 8
+  )
+})
+
+test_that("the analog comparison carries each analog's indication, product class and endpoint", {
+  # These three columns carry no numeric weight; nothing computes from them.
+  # They are asserted because the readout timepoint alone does not say what the
+  # analog measured, and neither analog's endpoint is sustained drug-free
+  # remission. Dropping them would leave a row that reads as like-for-like.
+  tbl <- analog_comparison_table(0.4, 0.05, raw_dir = RAW_DIR)
+  for (col in c("indication", "product_class", "reported_endpoint")) {
+    expect_true(col %in% names(tbl))
+    expect_false(any(is.na(tbl[[col]])))
+    expect_true(all(nzchar(tbl[[col]])))
+  }
+  expect_equal(nrow(tbl), nrow(analog_readouts(RAW_DIR)))
 })
 
 test_that("T12: no pricing function reads a manufacturing benchmark -- zero call sites", {

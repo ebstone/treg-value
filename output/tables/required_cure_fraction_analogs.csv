@@ -1,9 +1,9 @@
-# commit: 4a95e874c3b92973d5ed4577bb8cebe7d09f8123
+# commit: 5e91321da33d5e2aafc094d81614897f396e01bf
 # spec_sha256: 7377ef3cb2949720c28e3ecdd800621e5460ca5e300d5f815f68374800f993b4
-"analog","readout_weeks_from_treatment","years_from_landmark","comparable","drug_free_remission_share","h_per_year","required_cure_fraction_at_landmark"
-"PolTREG PTG-007",104,1.76923076923077,TRUE,0.117493502742606,0,0.117493502742606
-"Ovasave/CATS1",8,-0.0769230769230769,FALSE,NA,0,0.117493502742606
-"PolTREG PTG-007",104,1.76923076923077,TRUE,0.219671108040752,0.05,0.239988979320552
-"Ovasave/CATS1",8,-0.0769230769230769,FALSE,NA,0.05,0.239988979320552
-"PolTREG PTG-007",104,1.76923076923077,TRUE,0.316267643680801,0.1,0.377477855372527
-"Ovasave/CATS1",8,-0.0769230769230769,FALSE,NA,0.1,0.377477855372527
+"analog","readout_weeks_from_treatment","years_from_landmark","comparable","drug_free_remission_share","indication","product_class","reported_endpoint","h_per_year","required_cure_fraction_at_landmark"
+"PolTREG PTG-007",104,1.76923076923077,TRUE,0.117493502742606,"Type 1 diabetes","Autologous polyclonal Treg","Insulin dose at or below 0.5 IU/kg with fasting C-peptide above 0.5 ng/mL",0,0.117493502742606
+"Ovasave/CATS1",8,-0.0769230769230769,FALSE,NA,"Crohn's disease","Autologous antigen-specific Tr1","Reduction of 100 points in the Crohn's Disease Activity Index",0,0.117493502742606
+"PolTREG PTG-007",104,1.76923076923077,TRUE,0.219671108040752,"Type 1 diabetes","Autologous polyclonal Treg","Insulin dose at or below 0.5 IU/kg with fasting C-peptide above 0.5 ng/mL",0.05,0.239988979320552
+"Ovasave/CATS1",8,-0.0769230769230769,FALSE,NA,"Crohn's disease","Autologous antigen-specific Tr1","Reduction of 100 points in the Crohn's Disease Activity Index",0.05,0.239988979320552
+"PolTREG PTG-007",104,1.76923076923077,TRUE,0.316267643680801,"Type 1 diabetes","Autologous polyclonal Treg","Insulin dose at or below 0.5 IU/kg with fasting C-peptide above 0.5 ng/mL",0.1,0.377477855372527
+"Ovasave/CATS1",8,-0.0769230769230769,FALSE,NA,"Crohn's disease","Autologous antigen-specific Tr1","Reduction of 100 points in the Crohn's Disease Activity Index",0.1,0.377477855372527

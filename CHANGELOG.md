@@ -2,6 +2,42 @@
 
 One line per session: what changed, and which tests now cover it.
 
+## 2026-09-15 (analog readout timepoints sourced; the PolTREG analog turns out to be a type 1 diabetes trial)
+
+- `R/analog_comparison.R`'s `ANALOG_READOUTS_WEEKS` constant becomes
+  `data/raw/treg_analog_readouts.csv` + sidecar. These timepoints entered
+  the repository in its initial commit as a bare constant with no source of
+  any kind, and guard 1 never reached them because a constant is not a file
+  in `data/raw/`. **The numbers are unchanged** -- 104 and 8 weeks, exactly
+  as SPEC.md section 7 states them.
+- Tracing them produced both citations and one finding. Ovasave/CATS1 is
+  Desreumaux et al., *Gastroenterology* 2012;143(5):1207-1217.e2: right
+  indication, and the week-8 readout checks out. **The closest primary
+  source for "PolTREG PTG-007 at 24 months" is Marek-Trzonkowska et al.,
+  *J Transl Med* 2016;14:332 -- autologous polyclonal Tregs in children
+  with type 1 diabetes**, whose remission endpoint is a reduced insulin
+  dose with preserved C-peptide, not a drug-free state. The 24-month
+  follow-up is genuine and is the only element section 7 draws on.
+- Retained with the mismatch disclosed rather than dropped (Stone,
+  2026-09-15): section 7 consumes the timepoint only, no output records
+  what either analog achieved, and no figure depends on commensurability.
+  `analog_comparison_table()` gains `indication`, `product_class` and
+  `reported_endpoint`, carried from the raw file so the caveat travels with
+  the data rather than living only in prose. Nothing computes from them and
+  `comparable` is still decided on timing alone.
+- **Tests.** T11's two tests no longer name a specific analog -- they assert
+  the decay rule over whichever rows read out after the landmark, so a test
+  cannot fail for the wrong reason when a row's status changes. Two new
+  tests: a provenance re-derivation pinning the sourced timepoints to
+  section 7's stated values, and one asserting the three descriptive columns
+  survive into the table. Suite 3,965 passing, 0 failures, 0 skips (3,957
+  before).
+- `output/tables/analog_comparison_w4.csv` and
+  `required_cure_fraction_analogs.csv` regenerated: every pre-existing value
+  byte-identical, three columns added. Three other outputs differ only in
+  their commit-hash stamp line. `SPEC.md` is untouched, so no `spec_sha256`
+  changed and no wider regeneration was needed.
+
 ## 2026-09-10 (US CD advanced-therapy share candidates sourced for O1/O11 -- disagreement recorded, not resolved)
 
 - A DelveInsight market-research page Eric supplied for CD severity share

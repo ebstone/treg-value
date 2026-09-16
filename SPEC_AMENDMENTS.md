@@ -10,6 +10,59 @@ not a decision made in code.
 |---|---|---|---|---|
 | — | — | — | — | — |
 
+## 2026-09-15 — Analog readouts sourced
+
+**Signed off:** Stone, 2026-09-15
+
+**Supersedes:** nothing in `SPEC.md`. Section 7 names both analogs and both
+readout timepoints and continues to govern; this records where those timepoints
+now come from, and what the cited sources turn out to say.
+
+**Change.** The analog readout timepoints move out of
+`R/analog_comparison.R`'s `ANALOG_READOUTS_WEEKS` constant into
+`data/raw/treg_analog_readouts.csv` with a resolving `.source.yaml`. **The
+numbers are unchanged** — 104 weeks and 8 weeks, exactly as section 7 states
+them, asserted by a re-derivation test. `analog_comparison_table()` gains three
+descriptive columns carried from that file: `indication`, `product_class` and
+`reported_endpoint`. Nothing computes from them, and `comparable` is still
+decided on timing alone.
+
+**Reason.** Until now these timepoints had no source of any kind. They entered
+the repository in its initial commit as a bare constant, and guard 1's
+provenance requirement never reached them because the constant was not a file in
+`data/raw/`. Tracing them produced two citations and one finding worth
+recording:
+
+- **Ovasave/CATS1 is Desreumaux et al., *Gastroenterology* 2012;143(5):1207–1217.e2.**
+  A phase 1/2a dose-escalation study of ovalbumin-specific autologous Tr1 cells
+  in 20 patients with refractory Crohn's disease, reporting response at weeks 5
+  and 8. Section 7's week-8 timepoint is correct and the indication matches.
+- **The closest primary source for "PolTREG PTG-007 at 24 months" is
+  Marek-Trzonkowska et al., *J Transl Med* 2016;14:332 — a trial of autologous
+  polyclonal regulatory T cells in children with type 1 diabetes.** Not Crohn's
+  disease, not an allogeneic product. Its 24-month follow-up is genuine, and is
+  the only element section 7 draws on. Its remission endpoint is a reduced
+  insulin dose with preserved C-peptide, and the paper records that every
+  subject eventually required insulin again, so it is not a drug-free state.
+  "PTG-007" is the sponsor's later commercial designation for the programme
+  descending from that academic work; the cited paper does not use the code.
+
+**Why the row is retained rather than dropped.** Section 7 consumes the
+timepoint only. `analog_comparison_table()` reports *this model's own* predicted
+drug-free-remission share decayed to that date, and neither analog's achieved
+value is recorded or used anywhere, so no numeric equivalence is asserted and no
+figure in this study depends on the analog being commensurable. Dropping the row
+would also leave the comparison with no rows reading out after the landmark at
+all. The mismatch is therefore disclosed rather than removed, and the three new
+columns exist so that the disclosure travels with the data instead of living
+only in prose.
+
+**Reporting obligation this creates.** Any manuscript reporting the analog
+comparison must state that the 24-month timepoint comes from a type 1 diabetes
+trial of an autologous polyclonal product whose remission endpoint is not
+drug-free. Without that, a reader takes both analogs for Crohn's disease trials.
+Recorded as U1 in the sidecar.
+
 ## 2026-08-11 — L9 locked
 
 **Signed off:** Stone

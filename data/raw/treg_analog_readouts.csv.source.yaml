@@ -1,0 +1,100 @@
+file: treg_analog_readouts.csv
+status: transcribed
+citation:
+  - key: marek_trzonkowska_2016
+    analog: PolTREG PTG-007
+    authors: >
+      Marek-Trzonkowska N, Mysliwiec M, Iwaszkiewicz-Grzes D, Gliwinski M,
+      Derkowska I, Zalinska M, Zielinski M, Grabowska M, Zawadzka-Starczewska K,
+      Kaminska H, Owczuk R, Szadkowska A, Wyka K, Mlynarski W, Jarosz-Chobot P,
+      Bossowski A, Siebert J, Trzonkowski P.
+    title: >
+      Factors affecting long-term efficacy of T regulatory cell-based therapy in
+      type 1 diabetes.
+    journal: Journal of Translational Medicine
+    year: 2016
+    volume: 14
+    article_number: 332
+    doi: 10.1186/s12967-016-1090-7
+    pmcid: PMC5131539
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC5131539
+    open_access: CC BY 4.0
+  - key: desreumaux_2012
+    analog: Ovasave/CATS1
+    authors: >
+      Desreumaux P, Foussat A, Allez M, Beaugerie L, Hebuterne X, Bouhnik Y,
+      Nachury M, Brun V, Bastian H, Belmonte N, Ticchioni M, Duchange A,
+      Morel-Mandrino P, Neveu V, Clerget-Chossat N, Forte M, Colombel JF.
+    title: >
+      Safety and Efficacy of Antigen-Specific Regulatory T-Cell Therapy for
+      Patients With Refractory Crohn's Disease.
+    journal: Gastroenterology
+    year: 2012
+    volume: 143
+    issue: 5
+    pages: 1207-1217.e2
+    doi: 10.1053/j.gastro.2012.07.116
+    pmid: 22885333
+table_or_page: >
+  marek_trzonkowska_2016: the study's 24-month follow-up window, stated
+  throughout and in the Methods' follow-up description.
+  desreumaux_2012: the CATS1 trial's week-5 and week-8 response readouts, stated
+  in the Abstract and Results.
+retrieved: 2026-09-15
+retrieved_via: >
+  Bibliographic fields verified against Crossref REST API records
+  (api.crossref.org/works) for both DOIs, which returned the full author lists,
+  titles, journals, volumes, issues, pages and years transcribed above.
+  marek_trzonkowska_2016's study characteristics were read from the open-access
+  full text at PMC5131539. PubMed and gastrojournal.org both refuse programmatic
+  fetches (cookie wall and HTTP 403 respectively), so neither was used as a
+  transcription source.
+sha256: d7ef934c79e715bf3c0af36c2164e9e5ca04811f314178b3dd519f569e39c8df
+notes: >
+  This file replaces a hardcoded constant. SPEC.md section 7 names both analogs
+  and both readout timepoints, but until this file existed those timepoints lived
+  only in R/analog_comparison.R's ANALOG_READOUTS_WEEKS vector with no source of
+  any kind. The numeric timepoints are unchanged: 104 weeks (24 months) and 8
+  weeks, exactly as SPEC.md section 7 states them.
+
+  The `indication`, `product_class` and `reported_endpoint` columns carry no
+  numeric weight -- nothing computes from them. They exist because the readout
+  timepoint alone does not tell a reader what the analog measured, and the
+  comparison is easy to over-read without them.
+
+  Neither analog's reported endpoint is sustained drug-free remission, which is
+  what this study's cure fraction measures. Neither analog's own achieved value
+  is recorded here or used anywhere: SPEC.md section 7's rule consumes the
+  timepoint only, and `analog_comparison_table()` reports this model's own
+  predicted share decayed to that date. No numeric equivalence between this study
+  and either analog is asserted by any output.
+unresolved:
+  - id: U1
+    issue: >
+      marek_trzonkowska_2016 studies AUTOLOGOUS POLYCLONAL regulatory T cells in
+      children with TYPE 1 DIABETES. It is not a Crohn's disease trial and not an
+      allogeneic product, so it differs from this study's subject on indication,
+      donor source and clonality. Its 24-month follow-up is genuine and is the
+      only element SPEC.md section 7 draws on. Its remission definition is a
+      reduced insulin dose together with preserved C-peptide, and the paper
+      records that all subjects eventually required insulin again -- so its
+      "remission" is not a drug-free state.
+
+      "PTG-007" is the sponsor's later commercial designation for the polyclonal
+      Treg programme descending from this academic work; the paper itself does not
+      use the code. SPEC.md section 7's label is therefore an attribution, not a
+      name the cited source carries.
+
+      Retained by author decision (Stone, 2026-09-15) with the mismatch disclosed
+      rather than dropped. Any manuscript reporting this row must state the
+      indication and endpoint mismatch, or a reader will take both analogs for
+      Crohn's disease trials.
+    blocks: nothing computational; a reporting obligation, recorded in SPEC_AMENDMENTS.md
+  - id: U2
+    issue: >
+      desreumaux_2012 reports response at weeks 5 and 8. SPEC.md section 7 uses
+      week 8, the later of the two, which is the conservative choice of the pair
+      and the one the published abstract leads with. The trial is a single-
+      injection dose-escalation study in 20 patients across four dose levels, so
+      its week-8 figure is not a single-arm effect estimate.
+    blocks: nothing; this analog reads out before the 12-week landmark and is already reported as not comparable
